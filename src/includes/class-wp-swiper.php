@@ -2,6 +2,7 @@
 
 class WP_Swiper {
     
+    protected $loader;
     protected $plugin_prefix;
     protected $plugin_name;
     protected $version;
@@ -28,7 +29,30 @@ class WP_Swiper {
 		add_action( 'enqueue_block_editor_assets', array($this, 'register_gutenberg_block') );
 		add_action( 'enqueue_block_editor_assets', array($this, 'enqueue_admin') );
 		add_action( 'wp_enqueue_scripts', array($this, 'enqueue_frontend') );
-	}
+    }
+    
+    private function load_dependencies() {
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-loader.php';
+        $this->loader = new AdUnblocker_Loader();
+    }
+
+    private function define_admin_hooks() {
+
+        $plugin_admin = new AdUnblocker_Admin( $this->get_plugin_name(), $this->get_version() );
+
+        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action( 'admin_menu', $plugin_admin, 'add_menu' );
+        $this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
+
+    }
+
+    private function define_public_hooks() {
+        $plugin_public = new AdUnblocker_Public( $this->get_plugin_name(), $this->get_version() );
+
+        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+    }
 
     function enqueue_admin() {
         wp_enqueue_style(
@@ -138,5 +162,3 @@ class WP_Swiper {
         return $this->prefix;
     }
 }
-
-$wp_swiper = new WP_Swiper();
