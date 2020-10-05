@@ -1,0 +1,39 @@
+{
+	"name": "da/wp-swiper-slide",
+    "parent": [ "da/wp-swiper-slides" ],
+	"category": "common",
+    "supports": {
+        "html": false,
+        "className": false,
+        "anchor": true,
+        "inserter": false,
+        "reusable": false
+    },
+    "attributes": {
+        "slideImg": {
+            "type": "string"
+        },
+        "slug": {
+            "type": "string"
+        },
+        "contentValign" : {
+            "type": "string",
+            "default": ""
+        },
+        "contentHalign": {
+            "type": "string",
+            "default": ""
+        },
+        "overlayColor": {
+            "type": "object",
+            "default": {
+                "rgb": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0,
+                    "a": 1
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "wp-gst",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Digital Apps",
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^5.1.0",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-changed": "^3.2.0",
+    "gulp-debug": "^4.0.0",
+    "gulp-directory-sync": "^1.2.4",
+    "gulp-filelog": "^0.4.1",
+    "gulp-load-plugins": "^1.6.0",
+    "gulp-notify": "^3.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-util": "^3.0.8",
+    "gulp-vinyl-zip": "^2.2.0",
+    "gulp-watch": "^5.0.1",
+    "node-sass": "^4.14.1",
+    "path": "^0.12.7",
+    "vinyl-ftp": "^0.6.1"
+  },
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-ignore": "^3.0.0",
+    "syncy": "^3.0.0"
+  }
+}

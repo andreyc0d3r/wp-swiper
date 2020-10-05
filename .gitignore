@@ -1,0 +1,66 @@
+# ignore all files starting with .
+.*
+
+# track this file .gitignore (i.e. do NOT ignore it)
+!.gitignore
+
+# track .babelrc & .browserlistrc files
+!*.babelrc
+!*.browserlistrc
+
+# track readme.md in the root (i.e. do NOT ignore it)
+!readme.md
+!README.md
+
+# ignore all files that start with ~
+~*
+
+# ignore OS generated files
+ehthumbs.db
+Thumbs.db
+
+# ignore Editor files
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+
+# ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# ignore compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.lnk
+
+# ignore packaged files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# ignore generated css file (theme customiser)
+/css/generate.css
+/css/admin_generate.css
+/css/fonts_generate.css
+/css/admin_fonts_generate.css
+
+# ignore files fetched through composer (and composer files)
+**/vendor/*
+/composer.lock
+
+# ignore webpack/npm files in extensions
+**/node_modules
+/.git
+composer.lock
+package-lock.json
+/dist
