@@ -13,8 +13,8 @@ class WP_Swiper {
         } else {
             $this->version = '1.0.0';
         }
-        $this->plguin_prefix = 'daabd';
-        $this->plugin_name = 'adunblocker';
+        $this->plguin_prefix = 'dawps';
+        $this->plugin_name = 'wpswiper';
 
         //$theme = wp_get_theme(); //get the theme object
         $this->gb_settings = array(
