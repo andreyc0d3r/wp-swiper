@@ -17,11 +17,17 @@ class WP_Swiper {
         $this->plguin_prefix = 'dawps';
         $this->plugin_name = 'wpswiper';
 
+        $this->load_dependencies();
+        $this->define_admin_hooks();
+        $this->define_public_hooks();
 
     }
     
     private function load_dependencies() {
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-loader.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-swiper-admin.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-swiper-public.php';
+
         $this->loader = new WP_Swiper_Loader();
     }
 
