@@ -3,14 +3,14 @@
 /**
  * Register all actions and filters for the plugin
  *
- * @link       https://digitalapps.co
+ * @link       https://digitalapps.com
  * @since      1.0.0
  *
  * @package    AdUnblocker
  * @subpackage AdUnblocker/includes
  */
 
-class AdUnblocker_Loader {
+class WP_Swiper_Loader {
 
     /**
      * The array of actions registered with WordPress.

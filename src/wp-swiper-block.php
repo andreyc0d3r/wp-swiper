@@ -38,7 +38,7 @@ define( 'DAWPS_PLUGIN_VERSION', '1.0.0' );
  */
 function activate_adunblocker() {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper-activator.php';
-    AdUnblocker_Activator::activate();
+    WP_Swiper_Activator::activate();
 }
 
 /**
@@ -47,7 +47,7 @@ function activate_adunblocker() {
  */
 function deactivate_adunblocker() {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper-deactivator.php';
-    AdUnblocker_Deactivator::deactivate();
+    WP_Swiper_Deactivator::deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_wpswiper' );
