@@ -57,7 +57,7 @@ register_deactivation_hook( __FILE__, 'deactivate_wpswiper' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-adunblocker.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper.php';
 
 /**
  * Begins execution of the plugin.
@@ -68,10 +68,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-adunblocker.php';
  *
  * @since    1.0.0
  */
-function run_wpswiper() {
+function run_wp_swiper() {
 
     $plugin = new WP_Swiper();
     $plugin->run();
 
 }
-run_wpswiper();
+run_wp_swiper();

@@ -1,13 +1,13 @@
-const gulp   = require('gulp');
-const watch   = require('gulp-watch');
-const $      = require('gulp-load-plugins')();
-var gutil = require('gulp-util');
-var zip = require( 'gulp-vinyl-zip' );
-var rename = require('gulp-rename');
-var path = require('path');
-var del     = require('del');
-var sass = require( 'gulp-sass');
-const syncy = require('syncy');
+const gulp      = require('gulp');
+const watch     = require('gulp-watch');
+const $         = require('gulp-load-plugins')();
+var gutil       = require('gulp-util');
+var zip         = require( 'gulp-vinyl-zip' );
+var rename      = require('gulp-rename');
+var path        = require('path');
+var del         = require('del');
+var sass        = require( 'gulp-sass');
+const syncy     = require('syncy');
 
 
 var settings = {
@@ -303,7 +303,12 @@ gulp.task('watchmac', function(done) {
     done();
 });
 
-gulp.task( 'mac', gulp.series( 'build_scss:prod', 'admin_build_scss:prod', 'build_scss:ext', 'sync_dir:mac' ) );
+gulp.task( 'mac', gulp.series( 
+    // 'build_scss:prod', 
+    // 'admin_build_scss:prod', 
+    // 'build_scss:ext', 
+    'sync_dir:mac' 
+) );
 gulp.task( 'macdev', gulp.series( 'watchmac' ) );
 // ------------------------------------------------------------
 
