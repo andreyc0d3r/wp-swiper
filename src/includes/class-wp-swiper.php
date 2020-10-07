@@ -16,7 +16,7 @@ class WP_Swiper {
         }
         $this->plguin_prefix = 'dawps';
         $this->plugin_name = 'wpswiper';
-
+        
         $this->load_dependencies();
         $this->define_admin_hooks();
         $this->define_public_hooks();
@@ -43,14 +43,12 @@ class WP_Swiper {
 
         // Settings for the settings page
         // $this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
-        
+
         $this->loader->add_action( 'enqueue_block_editor_assets', $plugin_admin, 'register_gutenberg_block' );
-        $this->loader->add_action( 'enqueue_block_editor_assets', $plugin_admin, 'enqueue_admin' );
+        $this->loader->add_action( 'enqueue_block_editor_assets', $plugin_admin, 'enqueue_admin_styles' );
         
-
-
     }
-
+    
     private function define_public_hooks() {
         $plugin_public = new WP_Swiper_Public( $this->get_plugin_name(), $this->get_version() );
 
@@ -62,15 +60,12 @@ class WP_Swiper {
 
     function enqueue_admin() {
         wp_enqueue_style(
-			$this->plugin_name . '-block-editor',
+			$this->plugin_name . '-block-editor-admin-style',
 			plugin_dir_path( dirname( __FILE__ ) ) . "/css/admin_block.css",
 			array(),
 			'1.0.0'
 		);
     }
-
-
-
     
     /**
      * Run the loader to execute all of the hooks with WordPress.

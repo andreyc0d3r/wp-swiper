@@ -137,11 +137,14 @@ class BlockEdit extends Component {
         }
     }
 
+    
     removeTab( i ) {
         const {
             setAttributes,
             attributes,
             block,
+            getBlocks,
+            replaceInnerBlocks,
         } = this.props;
 
         const {
@@ -154,8 +157,13 @@ class BlockEdit extends Component {
             this.props.removeBlock( block.innerBlocks[ i ].clientId );
 
             if ( tabsData[ i ] ) {
-                const newTabsData = Object.assign( [], tabsData );
+                const newTabsData = [ ...tabsData ];
                 newTabsData.splice( i, 1 );
+
+                const innerBlocks = [ ...getBlocks( block.clientId ) ];
+                innerBlocks.splice( i, 1 );
+
+                replaceInnerBlocks( block.clientId, innerBlocks, false );
 
                 setAttributes( {
                     tabsData: newTabsData,

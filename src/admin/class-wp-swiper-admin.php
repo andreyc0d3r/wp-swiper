@@ -96,16 +96,27 @@ class WP_Swiper_Admin {
         $this->options = get_option( $this->plugin_name . '-options' );
     } // set_options()
 
-    function register_gutenberg_block(){
+    function enqueue_admin_styles() {
+        wp_enqueue_style(
+			$this->plugin_name . '-block-editor-style',
+			plugin_dir_url( __DIR__ ) . "css/admin_block.css",
+			array(),
+			'1.0.0'
+		);
+    }
+
+    public function register_gutenberg_block() {
+
 		// Skip block registration if Gutenberg is not enabled/merged.
 		if ( ! function_exists( 'register_block_type' ) ) {
 			return;
 		}
 
 		wp_register_script(
-			$this->plugin_name . '-block-editor',
-			plugin_dir_url( __FILE__ ) . '/gutenberg/js/admin_block.js',
+			'wpswiper-block-editor',
+			plugin_dir_url( __DIR__ ) . 'gutenberg/js/admin_block.js',
 			array(
+                'wp-block-editor',
 				'wp-blocks',
 				'wp-i18n',
 				'wp-element',
@@ -117,9 +128,22 @@ class WP_Swiper_Admin {
                 'wp-i18n'
 			),
 			'1.0.0'
-		);
+        );
 
-        wp_enqueue_script( $this->plugin_name . '-block-editor' );
+        wp_localize_script( 
+            'wpswiper-block-editor', 
+            'wpswiper_settings', 
+            array(
+                'slug'       => 'wpswiper',
+                'title'      => 'WP Swiper Block',
+                'namespace'  => 'wb', //can't contain special characters
+                'category'   => 'common', //`common`, `embed`, `formatting`, `layout`, `widgets`
+                'icon'       => 'admin-users'
+            )
+        );
+
+        wp_enqueue_script( 'wpswiper-block-editor' );
+        
 		// register_block_type( $gb_settings['namespace'].'/'.$gb_settings['slug'], array(
 		// 	'editor_script' => $gb_settings['slug'].'-block-editor',
 		// 	'editor_style'  => $gb_settings['slug'].'-block-editor'
