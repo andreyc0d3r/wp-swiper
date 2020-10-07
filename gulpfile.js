@@ -51,10 +51,30 @@ gulp.task('package', function(done){
 
 // task: clean old files
 gulp.task('clean:build', function(done) {
-    del(settings.dist_path + '/astheme.zip', {force: true}); // remove old zip file
+    del(settings.dist_path + '/**', {force: true}); // remove old zip file
     done();
 });
 
+gulp.task('sync_dist', function(done){
+    gulp.src( [
+        // settings.repo_path + '/**/*',
+        settings.repo_path + '/**/*',
+        // '**/(admin_block|frontend_block).js',
+        '!**/gutenberg/**',
+        settings.repo_path + '/**/gutenberg/**/!(js){admin_block,frontend_block}.js',
+        '!**/node_modules/**',
+        '!*.scss',
+        '!**/*.lnk',
+        '!**/*.dev.js',
+        '!**/package.json',
+        '!**/package-lock.json',
+        '!**/webpack.config.js',
+        '!**/style/components'
+    ] )
+    .pipe( gulp.dest( settings.dist_path ) )
+    .on('error', gutil.log);
+    done();
+});
 
 
 
@@ -255,6 +275,13 @@ gulp.task( 'win', gulp.series(
     'admin_build_scss:prod', 
     'build_scss:ext', 
     'sync_dir:win' ) );
+
+gulp.task( 'win:dist', gulp.series( 
+    'clean:build',
+    // 'build_scss:prod',
+    // 'package',
+    'sync_dist'
+) );
 //gulp.task( 'windev', gulp.series( 'watchwin' ) );
 // ------------------------------------------------------------
 

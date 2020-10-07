@@ -364,7 +364,7 @@ class BlockEdit extends Component {
 						</PanelRow>
 						<PanelRow>
 							<SelectControl
-								label="Effect"
+								label="Effect (Under Consttruction)"
 								selected={effect}
 								options={[
 									{ label: "Slide", value: "slide" },
