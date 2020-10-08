@@ -35,15 +35,6 @@ class WP_Swiper {
 
         $plugin_admin = new WP_Swiper_Admin( $this->get_plugin_name(), $this->get_version() );
 
-        // $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-        // $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
-        // Menu
-        // $this->loader->add_action( 'admin_menu', $plugin_admin, 'add_menu' );
-
-        // Settings for the settings page
-        // $this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
-
         $this->loader->add_action( 'enqueue_block_editor_assets', $plugin_admin, 'register_gutenberg_block' );
         $this->loader->add_action( 'enqueue_block_editor_assets', $plugin_admin, 'enqueue_admin_styles' );
         
@@ -52,9 +43,8 @@ class WP_Swiper {
     private function define_public_hooks() {
         $plugin_public = new WP_Swiper_Public( $this->get_plugin_name(), $this->get_version() );
 
-        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_frontend' );
+        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_frontend_assets' );
+
 
     }
 

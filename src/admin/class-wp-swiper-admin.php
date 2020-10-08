@@ -74,8 +74,6 @@ class WP_Swiper_Admin {
          * class.
          */
 
-        wp_enqueue_style( 'wp-color-picker' );
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/adunblocker-admin.css', array(), $this->version, 'all' );
 
     }
 

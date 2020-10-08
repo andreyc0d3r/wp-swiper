@@ -70,35 +70,6 @@ class WP_Swiper_Public {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts() {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in AdUnblocker_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The AdUnblocker_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-        if( array_key_exists( $this->plugin_name . '-file-name', $this->settings ) &&
-            array_key_exists( $this->plugin_name . '-status', $this->settings ) ) {
-
-                if ( $this->settings[$this->plugin_name . '-status'] == 'y' ) {
-                    $wp_upload_dir = wp_upload_dir();
-                    wp_enqueue_script( $this->plugin_name, $wp_upload_dir['baseurl'] . '/' . $this->settings[$this->plugin_name . '-file-name'] . '.js', array( 'jquery' ), $this->version, false );
-                }
-        }
-
-    }
-
-    /**
-     * Register the JavaScript for the public-facing side of the site.
-     *
-     * @since    1.0.0
-     */
     public function localize_script() {
 
         $nonces = apply_filters( 'daau_nonces', array(
@@ -123,13 +94,12 @@ class WP_Swiper_Public {
 
         $settings = array();
         $settings = get_option( $this->plugin_name . '-options' );
-        $settings[$this->plugin_name . '-content'] = wpautop($settings[$this->plugin_name . '-content']);
 
         return $settings;
 
     }
 
-    function enqueue_styles() {
+    function enqueue_frontend_assets() {
         wp_enqueue_style(
 			$this->plugin_name . '-block-frontend',
 			plugin_dir_path( dirname( __FILE__ ) ) . "/css/frontend_block.css",
