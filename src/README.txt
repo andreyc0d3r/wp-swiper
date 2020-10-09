@@ -44,11 +44,11 @@ More Features to be added:
 
 == Installation ==
 
-Installing AdUnblocker is easy, go to your WordPress admin panel and click on Plugins > Add New, searching for "WP Swiper".
+Installing WP Swiper is easy, go to your WordPress admin panel and click on Plugins > Add New, searching for "WP Swiper".
 Alternatively, you can install the plugin manually by downloading the plugin from wordpress.org/plugins
-1. Upload the entire adunblocker folder to the /wp-content/plugins/ directory
+1. Upload the entire WP Swiper folder to the /wp-content/plugins/ directory
 2. Activate the plugin through the ‘Plugins’ menu in WordPress.
-3. Customize the plugin from the menu by selecting AdUnblocker in the sidebar.
+3. Customize the plugin from the menu by selecting WP Swiper in the sidebar.
 
 
 == Changelog ==

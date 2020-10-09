@@ -22,7 +22,7 @@
  * @link       https://digitalapps.co
  * @since      1.0.0
  *
- * @package    AdUnblocker
+ * @package    WP_Swiper
  */
 
 // If uninstall not called from WordPress, then exit.

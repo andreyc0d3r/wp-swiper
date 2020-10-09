@@ -14,7 +14,7 @@ var settings = {
     'repo_path'     : './src',
     'dist_path'     : '../dist',
     'mac_dest'      : '/Users/andrey/www/personal/wp-swiper/www/wp-content/plugins/wp-swiper',
-    'win_dest'      : 'H:/dev/clients/timeless/www/wp-content/themes/timeless'
+    'win_dest'      : 'H:/dev/server/wp-swiper/www/wp-content/plugins/wp-swiper'
 };
 
 /**
@@ -75,55 +75,6 @@ gulp.task('sync_dist', function(done){
     .on('error', gutil.log);
     done();
 });
-
-
-
-
-
-
-
-// https://github.com/isaacs/node-glob#glob-primer
-gulp.task( 'build_theme', function( done ) {
-    gulp.src(
-        [
-            settings.repo_path + '/**',
-            '!' + settings.repo_path + '/**/node_modules/**',
-            '!' + settings.repo_path + '/**/package.json',
-            '!' + settings.repo_path + '/**/package-lock.json',
-            '!' + settings.repo_path + '/**/webpack.config.js',
-            '!' + settings.repo_path + '/**/*.lnk',
-        ]
-    )
-    .pipe( gulp.dest( settings.themes[1].adsense_theme ) );
-    done();
-});
-
-
-gulp.task( 'sync_dir:linux', function(done) {
-    gulp.src([
-        settings.repo_path
-    ])
-    .pipe(dirSync( 
-        settings.repo_path, 
-        settings.linux_path,
-        { 
-            printSummary: true, 
-            ignore: [
-                '.git', 
-                'node_modules',
-                '!**/node_modules/**', 
-                '!*.scss',
-                '!**/*.lnk',
-                '!**/package.json',
-                '!**/package-lock.json',
-                '!**/webpack.config.js',
-                '!**/style/components'
-            ]
-        } )
-    )
-    .on('error', gutil.log);
-    done();
-} );
 
 
 
@@ -235,21 +186,6 @@ gulp.task('admin_build_scss:prod', function (done) {
 // ------------------------------------------------------------
 // Windows
 gulp.task( 'sync_dir:win', function(done) {
-    // return gulp.src([ 
-    //     settings.repo_path,
-    //     '!**/node_modules/**'
-    // ])
-    // .pipe(dirSync( 
-    //     settings.repo_path, 
-    //     settings.win_dest,
-    //     { 
-    //         printSummary: true,
-    //         ignore: ['.git', 'node_modules'] 
-    //     } )
-    // )
-    // .on('error', gutil.log);
-
-
     syncy(
         [
             settings.repo_path + '/**',
@@ -266,14 +202,12 @@ gulp.task( 'sync_dir:win', function(done) {
     .catch((err) => {
         done(err);
     });
-
-    // done();
 } );
 
 gulp.task( 'win', gulp.series( 
-    'build_scss:prod', 
-    'admin_build_scss:prod', 
-    'build_scss:ext', 
+    // 'build_scss:prod', 
+    // 'admin_build_scss:prod', 
+    // 'build_scss:ext', 
     'sync_dir:win' ) );
 
 gulp.task( 'win:dist', gulp.series( 

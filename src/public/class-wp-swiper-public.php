@@ -6,8 +6,8 @@
  * @link       https://digitalapps.com
  * @since      1.0.0
  *
- * @package    AdUnblocker
- * @subpackage AdUnblocker/public
+ * @package    WP_Swiper
+ * @subpackage WP_Swiper/public
  */
 
 /**
@@ -16,8 +16,8 @@
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @package    AdUnblocker
- * @subpackage AdUnblocker/public
+ * @package    WP_Swiper
+ * @subpackage WP_Swiper/public
  * @author     Andrey Matveyev <andrey@digitalapps.co>
  */
 class WP_Swiper_Public {

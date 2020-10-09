@@ -32,20 +32,12 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( 'DAWPS_PLUGIN_VERSION', '1.0.0' );
 
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-adunblocker-activator.php
- */
-function activate_adunblocker() {
+function activate_wpswiper() {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper-activator.php';
     WP_Swiper_Activator::activate();
 }
 
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-adunblocker-deactivator.php
- */
-function deactivate_adunblocker() {
+function deactivate_wpswiper() {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper-deactivator.php';
     WP_Swiper_Deactivator::deactivate();
 }

@@ -6,8 +6,8 @@
  * @link       https://digitalapps.com
  * @since      1.0.0
  *
- * @package    AdUnblocker
- * @subpackage AdUnblocker/includes
+ * @package    WP_Swiper
+ * @subpackage WP_Swiper/includes
  */
 
 class WP_Swiper_Loader {

@@ -6,8 +6,8 @@
  * @link       https://digitalapps.co
  * @since      1.0.0
  *
- * @package    AdUnblocker
- * @subpackage AdUnblocker/includes
+ * @package    WP_Swiper
+ * @subpackage WP_Swiper/includes
  */
 
 /**
@@ -16,8 +16,8 @@
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    AdUnblocker
- * @subpackage AdUnblocker/includes
+ * @package    WP_Swiper
+ * @subpackage WP_Swiper/includes
  * @author     Digital Apps <support@digitalapps.com>
  */
 class WP_Swiper_Activator {
