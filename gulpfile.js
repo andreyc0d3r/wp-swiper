@@ -224,6 +224,7 @@ gulp.task( 'win', gulp.series(
 gulp.task( 'win:dist', gulp.series( 
     'clean:build',
     // 'build_scss:prod',
+    'admin_build_scss:prod', 
     // 'package',
     'sync_dist'
 ) );
