@@ -245,7 +245,21 @@ class BlockEdit extends Component {
                         <PanelRow>
                             { get_image( overlayImg ) }
                         </PanelRow>
-                        <BaseControl label={ __( 'Background Image Overlay', '@@text_domain' ) }>
+                        <PanelRow>
+							<Button
+								isSecondary
+								isSmall
+								className="block-library-cover__reset-button"
+								onClick={ () =>
+									setAttributes( {
+										overlayImg: undefined
+									} )
+								}
+							>
+								{ __( 'Clear Media' ) }
+							</Button>
+						</PanelRow>
+                        <BaseControl label={ __( 'Image Overlay Opacity', '@@text_domain' ) }>
 							<RangeControl
 								label={ __( 'Opacity' ) }
 								value={ overlayImgOpacity }

@@ -8,11 +8,13 @@ var path        = require('path');
 var del         = require('del');
 var sass        = require( 'gulp-sass');
 const syncy     = require('syncy');
+var uglify = require('gulp-uglify');
 
 
 var settings = {
     'repo_path'     : './src',
     'dist_path'     : '../dist',
+    'zip_path'      : '../zip',
     'mac_dest'      : '/Users/andrey/www/personal/wp-swiper/www/wp-content/plugins/wp-swiper',
     'win_dest'      : 'H:/dev/server/wp-swiper/www/wp-content/plugins/wp-swiper'
 };
@@ -196,6 +198,20 @@ gulp.task('admin_build_scss:prod', function (done) {
 // ------------------------------------------------------------
 // WINDOWS
 // ------------------------------------------------------------
+gulp.task( 'zip', function() {
+    // gulp.src( settings.dist_path + '/**/*/*.js' )
+    //     .pipe(uglify())
+    //     .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+    //     .pipe( gulp.dest(settings.dist_path ))
+    //     .on('error', gutil.log);
+    return gulp.src( settings.dist_path + '/**/*' )
+        .pipe(rename(function(file) {
+            file.dirname = 'wp-swiper' + path.sep + file.dirname;
+        }))
+        .pipe(zip.dest(settings.zip_path + '/wp-swiper.zip'))
+        // .pipe(gulp.dest(settings.release_path))
+        .on('error', gutil.log);
+} );
 gulp.task( 'sync_dir:win', function(done) {
     syncy(
         [
@@ -219,14 +235,17 @@ gulp.task( 'win', gulp.series(
     // 'build_scss:prod', 
     'admin_build_scss:prod', 
     // 'build_scss:ext', 
-    'sync_dir:win' ) );
+    'sync_dir:win'
+    ) 
+);
 
 gulp.task( 'win:dist', gulp.series( 
     'clean:build',
     // 'build_scss:prod',
     'admin_build_scss:prod', 
     // 'package',
-    'sync_dist'
+    'sync_dist',
+    // 'zip'
 ) );
 //gulp.task( 'windev', gulp.series( 'watchwin' ) );
 // ------------------------------------------------------------

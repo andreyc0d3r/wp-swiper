@@ -84,6 +84,20 @@ class BlockEdit extends Component {
                             <PanelRow>
                                 { get_image( slideImg ) }
                             </PanelRow>
+                            <PanelRow>
+                                <Button
+                                    isSecondary
+                                    isSmall
+                                    className="block-library-cover__reset-button"
+                                    onClick={ () =>
+                                        setAttributes( {
+                                            slideImg: undefined
+                                        } )
+                                    }
+                                >
+                                    { __( 'Clear Media' ) }
+                                </Button>
+                            </PanelRow>
                         </BaseControl>
                     </PanelBody>
                 </InspectorControls>

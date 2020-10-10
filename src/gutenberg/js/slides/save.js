@@ -60,7 +60,7 @@ class BlockSave extends Component {
 
         return (
             <div className={ className } >
-                <div className="wp-swiper__overlay-img" style={ style_overlay_image }></div>
+                {this.getOverlayImg( overlayImg, style_overlay_image )}
                 <div className="wp-swiper__wrapper" style={ style_overlay_wrapper }>
                     <div 
                         className="swiper-container"
@@ -86,6 +86,13 @@ class BlockSave extends Component {
                 
             </div>
         );
+    }
+
+    getOverlayImg( overlayImg, style_overlay_image ) {
+        if( overlayImg === undefined ) {
+            return;
+        }
+        return <div className="wp-swiper__overlay-img" style={ style_overlay_image }></div>;
     }
 
     getPagination( { attributes } ) {

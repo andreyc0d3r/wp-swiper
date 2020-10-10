@@ -13,17 +13,6 @@ var wp_swiper = new function() {
 
     self.init_options = function() {
         var wpSwipers = document.getElementsByClassName( "swiper-container" );
-
-        // Optional parameters
-        //self.options.direction = 'vertical';
-        self.options.loop = false;
-        
-    
-        // And if we need scrollbar
-        // self.scrollbar = {
-        //     el: '.swiper-scrollbar',
-        // };
-
         window.wpSwiper = [];
         for( i = 0; i < wpSwipers.length; i++ ) {
             if( wpSwipers[i].hasAttribute( "data-navigation" ) ) {
@@ -79,25 +68,3 @@ var wp_swiper = new function() {
 		}
 	});
 }
-
-// var mySwiper = new Swiper('.swiper-container', {
-//     // Optional parameters
-//     direction: 'vertical',
-//     loop: true,
-  
-//     // If we need pagination
-//     pagination: {
-//       el: '.swiper-pagination',
-//     },
-  
-//     // Navigation arrows
-//     navigation: {
-//       nextEl: '.swiper-button-next',
-//       prevEl: '.swiper-button-prev',
-//     },
-  
-//     // And if we need scrollbar
-//     scrollbar: {
-//       el: '.swiper-scrollbar',
-//     },
-//   })

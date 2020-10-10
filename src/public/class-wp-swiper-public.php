@@ -102,7 +102,7 @@ class WP_Swiper_Public {
     function enqueue_frontend_assets() {
         wp_enqueue_style(
 			$this->plugin_name . '-block-frontend',
-			plugin_dir_path( dirname( __FILE__ ) ) . "/css/frontend_block.css",
+			plugin_dir_url(__DIR__) . "css/frontend_block.css",
 			array(),
 			'1.0.0'
         );
@@ -116,7 +116,7 @@ class WP_Swiper_Public {
         
         wp_register_script(
             $this->plugin_name . '-frontend-js',
-            plugin_dir_path( dirname( __FILE__ ) ) . "/js/frontend_block.js",
+            plugin_dir_url(__DIR__) . "gutenberg/js/frontend_block.js",
             array('jquery', 'swiperjs'),
             '1.0.0'
         );
