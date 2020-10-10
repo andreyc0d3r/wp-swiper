@@ -63,7 +63,7 @@ gulp.task('sync_dist', function(done){
         '!**/gutenberg/**',
         settings.repo_path + '/**/gutenberg/**/!(js){admin_block,frontend_block}.js',
         '!**/node_modules/**',
-        '!*.scss',
+        '!**/*.scss',
         '!**/*.lnk',
         '!**/*.dev.js',
         '!**/package.json',
@@ -163,8 +163,17 @@ gulp.task('build_scss:dev', function (done) {
         done();
 });
 
+// ------------------------------------------------------------
+// ADMIN SASS
+// .scss
+// WIN + MAC
+// ------------------------------------------------------------
 gulp.task('admin_build_scss:prod', function (done) {
-    gulp.src([ settings.repo_path + '/theme/admin/css/admin-theme.scss'] )
+    gulp.src([ 
+        settings.repo_path + '/**/*/*.scss',
+        '!' + settings.repo_path + '/**/node_modules/**'
+        
+    ] )
         .pipe($.plumber({ errorHandler }))
         .pipe(sass({
             outputStyle: 'compressed'
@@ -178,13 +187,15 @@ gulp.task('admin_build_scss:prod', function (done) {
                 ]
             }
         }))
-        .pipe(gulp.dest( settings.repo_path + '/theme/admin/css' ) );
+        .pipe(gulp.dest( settings.repo_path ) );
         done();
 });
+
 // ------------------------------------------------------------
 
 // ------------------------------------------------------------
-// Windows
+// WINDOWS
+// ------------------------------------------------------------
 gulp.task( 'sync_dir:win', function(done) {
     syncy(
         [
@@ -206,7 +217,7 @@ gulp.task( 'sync_dir:win', function(done) {
 
 gulp.task( 'win', gulp.series( 
     // 'build_scss:prod', 
-    // 'admin_build_scss:prod', 
+    'admin_build_scss:prod', 
     // 'build_scss:ext', 
     'sync_dir:win' ) );
 

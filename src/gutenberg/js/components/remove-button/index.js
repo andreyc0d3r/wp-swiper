@@ -29,7 +29,7 @@ export default class RemoveButton extends Component {
             onRemove,
             show,
             style,
-            tooltipText = __( 'Remove Block?', '@@text_domain' ),
+            tooltipText = __( 'Remove Slide?', '@@text_domain' ),
             tooltipRemoveText = __( 'Remove', '@@text_domain' ),
             tooltipCancelText = __( 'Cancel', '@@text_domain' ),
         } = this.props;
@@ -87,9 +87,7 @@ export default class RemoveButton extends Component {
                         </Button>
                     </Popover>
                 ) : '' }
-                { <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.75 7.2C12.75 6.78579 12.4142 6.45 12 6.45C11.5858 6.45 11.25 6.78579 11.25 7.2H12.75ZM12 12H11.25C11.25 12.2841 11.4105 12.5438 11.6646 12.6708L12 12ZM14.8646 14.2708C15.2351 14.4561 15.6856 14.3059 15.8708 13.9354C16.0561 13.5649 15.9059 13.1144 15.5354 12.9292L14.8646 14.2708ZM19.25 12C19.25 16.0041 16.0041 19.25 12 19.25V20.75C16.8325 20.75 20.75 16.8325 20.75 12H19.25ZM12 19.25C7.99594 19.25 4.75 16.0041 4.75 12H3.25C3.25 16.8325 7.16751 20.75 12 20.75V19.25ZM4.75 12C4.75 7.99594 7.99594 4.75 12 4.75V3.25C7.16751 3.25 3.25 7.16751 3.25 12H4.75ZM12 4.75C16.0041 4.75 19.25 7.99594 19.25 12H20.75C20.75 7.16751 16.8325 3.25 12 3.25V4.75ZM11.25 7.2V12H12.75V7.2H11.25ZM11.6646 12.6708L14.8646 14.2708L15.5354 12.9292L12.3354 11.3292L11.6646 12.6708Z" fill="currentColor"/>
-                    </svg> }
+                { <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-trash fa-w-14 fa-3x"><path fill="currentColor" d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z" class=""></path></svg> }
             </Button>
         );
     }
