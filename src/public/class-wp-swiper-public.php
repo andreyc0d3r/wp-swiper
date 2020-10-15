@@ -102,21 +102,21 @@ class WP_Swiper_Public {
     function enqueue_frontend_assets() {
         wp_enqueue_style(
 			$this->plugin_name . '-block-frontend',
-			plugin_dir_url(__DIR__) . "css/frontend_block.css",
+			plugin_dir_url(__DIR__) . 'css/frontend_block.css',
 			array(),
 			'1.0.0'
         );
         
 		wp_enqueue_style(
-			'swiper-bundle',
-			"https://unpkg.com/swiper/swiper-bundle.min.css",
+            $this->plugin_name . '-bundle-css',
+			plugin_dir_url(__DIR__) .  'public/css/swiper-bundle.min.css',
 			array(),
 			'1.0.0'
         );
         
         wp_register_script(
             $this->plugin_name . '-frontend-js',
-            plugin_dir_url(__DIR__) . "gutenberg/js/frontend_block.js",
+            plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
             array('jquery', 'swiperjs'),
             '1.0.0'
         );
@@ -124,11 +124,18 @@ class WP_Swiper_Public {
         wp_enqueue_script(
             $this->plugin_name . '-frontend-js'
         );
+
+        wp_register_script(
+            $this->plugin_name . '-bundle-js',
+            plugin_dir_url(__DIR__) .  'public/js/swiper-bundle.min.js',
+            array('jquery', 'swiperjs'),
+            '1.0.0'
+        );
+
+        wp_enqueue_script(
+            $this->plugin_name . '-bundle-js'
+        );
         
-		wp_enqueue_script(
-			'swiperjs',
-            'https://unpkg.com/swiper/swiper-bundle.min.js'
-		);
     }
 
 }

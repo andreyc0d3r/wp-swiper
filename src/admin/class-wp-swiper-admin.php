@@ -115,24 +115,8 @@ class WP_Swiper_Admin {
 			'1.0.0'
         );
 
-        wp_localize_script( 
-            'wpswiper-block-editor', 
-            'wpswiper_settings', 
-            array(
-                'slug'       => 'wpswiper',
-                'title'      => 'WP Swiper Block',
-                'namespace'  => 'wb', //can't contain special characters
-                'category'   => 'common', //`common`, `embed`, `formatting`, `layout`, `widgets`
-                'icon'       => 'admin-users'
-            )
-        );
-
         wp_enqueue_script( 'wpswiper-block-editor' );
-        
-		// register_block_type( $gb_settings['namespace'].'/'.$gb_settings['slug'], array(
-		// 	'editor_script' => $gb_settings['slug'].'-block-editor',
-		// 	'editor_style'  => $gb_settings['slug'].'-block-editor'
-		// ) );
+    
     }
     
 
