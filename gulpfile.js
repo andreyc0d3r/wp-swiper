@@ -294,22 +294,24 @@ gulp.task( 'mac', gulp.series(
 // <SVN>
 // *******************************
 gulp.task( 'sync_dir:svn', function(done) {
-    syncy(
-        [
-            settings.repo_path + '/**',
-            '!' + settings.repo_path + '/**/node_modules/**'
-        ], 
-        settings.svn_path + '/wp-swiper/trunk/',
-        {
-            base: settings.repo_path
-        }
-    )
-    .then(() => {
-        done();
-    })
-    .catch((err) => {
-        done(err);
-    });
+    gulp.src( [
+        // settings.repo_path + '/**/*',
+        settings.repo_path + '/**/*',
+        // '**/(admin_block|frontend_block).js',
+        '!**/gutenberg/**',
+        settings.repo_path + '/**/gutenberg/**/!(js){admin_block,frontend_block}.js',
+        '!**/node_modules/**',
+        '!**/*.scss',
+        '!**/*.lnk',
+        '!**/*.dev.js',
+        '!**/package.json',
+        '!**/package-lock.json',
+        '!**/webpack.config.js',
+        '!**/style/components'
+    ] )
+    .pipe( gulp.dest( settings.svn_path + '/wp-swiper/trunk/' ) )
+    .on('error', gutil.log);
+    done();
 } );
 gulp.task('clean:svn', function(done) {
     del(settings.svn_path + '/wp-swiper/trunk/**', {force: true}); // remove old zip file
