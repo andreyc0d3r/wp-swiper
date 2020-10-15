@@ -15,6 +15,7 @@ var settings = {
     'repo_path'     : './src',
     'dist_path'     : '../dist',
     'zip_path'      : '../zip',
+    'svn_path'      : '../svn',
     'mac_dest'      : '/Users/andrey/www/personal/wp-swiper/www/wp-content/plugins/wp-swiper',
     'win_dest'      : 'H:/dev/server/wp-swiper/www/wp-content/plugins/wp-swiper'
 };
@@ -253,21 +254,6 @@ gulp.task( 'win:dist', gulp.series(
 // ------------------------------------------------------------
 // Mac
 gulp.task( 'sync_dir:mac', function(done) {
-    // return gulp.src([ 
-    //     settings.repo_path,
-    //     '!**/node_modules/**'
-    // ])
-    // .pipe(dirSync( 
-    //     settings.repo_path, 
-    //     settings.mac_dest,
-    //     { 
-    //         printSummary: true,
-    //         ignore: ['.git', 'node_modules'] 
-    //     } )
-    // )
-    // .on('error', gutil.log);
-
-    // done();
     syncy(
         [
             settings.repo_path + '/**',
@@ -301,7 +287,49 @@ gulp.task( 'mac', gulp.series(
     // 'build_scss:ext', 
     'sync_dir:mac' 
 ) );
-gulp.task( 'macdev', gulp.series( 'watchmac' ) );
+
+
+// *******************************
+// <SVN>
+// <SVN>
+// *******************************
+gulp.task( 'sync_dir:svn', function(done) {
+    gulp.src( [
+        // settings.repo_path + '/**/*',
+        settings.repo_path + '/**/*',
+        // '**/(admin_block|frontend_block).js',
+        '!**/gutenberg/**',
+        settings.repo_path + '/**/gutenberg/**/!(js){admin_block,frontend_block}.js',
+        '!**/node_modules/**',
+        '!**/*.scss',
+        '!**/*.lnk',
+        '!**/*.dev.js',
+        '!**/package.json',
+        '!**/package-lock.json',
+        '!**/webpack.config.js',
+        '!**/style/components'
+    ] )
+    .pipe( gulp.dest( settings.svn_path + '/wp-swiper/trunk/' ) )
+    .on('error', gutil.log);
+    done();
+} );
+gulp.task('clean:svn', function(done) {
+    del(settings.svn_path + '/wp-swiper/trunk/**', {force: true}); // remove old zip file
+    done();
+});
+gulp.task( 'svn', gulp.series( 
+    'clean:svn', 
+    'admin_build_scss:prod', 
+    // 'build_scss:ext', 
+    'sync_dir:svn' 
+) );
+// *******************************
+// </SVN>
+// </SVN>
+// *******************************
+
+
+    gulp.task( 'macdev', gulp.series( 'watchmac' ) );
 // ------------------------------------------------------------
 
 
