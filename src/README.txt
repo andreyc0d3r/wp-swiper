@@ -15,6 +15,7 @@ Gutenberg Block The Most Modern Mobile Touch Slider. Swiper is the most modern f
 [WP Swiper](https://digitalapps.com/wordpress-plugins/wp-swiper/) Gutenberg Block is the most modern free mobile touch slider with hardware accelerated transitions and amazing native behavior. It is intended to be used in mobile websites, mobile web apps, and mobile native/hybrid apps. 
 
 Visit the [official website](https://swiperjs.com/)
+New Features and suggestions [Contact Me](https://digitalapps.com/contacts/)
 
 !!! IMPORTANT !!!
 
