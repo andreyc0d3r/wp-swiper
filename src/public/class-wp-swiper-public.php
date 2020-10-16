@@ -113,27 +113,27 @@ class WP_Swiper_Public {
 			array(),
 			'1.0.0'
         );
-        
-        wp_register_script(
-            $this->plugin_name . '-frontend-js',
-            plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
-            array('jquery', 'swiperjs'),
-            '1.0.0'
-        );
-
-        wp_enqueue_script(
-            $this->plugin_name . '-frontend-js'
-        );
 
         wp_register_script(
             $this->plugin_name . '-bundle-js',
             plugin_dir_url(__DIR__) .  'public/js/swiper-bundle.min.js',
-            array('jquery', 'swiperjs'),
+            array( 'jquery' ),
             '1.0.0'
         );
 
         wp_enqueue_script(
             $this->plugin_name . '-bundle-js'
+        );
+        
+        wp_register_script(
+            $this->plugin_name . '-frontend-js',
+            plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
+            array( 'jquery', $this->plugin_name . '-bundle-js' ),
+            '1.0.0'
+        );
+
+        wp_enqueue_script(
+            $this->plugin_name . '-frontend-js'
         );
         
     }
