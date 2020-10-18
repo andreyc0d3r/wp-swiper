@@ -26,9 +26,10 @@ If you are a designer and have an interface design in mind, let me know.
 
 The backend UI is not the prettiest thing at the moment. But it's very intuitive and does the job! The interface is set up as a series of tabs, each tab controls a slide. Click on the tab and you may upload an image. Click on the WP Swiper block and you can control slider overlay + color overlay.
 
-Another note re: backend UI, the original idea was generate the functional slider within the editor. But theres an issue with conteneditable HTML elements. I lodged [an issue](https://github.com/nolimits4web/swiper/issues/3801) on official swiper github repo for them to resolve. Leave a comment for the to prioritise the solution.
+Another note re: backend UI, the original idea was generate the functional slider within the editor. But theres an issue with conteneditable HTML elements. I lodged [an issue](https://github.com/nolimits4web/swiper/issues/3801) on official swiper github repo for them to resolve. Leave a comment for them to prioritise the solution.
 
-If you want to use the slide with text. Select slide, add image, the image gonna appear as a background on the frontend.
+If you want to use the slide with text. 
+Select slide, add image, the image gonna appear as a background on the frontend.
 If you want to use the slider for images, just add a regular image block.
 
 Features:
