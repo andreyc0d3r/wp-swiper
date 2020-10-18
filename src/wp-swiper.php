@@ -16,7 +16,7 @@
  * Plugin Name:       WP Swiper
  * Plugin URI:        https://digitalapps.com/wp-swiper/
  * Description:       This plugin detects if Google AdSense ads are blocked by ad-blocker. A popup shows with a text requesting user to whitelist your website.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Digital Apps
  * Author URI:        https://digitalapps.com/
  * License:           GPL-2.0+
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'DAWPS_PLUGIN_VERSION', '1.0.1' );
+define( 'DAWPS_PLUGIN_VERSION', '1.0.2' );
 
 function activate_wpswiper() {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper-activator.php';
