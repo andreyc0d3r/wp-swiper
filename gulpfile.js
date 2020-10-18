@@ -1,14 +1,17 @@
 const gulp      = require('gulp');
-const watch     = require('gulp-watch');
+
 const $         = require('gulp-load-plugins')();
 var gutil       = require('gulp-util');
+
 var zip         = require( 'gulp-vinyl-zip' );
 var rename      = require('gulp-rename');
+
 var path        = require('path');
+
 var del         = require('del');
 var sass        = require( 'gulp-sass');
+
 const syncy     = require('syncy');
-var uglify = require('gulp-uglify');
 
 
 var settings = {
@@ -272,15 +275,6 @@ gulp.task( 'sync_dir:mac', function(done) {
     });
 } );
 
-gulp.task('watchmac', function(done) {
-    // var conn = getFtpConnection();
-    gulp.watch( [
-        settings.repo_path + '/**/*',
-        '!' + settings.repo_path + '/style/style.min.css'
-    ], gulp.series( 'mac' ) );
-    done();
-});
-
 gulp.task( 'mac', gulp.series( 
     // 'build_scss:prod', 
     // 'admin_build_scss:prod', 
@@ -327,21 +321,3 @@ gulp.task( 'svn', gulp.series(
 // </SVN>
 // </SVN>
 // *******************************
-
-
-    gulp.task( 'macdev', gulp.series( 'watchmac' ) );
-// ------------------------------------------------------------
-
-
-
-
-
-
-
-// gulp.task('build', gulp.series('clean:build', ['build_scss:prod','package']));
-// // dev
-// // gulp.task('dev', gulp.series('clean:dev', 'build_theme', ['build_scss:dev']));
-// gulp.task('dev', gulp.series('clean:dev', 'build_theme' ));
-
-// // gulp.task('mac', gulp.series('build_scss:mac', 'sync_dir:mac'));
-// gulp.task( 'linux', gulp.series( 'build_scss:prod', 'sync_dir:linux' ) );

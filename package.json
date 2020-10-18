@@ -1,36 +1,50 @@
 {
-  "name": "wp-gst",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Digital Apps",
-  "license": "ISC",
-  "devDependencies": {
-    "del": "^5.1.0",
-    "gulp-autoprefixer": "^6.1.0",
-    "gulp-changed": "^3.2.0",
-    "gulp-debug": "^4.0.0",
-    "gulp-directory-sync": "^1.2.4",
-    "gulp-filelog": "^0.4.1",
-    "gulp-load-plugins": "^1.6.0",
-    "gulp-notify": "^3.0.0",
-    "gulp-plumber": "^1.1.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-sass": "^4.0.2",
-    "gulp-uglify": "^3.0.2",
-    "gulp-util": "^3.0.8",
-    "gulp-vinyl-zip": "^2.2.0",
-    "gulp-watch": "^5.0.1",
-    "node-sass": "^4.14.1",
-    "path": "^0.12.7",
-    "vinyl-ftp": "^0.6.1"
-  },
-  "dependencies": {
-    "gulp": "^4.0.2",
-    "gulp-ignore": "^3.0.0",
-    "syncy": "^3.0.0"
-  }
+    "name": "wp-swiper",
+    "version": "1.0.0",
+    "description": "",
+    "main": "js/block.js",
+    "scripts": {
+        "dev": "webpack --mode=development",
+        "build": "webpack --mode=production"
+    },
+    "author": "Digital Apps",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/core": "^7.9.0",
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "@babel/preset-env": "^7.9.0",
+        "@babel/preset-react": "^7.9.4",
+        "autoprefixer": "^9.8.6",
+        "babel-loader": "^8.1.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "cross-env": "^6.0.3",
+        "css-loader": "^4.2.2",
+        "del": "^5.1.0",
+        "file-loader": "^6.1.0",
+        "gulp": "^4.0.2",
+        "gulp-ignore": "^3.0.0",
+        "gulp-load-plugins": "^2.0.5",
+        "gulp-rename": "^1.4.0",
+        "gulp-sass": "^4.1.0",
+        "gulp-util": "^3.0.8",
+        "gulp-vinyl-zip": "^2.2.0",
+        "mini-css-extract-plugin": "^1.0.0",
+        "node-sass": "^4.14.1",
+        "path": "^0.12.7",
+        "postcss": "^8.1.1",
+        "postcss-loader": "^4.0.4",
+        "sass-loader": "^10.0.2",
+        "slugify": "^1.3.4",
+        "striptags": "^3.1.1",
+        "style-loader": "^1.2.1",
+        "syncy": "^3.0.0",
+        "webpack": "^4.44.1",
+        "webpack-cli": "^3.3.11"
+    },
+    "dependencies": {
+        "classnames": "^2.2.6"
+    },
+    "browserslist": [
+        "extends @wordpress/browserslist-config"
+    ]
 }

@@ -43,8 +43,6 @@
 
         .swiper-button-prev,
         .swiper-button-next {
-            
-
             svg {
                 fill: #000000;
                 width: 32px;
@@ -76,26 +74,11 @@
     &--valign-right {
         justify-content: flex-end;
     }
-    
-    .skew {
-        position: fixed;
-        left: 0;
-        background-image: url("../img/bg_skew.png");
-        width: 100%;
-        height: 200px;
-        bottom: 0;
-        z-index: 1;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
 
     .swiper-container-autoheight .swiper-slide {
         height: 100%;
     }
 
-    &__wrapper {
-
-    }
     &__overlay-color {
         position: absolute;
         left: 0;
@@ -134,6 +117,7 @@
         background-size: cover;
 
         .wp-swiper__slide-content {
+            display: flex;
             position: relative;
             z-index: 5;
         }

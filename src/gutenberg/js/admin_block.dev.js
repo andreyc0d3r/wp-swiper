@@ -1,3 +1,5 @@
+import '../../css/frontend_block.scss';
+
 import * as slides from './slides';
 import * as slide from './slide';
 
