@@ -1,4 +1,4 @@
-import '../../css/frontend_block.scss';
+import '../../css/editor.scss';
 
 import * as slides from './slides';
 import * as slide from './slide';

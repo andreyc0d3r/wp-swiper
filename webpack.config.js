@@ -6,18 +6,23 @@ const externals = {
 
 const autoprefixer = require('autoprefixer');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
+
 
 module.exports = {
-    entry: './src/gutenberg/js/admin_block.dev.js',
+    entry: {
+        admin_block: './src/gutenberg/js/admin_block.dev.js',
+        frontend_block: './src/gutenberg/js/frontend_block.dev.js'
+    },
     output: {
         path: __dirname,
-        filename: './src/gutenberg/js/admin_block.js',
+        filename: './src/gutenberg/js/[name].js',
     },
     plugins: [
         new MiniCSSExtractPlugin(
             {
-                path: __dirname,
-                filename: "./src/css/admin_block.css"
+                filename: './src/css/[name].css',
+                chunkFilename: './src/css/[id].css',
             }
         )
     ],
@@ -30,8 +35,8 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        "presets": [ 
-                            "@babel/preset-env", 
+                        "presets": [
+                            "@babel/preset-env",
                             [
                                 "@babel/preset-react",
                                 {
@@ -46,22 +51,24 @@ module.exports = {
             {
                 test: /\.s[ac]ss$/i,
                 use: [
-                  // Creates `style` nodes from JS strings
-                  MiniCSSExtractPlugin.loader,
-                  // Translates CSS into CommonJS
-                  'css-loader',
+                    {
+                        // Creates `style` nodes from JS strings
+                        loader: MiniCSSExtractPlugin.loader,
+                    },
+                    // Translates CSS into CommonJS
+                    'css-loader',
                     {
                         loader: 'postcss-loader',
                         options: {
-                            postcssOptions:{
+                            postcssOptions: {
                                 plugins: [
                                     require('autoprefixer')
                                 ]
                             }
                         }
                     },
-                  // Compiles Sass to CSS
-                  'sass-loader',
+                    // Compiles Sass to CSS
+                    'sass-loader',
                 ],
             },
         ],

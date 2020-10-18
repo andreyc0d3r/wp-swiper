@@ -313,7 +313,7 @@ gulp.task('clean:svn', function(done) {
 });
 gulp.task( 'svn', gulp.series( 
     'clean:svn', 
-    'admin_build_scss:prod', 
+    // 'admin_build_scss:prod', 
     // 'build_scss:ext', 
     'sync_dir:svn' 
 ) );
