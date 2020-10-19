@@ -14,49 +14,51 @@ var wp_swiper = new function() {
     };
 
     self.init_options = function() {
-        var wpSwipers = document.getElementsByClassName( "swiper-container" );
+        var wpSwipers = document.querySelectorAll( ".wp-swiper" );
         window.wpSwiper = [];
         for( let i = 0; i < wpSwipers.length; i++ ) {
-            if( wpSwipers[i].hasAttribute( "data-navigation" ) ) {
-                if( ( wpSwipers[i].getAttribute( "data-navigation" ) == "true" ) ) {
+            let swiper_container = wpSwipers[i].querySelector( ".swiper-container" );
+           
+            if( swiper_container.hasAttribute( "data-navigation" ) ) {
+                if( ( swiper_container.getAttribute( "data-navigation" ) == "true" ) ) {
                     self.options.navigation = {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
+                        nextEl: wpSwipers[i].querySelector( ".swiper-button-next" ),
+                        prevEl: wpSwipers[i].querySelector( ".swiper-button-prev" ),
                     }
                 }
             }
-            if( wpSwipers[i].hasAttribute( "data-pagination" ) ) {
-                if( ( wpSwipers[i].getAttribute( "data-pagination" ) == "true" ) ) {
+            if( swiper_container.hasAttribute( "data-pagination" ) ) {
+                if( ( swiper_container.getAttribute( "data-pagination" ) == "true" ) ) {
                     self.options.pagination = {
-                        el: '.swiper-pagination',
+                        el: wpSwipers[i].querySelector( ".swiper-pagination" )
                     };
                 }
             }
-            if( wpSwipers[i].hasAttribute( "data-slidespercolumn" ) ) {
-                self.options.slidesPerColumn = self.getNumber( wpSwipers[i].getAttribute( "data-slidespercolumn" ), 1 );
+            if( swiper_container.hasAttribute( "data-slidespercolumn" ) ) {
+                self.options.slidesPerColumn = self.getNumber( swiper_container.getAttribute( "data-slidespercolumn" ), 1 );
             }
-            if( wpSwipers[i].hasAttribute( "data-autoplay" ) ) {
-                self.options.autoplay = ( wpSwipers[i].getAttribute( "data-autoplay" ) == "true" );
+            if( swiper_container.hasAttribute( "data-autoplay" ) ) {
+                self.options.autoplay = ( swiper_container.getAttribute( "data-autoplay" ) == "true" );
             }
-            if( wpSwipers[i].hasAttribute( "data-delay" ) ) {
-                self.options.delay = wpSwipers[i].getAttribute( "data-delay" );
+            if( swiper_container.hasAttribute( "data-delay" ) ) {
+                self.options.delay = swiper_container.getAttribute( "data-delay" );
             }
-            if( wpSwipers[i].hasAttribute( "data-speed" ) ) {
-                self.options.speed = self.getNumber( wpSwipers[i].getAttribute( "data-speed" ), 500);
+            if( swiper_container.hasAttribute( "data-speed" ) ) {
+                self.options.speed = self.getNumber( swiper_container.getAttribute( "data-speed" ), 500);
             }
-            if( wpSwipers[i].hasAttribute( "data-loop" ) ) {
-                self.options.loop = ( wpSwipers[i].getAttribute( "data-loop" ) == "true" );
+            if( swiper_container.hasAttribute( "data-loop" ) ) {
+                self.options.loop = ( swiper_container.getAttribute( "data-loop" ) == "true" );
             }
-            if( wpSwipers[i].hasAttribute( "data-effect" ) ) {
-                self.options.effect = wpSwipers[i].getAttribute( "data-effect" );
+            if( swiper_container.hasAttribute( "data-effect" ) ) {
+                self.options.effect = swiper_container.getAttribute( "data-effect" );
             }
-            if( wpSwipers[i].hasAttribute( "data-slidesperview" ) ) {
-                self.options.slidesPerView = self.getNumber( wpSwipers[i].getAttribute( "data-slidesperview" ), 1 );
+            if( swiper_container.hasAttribute( "data-slidesperview" ) ) {
+                self.options.slidesPerView = self.getNumber( swiper_container.getAttribute( "data-slidesperview" ), 1 );
             }
-            if( wpSwipers[i].hasAttribute( "data-spacebetween" ) ) {
-                self.options.spaceBetween = self.getNumber( wpSwipers[i].getAttribute( "data-spacebetween" ), 0 );
+            if( swiper_container.hasAttribute( "data-spacebetween" ) ) {
+                self.options.spaceBetween = self.getNumber( swiper_container.getAttribute( "data-spacebetween" ), 0 );
             }
-            window.wpSwiper[i] = new Swiper(wpSwipers[i], self.options);
+            window.wpSwiper[i] = new Swiper(swiper_container, self.options);
         }
         
     };

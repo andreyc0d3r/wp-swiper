@@ -6,10 +6,15 @@
         border-bottom: 1px solid #dee2e6;
     }
     .wp-swiper__slide-content {
+
         .wp-swiper__slide {
             position: relative;
             display: flex;
             min-height: 430px;
+
+            .block-editor-inner-blocks {
+                flex-grow: 1;
+            }
 
             .wp-swiper__slide-overlay {
                 position: absolute;
