@@ -17,7 +17,6 @@ import {
     PanelRow,
     BaseControl,
     ToggleControl,
-    IconButton,
     Tooltip,
     Button,
     ColorPicker,
@@ -226,7 +225,6 @@ class BlockEdit extends Component {
                                 <MediaUpload
                                     value={ overlayImg }
                                     onSelect={( media ) => {
-                                        //console.log( 'selected: ' + media );
                                         let img_url = media.sizes.full.url;
                                         setAttributes( { overlayImg: img_url } );
                                     }}
@@ -423,7 +421,7 @@ class BlockEdit extends Component {
                             }
                             { isSelectedBlockInRoot ? (
                                 <Tooltip text={ __( 'Add Slide', '@@text_domain' ) }>
-                                    <IconButton
+                                    <Button
                                         icon={ 'insert' }
                                         onClick={ () => {
                                             let newTabsData = [];

@@ -44,16 +44,18 @@ class BlockEdit extends Component {
         return true;
     };
 
-    getBgStyle = (style) => {
+    getOverlayImage = (style) => {
         if (this.props.attributes.slideImg) {
             style.backgroundImage = `url(${this.props.attributes.slideImg})`;
         }
         return style;
     };
 
-    getBgStyle = (style) => {
-        if (this.props.attributes.slideImg) {
-            style.backgroundImage = `url(${this.props.attributes.slideImg})`;
+    getOverlayColor = (style) => {
+        if (this.props.attributes.overlayColor) {
+            let { overlayColor } = this.props.attributes;
+            style.backgroundColor = `rgba(${overlayColor.rgb.r}, ${overlayColor.rgb.g}, ${overlayColor.rgb.b}, ${overlayColor.rgb.a})`
+            
         }
         return style;
     };
@@ -63,7 +65,7 @@ class BlockEdit extends Component {
 
         let { className = "" } = this.props;
 
-        const { slideImg, contentHalign, contentValign } = attributes;
+        const { slideImg, contentHalign, contentValign, overlayColor } = attributes;
 
         className = classnames(className, "wp-swiper__slide");
         className = classnames(className, { "has-image": this.isEmpty(slideImg) });
@@ -72,13 +74,12 @@ class BlockEdit extends Component {
         className = classnames(className, { "valign-bottom": contentValign ===  'bottom' });
         className = classnames(className, { "halign-center": contentHalign ===  'center' });
         className = classnames(className, { "halign-right": contentHalign ===  'right' });
-
-        console.log('ish');
-        console.log("className: ", className );
-        console.log( "contentValign: ", contentValign );
         
-        let style = {};
-        style = this.getBgStyle(style);
+        let style_overlay_image = {};
+        let style_overlay_color = {};
+    
+        style_overlay_image = this.getOverlayImage(style_overlay_image);
+        style_overlay_color = this.getOverlayColor(style_overlay_color);
 
         return (
             <Fragment>
@@ -140,7 +141,10 @@ class BlockEdit extends Component {
 
                 <div className={className}>
                     { slideImg &&
-                        <div className="wp-swiper__slide-image" style={style} />
+                        <div className="wp-swiper__slide-overlay wp-swiper__slide-overlay--image" style={style_overlay_image} />
+                    }
+                    { overlayColor.rgb.a > 0 &&
+                        <div className="wp-swiper__slide-overlay wp-swiper__slide-overlay--color" style={style_overlay_color} />
                     }
                     <InnerBlocks
                         templateLock={false}
