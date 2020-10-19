@@ -6,15 +6,13 @@ import classnames from 'classnames/dedupe';
 /**
  * WordPress dependencies
  */
-const {
-    applyFilters,
-} = wp.hooks;
-const { __ } = wp.i18n;
 
-const { Component, Fragment } = wp.element;
+import { __ } from "@wordpress/i18n";
 
-const { createBlock } = wp.blocks;
-const {
+import { Component, Fragment } from "@wordpress/element";
+
+import { createBlock } from "@wordpress/blocks";
+import {
     PanelBody,
     PanelRow,
     BaseControl,
@@ -26,26 +24,23 @@ const {
     RangeControl,
     TextControl,
     SelectControl
-} = wp.components;
+} from "@wordpress/components";
 
-const {
-    RichText,
+import {
     InspectorControls,
     InnerBlocks,
-    BlockControls,
-    AlignmentToolbar,
     MediaUploadCheck,
     MediaUpload
-} = wp.blockEditor;
+} from "@wordpress/block-editor";
 
-const {
+import {
     compose,
-} = wp.compose;
+} from "@wordpress/compose"
 
-const {
+import {
     withSelect,
     withDispatch,
-} = wp.data;
+} from "@wordpress/data"
 
 /**
  * Internal dependencies

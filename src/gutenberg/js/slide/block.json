@@ -10,6 +10,13 @@
         "reusable": false
     },
     "attributes": {
+        "align": { 
+            "type": "string", 
+            "default": "undefined" 
+        },
+        "slideImgId": {
+            "type": "number"
+        },
         "slideImg": {
             "type": "string"
         },

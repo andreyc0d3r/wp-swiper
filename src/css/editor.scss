@@ -1,6 +1,43 @@
 .wp-swiper__slides {
+    .wb-tabs-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #dee2e6;
+    }
     .wp-swiper__slide-content {
         .wp-swiper__slide {
+            position: relative;
+            display: flex;
+            min-height: 430px;
+
+            &-image {
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background-size: cover;
+                background-repeat: no-repeat;
+                opacity: 0.2;
+            }
+
+            &.valign-center {
+                align-items: center;
+            }
+
+            &.valign-bottom {
+                align-items: flex-end;
+            }
+
+            &.halign-center {
+                justify-content: center;
+            }
+
+            &.halign-right {
+                justify-content: flex-end;
+            }
+
             .wp-block {
                 width: 100%;
             }
@@ -34,15 +71,6 @@
 
 .wp-swiper__slide-content>.block-editor-inner-blocks>.block-editor-block-list__layout>.block-editor-block-list__block>.block-editor-block-list__block-edit {
     margin-top: 12px;
-}
-
-.wp-swiper__slides {
-    .wb-tabs-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #dee2e6;
-    }
 }
 
 .wp-swiper__slides .wb-tabs-buttons.wb-tabs-buttons-align-start {

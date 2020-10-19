@@ -2,6 +2,14 @@ const externals = {
     wp: 'wp',
     react: 'React',
     'react-dom': 'ReactDOM',
+    '@wordpress/blocks': ['wp', 'blocks'],
+    '@wordpress/i18n': ['wp', 'i18n'],
+    '@wordpress/element': ['wp', 'element'],
+    '@wordpress/data': ['wp', 'data'],
+    '@wordpress/components': ['wp', 'components'],
+    '@wordpress/block-editor': ['wp', 'blockEditor'],
+    '@wordpress/blocks': ['wp', 'blocks'],
+    '@wordpress/compose': ['wp', 'compose']
 };
 
 const autoprefixer = require('autoprefixer');
@@ -45,6 +53,11 @@ module.exports = {
                                 }
                             ]
                         ],
+                        "plugins": [
+                            [
+                              "@babel/plugin-proposal-class-properties"
+                            ]
+                        ]
                     }
                 },
             },

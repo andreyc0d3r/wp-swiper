@@ -44,6 +44,13 @@
         "webpack-cli": "^3.3.11"
     },
     "dependencies": {
+        "@wordpress/block-editor": "^5.0.2",
+        "@wordpress/blocks": "^6.23.0",
+        "@wordpress/components": "^11.0.1",
+        "@wordpress/compose": "^3.21.0",
+        "@wordpress/data": "^4.24.0",
+        "@wordpress/element": "^2.18.0",
+        "@wordpress/i18n": "^3.16.0",
         "classnames": "^2.2.6"
     },
     "browserslist": [

@@ -1,101 +1,122 @@
 /**
  * External dependencies
  */
-import classnames from 'classnames/dedupe';
+import classnames from "classnames/dedupe";
 
 /**
  * WordPress dependencies
  */
-const {
-    applyFilters,
-} = wp.hooks;
+import { __ } from "@wordpress/i18n";
 
-const { __ } = wp.i18n;
+import { Component, Fragment } from "@wordpress/element";
 
-const { Component, Fragment } = wp.element;
+import { withSelect } from "@wordpress/data";
 
-const {
-    withSelect,
-} = wp.data;
-
-const {
+import {
     PanelRow,
     PanelBody,
     BaseControl,
-    Button
-} = wp.components;
+    Button,
+} from "@wordpress/components";
 
-const {
+import {
     InnerBlocks,
     BlockControls,
     InspectorControls,
     AlignmentToolbar,
     BlockVerticalAlignmentToolbar,
     MediaUploadCheck,
-    MediaUpload
-} = wp.blockEditor;
+    MediaUpload,
+} from "@wordpress/block-editor";
 
-import get_image from '../utils/get-image';
+import get_image from "../utils/get-image";
 
 /**
  * Block Edit Class.
  */
 class BlockEdit extends Component {
+    onSelectImage = (media) => {
+        let img_url = media.sizes.full.url;
+        this.props.setAttributes({ slideImg: img_url });
+    };
+
+    isEmpty = (val) => {
+        return true;
+    };
+
+    getBgStyle = (style) => {
+        if (this.props.attributes.slideImg) {
+            style.backgroundImage = `url(${this.props.attributes.slideImg})`;
+        }
+        return style;
+    };
+
+    getBgStyle = (style) => {
+        if (this.props.attributes.slideImg) {
+            style.backgroundImage = `url(${this.props.attributes.slideImg})`;
+        }
+        return style;
+    };
+
     render() {
-        const {
-            setAttributes,
-            hasChildBlocks,
-            attributes
-        } = this.props;
+        const { setAttributes, hasChildBlocks, attributes } = this.props;
+
+        let { className = "" } = this.props;
+
+        const { slideImg, contentHalign, contentValign } = attributes;
+
+        className = classnames(className, "wp-swiper__slide");
+        className = classnames(className, { "has-image": this.isEmpty(slideImg) });
         
-        let {
-            className = '',
-        } = this.props;
+        className = classnames(className, { "valign-center": contentValign ===  'center' });
+        className = classnames(className, { "valign-bottom": contentValign ===  'bottom' });
+        className = classnames(className, { "halign-center": contentHalign ===  'center' });
+        className = classnames(className, { "halign-right": contentHalign ===  'right' });
 
-        const {
-            slideImg,
-            contentHalign,
-            contentValign
-        } = attributes;
-
-        className = classnames( className, 'wp-swiper__slide' );
+        console.log('ish');
+        console.log("className: ", className );
+        console.log( "contentValign: ", contentValign );
+        
+        let style = {};
+        style = this.getBgStyle(style);
 
         return (
             <Fragment>
                 <InspectorControls>
                     <PanelBody title={__("Image Settings")}>
-                        <BaseControl label={ __( 'Slide Image', '@@text_domain' ) }>
+                        <BaseControl label={__("Slide Image", "@@text_domain")}>
                             <PanelRow>
                                 <MediaUploadCheck>
                                     <MediaUpload
-                                        value={ slideImg }
-                                        onSelect={( media ) => {
-                                            //console.log( 'selected: ' + media );
-                                            let img_url = media.sizes.full.url;
-                                            setAttributes( { slideImg: img_url } );
-                                        }}
-                                        type='image'
-                                        render={( open ) => {
-                                            return <Button onClick={open.open} className="button">Select slide image</Button>;
+                                        value={slideImg}
+                                        onSelect={this.onSelectImage}
+                                        type="image"
+                                        render={(open) => {
+                                            return (
+                                                <Button
+                                                    onClick={open.open}
+                                                    className="button"
+                                                >
+                                                    Select slide image
+                                                </Button>
+                                            );
                                         }}
                                     />
                                 </MediaUploadCheck>
                             </PanelRow>
-                            <PanelRow>
-                                { get_image( slideImg ) }
-                            </PanelRow>
+                            <PanelRow>{get_image(slideImg)}</PanelRow>
                             <PanelRow>
                                 <Button
                                     isSecondary
                                     isSmall
                                     className="block-library-cover__reset-button"
-                                    onClick={ () =>
-                                        setAttributes( {
-                                            slideImg: undefined
-                                        } )
+                                    onClick={() =>
+                                        setAttributes({
+                                            slideImg: undefined,
+                                        })
                                     }
                                 >
-                                    { __( 'Clear Media' ) }
+                                    {__("Clear Media")}
                                 </Button>
                             </PanelRow>
                         </BaseControl>
@@ -103,32 +124,31 @@ class BlockEdit extends Component {
                 </InspectorControls>
                 <BlockControls>
                     <AlignmentToolbar
-                        value={ contentHalign }
-                        onChange={ ( value ) => {
-                            if ( value === 'left' ) {
-                                value = 'start';
-                            } else if ( value === 'right' ) {
-                                value = 'end';
-                            }
-                            setAttributes( { contentHalign: value } );
-                        } }
-                        controls={ [ 'left', 'center', 'right' ] }
+                        value={contentHalign}
+                        onChange={(value) => {
+                            setAttributes({ contentHalign: value });
+                        }}
+                        controls={["left", "center", "right"]}
                     />
                     <BlockVerticalAlignmentToolbar
-                        value={ contentValign }
-                        onChange={ ( value ) => {
-                            setAttributes( { contentValign: value } );
-                        } }
+                        value={contentValign}
+                        onChange={(value) => {
+                            setAttributes({ contentValign: value });
+                        }}
                     />
                 </BlockControls>
-                <div className={ className }>
+
+                <div className={className}>
+                    { slideImg &&
+                        <div className="wp-swiper__slide-image" style={style} />
+                    }
                     <InnerBlocks
-                        templateLock={ false }
-                        renderAppender={ (
+                        templateLock={false}
+                        renderAppender={
                             hasChildBlocks
                                 ? undefined
                                 : () => <InnerBlocks.ButtonBlockAppender />
-                        ) }
+                        }
                     />
                 </div>
             </Fragment>
@@ -136,11 +156,11 @@ class BlockEdit extends Component {
     }
 }
 
-export default withSelect( ( select, props ) => {
+export default withSelect((select, props) => {
     const { clientId } = props;
-    const  { getBlockOrder } = select( 'core/block-editor' );
+    const { getBlockOrder } = select("core/block-editor");
 
     return {
-        hasChildBlocks: getBlockOrder( clientId ).length > 0,
+        hasChildBlocks: getBlockOrder(clientId).length > 0,
     };
-} )( BlockEdit );
+})(BlockEdit);
