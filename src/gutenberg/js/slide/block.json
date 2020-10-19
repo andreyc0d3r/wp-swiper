@@ -1,7 +1,7 @@
 {
 	"name": "da/wp-swiper-slide",
     "parent": [ "da/wp-swiper-slides" ],
-	"category": "common",
+	"category": "media",
     "supports": {
         "html": false,
         "className": false,

@@ -1,6 +1,6 @@
 {
 	"name": "da/wp-swiper-slides",
-	"category": "common",
+	"category": "media",
     "supports": {
         "html": false,
         "className": false,
@@ -10,7 +10,7 @@
     "attributes": {
         "align": {
             "type": "string",
-            "default": "full"
+            "default": ""
         },
         "txtColor": {
             "type": "string"
