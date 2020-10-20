@@ -104,7 +104,7 @@ class WP_Swiper_Public {
 			$this->plugin_name . '-block-frontend',
 			plugin_dir_url(__DIR__) . 'css/frontend_block.css',
 			array(),
-			'1.0.0'
+			DAWPS_PLUGIN_VERSION
         );
         
 		wp_enqueue_style(
@@ -129,7 +129,7 @@ class WP_Swiper_Public {
             $this->plugin_name . '-frontend-js',
             plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
             array( 'jquery', $this->plugin_name . '-bundle-js' ),
-            '1.0.0'
+            DAWPS_PLUGIN_VERSION
         );
 
         wp_enqueue_script(
