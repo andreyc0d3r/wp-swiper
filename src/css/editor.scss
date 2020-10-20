@@ -9,11 +9,12 @@
 
         .wp-swiper__slide {
             position: relative;
-            display: flex;
+            padding: 10px;
+            border: 1px solid gray;
             min-height: 430px;
 
-            .block-editor-inner-blocks {
-                flex-grow: 1;
+            .wp-swiper__content {
+                z-index: 5;
             }
 
             .wp-swiper__slide-overlay {
@@ -45,35 +46,7 @@
             &.halign-right {
                 justify-content: flex-end;
             }
-
-            .wp-block {
-                width: 100%;
-            }
         }
-    }
-}
-
-
-.wp-swiper__slide {
-    padding: 10px;
-    border: 1px solid gray;
-
-    .wp-swiper__content {
-        z-index: 5;
-    }
-
-    .block-editor-block-list__layout {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-    }
-
-    .block-editor-inner-blocks {
-        display: flex;
-    }
-
-    .wp-block {
-        width: 100%;
     }
 }
 
