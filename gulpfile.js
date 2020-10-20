@@ -237,7 +237,7 @@ gulp.task( 'sync_dir:win', function(done) {
 
 gulp.task( 'win', gulp.series( 
     // 'build_scss:prod', 
-    'admin_build_scss:prod', 
+    // 'admin_build_scss:prod', 
     // 'build_scss:ext', 
     'sync_dir:win'
     ) 
