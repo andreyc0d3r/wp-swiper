@@ -26,6 +26,9 @@
                 }
             }
         },
+        "containerWidth": {
+            "type": "number"
+        },
         "overlayImg": {
             "type": "string"
         },

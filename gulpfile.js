@@ -1,26 +1,26 @@
-const gulp      = require('gulp');
+const gulp = require('gulp');
 
-const $         = require('gulp-load-plugins')();
-var gutil       = require('gulp-util');
+const $ = require('gulp-load-plugins')();
+var gutil = require('gulp-util');
 
-var zip         = require( 'gulp-vinyl-zip' );
-var rename      = require('gulp-rename');
+var zip = require('gulp-vinyl-zip');
+var rename = require('gulp-rename');
 
-var path        = require('path');
+var path = require('path');
 
-var del         = require('del');
-var sass        = require( 'gulp-sass');
+var del = require('del');
+var sass = require('gulp-sass');
 
-const syncy     = require('syncy');
-
+const syncy = require('syncy');
 
 var settings = {
-    'repo_path'     : './src',
-    'dist_path'     : '../dist',
-    'zip_path'      : '../zip',
-    'svn_path'      : '../svn',
-    'mac_dest'      : '/Users/andrey/www/personal/wp-swiper/www/wp-content/plugins/wp-swiper',
-    'win_dest'      : 'H:/dev/server/wp-swiper/www/wp-content/plugins/wp-swiper'
+    repo_path: './src',
+    dist_path: '../dist',
+    zip_path: '../zip',
+    svn_path: '../svn',
+    mac_dest:
+        '/Users/andrey/Dev/server/wp-swiper/www/app/public/wp-content/plugins/wp-swiper',
+    win_dest: 'H:/dev/server/wp-swiper/www/wp-content/plugins/wp-swiper',
 };
 
 /**
@@ -31,43 +31,44 @@ function errorHandler(err) {
     this.emit('end');
 }
 
-
-
 // task: package to zip
 // https://stackoverflow.com/questions/39029238/exclude-all-files-in-any-directory-named-node-module-with-gulp
-gulp.task('package', function(done){
-    gulp.src( [
+gulp.task('package', function (done) {
+    gulp.src([
         settings.repo_path + '/**/*',
-        '!**/node_modules/**', 
+        '!**/node_modules/**',
         '!*.scss',
         '!**/*.lnk',
         '!**/package.json',
         '!**/package-lock.json',
         '!**/webpack.config.js',
-        '!**/style/components'
-    ] )
-    .pipe(rename(function(file) {
-        file.dirname = 'astheme' + path.sep + file.dirname;
-    }))
-    .pipe( zip.dest( 'astheme.zip' ) )
-    .pipe( gulp.dest( settings.dist_path ) )
-    .on('error', gutil.log);
+        '!**/style/components',
+    ])
+        .pipe(
+            rename(function (file) {
+                file.dirname = 'astheme' + path.sep + file.dirname;
+            })
+        )
+        .pipe(zip.dest('astheme.zip'))
+        .pipe(gulp.dest(settings.dist_path))
+        .on('error', gutil.log);
     done();
 });
 
 // task: clean old files
-gulp.task('clean:build', function(done) {
-    del(settings.dist_path + '/**', {force: true}); // remove old zip file
+gulp.task('clean:build', function (done) {
+    del(settings.dist_path + '/**', { force: true }); // remove old zip file
     done();
 });
 
-gulp.task('sync_dist', function(done){
-    gulp.src( [
+gulp.task('sync_dist', function (done) {
+    gulp.src([
         // settings.repo_path + '/**/*',
         settings.repo_path + '/**/*',
         // '**/(admin_block|frontend_block).js',
         '!**/gutenberg/**',
-        settings.repo_path + '/**/gutenberg/**/!(js){admin_block,frontend_block}.js',
+        settings.repo_path +
+            '/**/gutenberg/**/!(js){admin_block,frontend_block}.js',
         '!**/node_modules/**',
         '!**/*.scss',
         '!**/*.lnk',
@@ -75,98 +76,93 @@ gulp.task('sync_dist', function(done){
         '!**/package.json',
         '!**/package-lock.json',
         '!**/webpack.config.js',
-        '!**/style/components'
-    ] )
-    .pipe( gulp.dest( settings.dist_path ) )
-    .on('error', gutil.log);
+        '!**/style/components',
+    ])
+        .pipe(gulp.dest(settings.dist_path))
+        .on('error', gutil.log);
     done();
 });
-
-
-
 
 // task: clean without images
-gulp.task('clean:dev', function(done){
-    del([
-        settings.themes[1].adsense_theme + '/**/*',
-    ], { force: true });
+gulp.task('clean:dev', function (done) {
+    del([settings.themes[1].adsense_theme + '/**/*'], { force: true });
     done();
 });
-
 
 // ------------------------------------------------------------
 // Shared
 gulp.task('build_scss:prod', function (done) {
-    gulp.src([ settings.repo_path + '/style/style.scss'] )
+    gulp.src([settings.repo_path + '/style/style.scss'])
         .pipe($.plumber({ errorHandler }))
-        .pipe(sass({
-            outputStyle: 'compressed'
-        })
-        .on('error', sass.logError))
-        .pipe($.autoprefixer({
-            autoprefixer: {
-                browsers: [
-                    'last 4 version',
-                    '> 1%'
-                ]
-            }
-        }))
-        .pipe($.rename({
-            suffix: '.min'
-        }))
-        .pipe(gulp.dest( settings.repo_path + '/style' ) );
-        done();
+        .pipe(
+            sass({
+                outputStyle: 'compressed',
+            }).on('error', sass.logError)
+        )
+        .pipe(
+            $.autoprefixer({
+                autoprefixer: {
+                    browsers: ['last 4 version', '> 1%'],
+                },
+            })
+        )
+        .pipe(
+            $.rename({
+                suffix: '.min',
+            })
+        )
+        .pipe(gulp.dest(settings.repo_path + '/style'));
+    done();
 });
 
 gulp.task('build_scss:ext', function (done) {
-    gulp.src(
-        [ 
-            settings.repo_path + '/theme/includes/extensions/**/css/*.scss',
-            '!' + settings.repo_path + '/**/node_modules/**'
-        ] )
+    gulp.src([
+        settings.repo_path + '/theme/includes/extensions/**/css/*.scss',
+        '!' + settings.repo_path + '/**/node_modules/**',
+    ])
         .pipe($.plumber({ errorHandler }))
-        .pipe(sass({
-            outputStyle: 'compressed'
-        })
-        .on('error', sass.logError))
-        .pipe($.autoprefixer({
-            autoprefixer: {
-                browsers: [
-                    'last 4 version',
-                    '> 1%'
-                ]
-            }
-        }))
+        .pipe(
+            sass({
+                outputStyle: 'compressed',
+            }).on('error', sass.logError)
+        )
+        .pipe(
+            $.autoprefixer({
+                autoprefixer: {
+                    browsers: ['last 4 version', '> 1%'],
+                },
+            })
+        )
         // .pipe($.rename({
         //     suffix: '.min'
         // }))
-        .pipe( gulp.dest(
-            settings.repo_path + '/theme/includes/extensions'
-        ) );
-        done();
+        .pipe(gulp.dest(settings.repo_path + '/theme/includes/extensions'));
+    done();
 });
 
 // https://fizzy.cc/gulp-theme-workflow/
 gulp.task('build_scss:dev', function (done) {
-    gulp.src([ settings.repo_path + '/style/style.scss'] )
+    gulp.src([settings.repo_path + '/style/style.scss'])
         .pipe($.plumber({ errorHandler }))
-        .pipe(sass({
-            outputStyle: 'expanded'
-        })
-        .on('error', sass.logError))
-        .pipe($.autoprefixer({
-            autoprefixer: {
-                browsers: [
-                    'last 4 version',
-                    '> 1%'
-                ]
-            }
-        }))
-        .pipe($.rename({
-            suffix: '.min'
-        }))
-        .pipe( gulp.dest( settings.repo_path + '/style' ) );
-        done();
+        .pipe(
+            sass({
+                outputStyle: 'expanded',
+            }).on('error', sass.logError)
+        )
+        .pipe(
+            $.autoprefixer({
+                autoprefixer: {
+                    browsers: ['last 4 version', '> 1%'],
+                },
+            })
+        )
+        .pipe(
+            $.rename({
+                suffix: '.min',
+            })
+        )
+        .pipe(gulp.dest(settings.repo_path + '/style'));
+    done();
 });
 
 // ------------------------------------------------------------
@@ -175,26 +171,25 @@ gulp.task('build_scss:dev', function (done) {
 // WIN + MAC
 // ------------------------------------------------------------
 gulp.task('admin_build_scss:prod', function (done) {
-    gulp.src([ 
+    gulp.src([
         settings.repo_path + '/**/*/*.scss',
-        '!' + settings.repo_path + '/**/node_modules/**'
-        
-    ] )
+        '!' + settings.repo_path + '/**/node_modules/**',
+    ])
         .pipe($.plumber({ errorHandler }))
-        .pipe(sass({
-            outputStyle: 'compressed'
-        })
-        .on('error', sass.logError))
-        .pipe($.autoprefixer({
-            autoprefixer: {
-                browsers: [
-                    'last 4 version',
-                    '> 1%'
-                ]
-            }
-        }))
-        .pipe(gulp.dest( settings.repo_path ) );
-        done();
+        .pipe(
+            sass({
+                outputStyle: 'compressed',
+            }).on('error', sass.logError)
+        )
+        .pipe(
+            $.autoprefixer({
+                autoprefixer: {
+                    browsers: ['last 4 version', '> 1%'],
+                },
+            })
+        )
+        .pipe(gulp.dest(settings.repo_path));
+    done();
 });
 
 // ------------------------------------------------------------
@@ -202,98 +197,111 @@ gulp.task('admin_build_scss:prod', function (done) {
 // ------------------------------------------------------------
 // WINDOWS
 // ------------------------------------------------------------
-gulp.task( 'zip', function() {
+gulp.task('zip', function () {
     // gulp.src( settings.dist_path + '/**/*/*.js' )
     //     .pipe(uglify())
     //     .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
     //     .pipe( gulp.dest(settings.dist_path ))
     //     .on('error', gutil.log);
-    return gulp.src( settings.dist_path + '/**/*' )
-        .pipe(rename(function(file) {
-            file.dirname = 'wp-swiper' + path.sep + file.dirname;
-        }))
-        .pipe(zip.dest(settings.zip_path + '/wp-swiper.zip'))
-        // .pipe(gulp.dest(settings.release_path))
-        .on('error', gutil.log);
-} );
-gulp.task( 'sync_dir:win', function(done) {
+    return (
+        gulp
+            .src(settings.dist_path + '/**/*')
+            .pipe(
+                rename(function (file) {
+                    file.dirname = 'wp-swiper' + path.sep + file.dirname;
+                })
+            )
+            .pipe(zip.dest(settings.zip_path + '/wp-swiper.zip'))
+            // .pipe(gulp.dest(settings.release_path))
+            .on('error', gutil.log)
+    );
+});
+gulp.task('sync_dir:win', function (done) {
     syncy(
         [
             settings.repo_path + '/**',
-            '!' + settings.repo_path + '/**/node_modules/**'
-        ], 
+            '!' + settings.repo_path + '/**/node_modules/**',
+        ],
         settings.win_dest,
         {
-            base: settings.repo_path
+            base: settings.repo_path,
         }
     )
-    .then(() => {
-        done();
-    })
-    .catch((err) => {
-        done(err);
-    });
-} );
+        .then(() => {
+            done();
+        })
+        .catch((err) => {
+            done(err);
+        });
+});
 
-gulp.task( 'win', gulp.series( 
-    // 'build_scss:prod', 
-    // 'admin_build_scss:prod', 
-    // 'build_scss:ext', 
-    'sync_dir:win'
-    ) 
+gulp.task(
+    'win',
+    gulp.series(
+        // 'build_scss:prod',
+        // 'admin_build_scss:prod',
+        // 'build_scss:ext',
+        'sync_dir:win'
+    )
 );
 
-gulp.task( 'win:dist', gulp.series( 
-    'clean:build',
-    // 'build_scss:prod',
-    'admin_build_scss:prod', 
-    // 'package',
-    'sync_dist',
-    // 'zip'
-) );
+gulp.task(
+    'win:dist',
+    gulp.series(
+        'clean:build',
+        // 'build_scss:prod',
+        'admin_build_scss:prod',
+        // 'package',
+        'sync_dist'
+        // 'zip'
+    )
+);
 //gulp.task( 'windev', gulp.series( 'watchwin' ) );
 // ------------------------------------------------------------
 
 // ------------------------------------------------------------
 // Mac
-gulp.task( 'sync_dir:mac', function(done) {
+gulp.task('sync_dir:mac', function (done) {
     syncy(
         [
             settings.repo_path + '/**',
-            '!' + settings.repo_path + '/**/node_modules/**'
-        ], 
+            '!' + settings.repo_path + '/**/node_modules/**',
+        ],
         settings.mac_dest,
         {
-            base: settings.repo_path
+            base: settings.repo_path,
         }
     )
-    .then(() => {
-        done();
-    })
-    .catch((err) => {
-        done(err);
-    });
-} );
+        .then(() => {
+            done();
+        })
+        .catch((err) => {
+            done(err);
+        });
+});
 
-gulp.task( 'mac', gulp.series( 
-    // 'build_scss:prod', 
-    // 'admin_build_scss:prod', 
-    // 'build_scss:ext', 
-    'sync_dir:mac' 
-) );
-
+gulp.task(
+    'mac',
+    gulp.series(
+        // 'build_scss:prod',
+        // 'admin_build_scss:prod',
+        // 'build_scss:ext',
+        'sync_dir:mac'
+    )
+);
 
 // *******************************
 // <SVN>
 // <SVN>
 // *******************************
-gulp.task( 'sync_dir:svn', function(done) {
-    gulp.src( [
+gulp.task('sync_dir:svn', function (done) {
+    gulp.src([
         // settings.repo_path + '/**/*',
         settings.repo_path + '/**/*',
         // '**/(admin_block|frontend_block).js',
         '!**/gutenberg/**',
-        settings.repo_path + '/**/gutenberg/**/!(js){admin_block,frontend_block}.js',
+        settings.repo_path +
+            '/**/gutenberg/**/!(js){admin_block,frontend_block}.js',
         '!**/node_modules/**',
         '!**/*.scss',
         '!**/*.lnk',
@@ -301,22 +309,25 @@ gulp.task( 'sync_dir:svn', function(done) {
         '!**/package.json',
         '!**/package-lock.json',
         '!**/webpack.config.js',
-        '!**/style/components'
-    ] )
-    .pipe( gulp.dest( settings.svn_path + '/wp-swiper/trunk/' ) )
-    .on('error', gutil.log);
-    done();
-} );
-gulp.task('clean:svn', function(done) {
-    del(settings.svn_path + '/wp-swiper/trunk/**', {force: true}); // remove old zip file
+        '!**/style/components',
+    ])
+        .pipe(gulp.dest(settings.svn_path + '/trunk/'))
+        .on('error', gutil.log);
     done();
 });
-gulp.task( 'svn', gulp.series( 
-    'clean:svn', 
-    // 'admin_build_scss:prod', 
-    // 'build_scss:ext', 
-    'sync_dir:svn' 
-) );
+gulp.task('clean:svn', function (done) {
+    del(settings.svn_path + '/trunk/**', { force: true }); // remove old zip file
+    done();
+});
+gulp.task(
+    'svn',
+    gulp.series(
+        'clean:svn',
+        // 'admin_build_scss:prod',
+        // 'build_scss:ext',
+        'sync_dir:svn'
+    )
+);
 // *******************************
 // </SVN>
 // </SVN>

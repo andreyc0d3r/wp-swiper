@@ -7,11 +7,11 @@ import classnames from 'classnames/dedupe';
  * WordPress dependencies
  */
 
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 
-import { Component, Fragment } from "@wordpress/element";
+import { Component, Fragment } from '@wordpress/element';
 
-import { createBlock } from "@wordpress/blocks";
+import { createBlock } from '@wordpress/blocks';
 import {
     PanelBody,
     PanelRow,
@@ -22,24 +22,19 @@ import {
     ColorPicker,
     RangeControl,
     TextControl,
-    SelectControl
-} from "@wordpress/components";
+    SelectControl,
+} from '@wordpress/components';
 
 import {
     InspectorControls,
     InnerBlocks,
     MediaUploadCheck,
-    MediaUpload
-} from "@wordpress/block-editor";
+    MediaUpload,
+} from '@wordpress/block-editor';
 
-import {
-    compose,
-} from "@wordpress/compose"
+import { compose } from '@wordpress/compose';
 
-import {
-    withSelect,
-    withDispatch,
-} from "@wordpress/data"
+import { withSelect, withDispatch } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -53,12 +48,12 @@ import get_image from '../utils/get-image';
  */
 class BlockEdit extends Component {
     constructor() {
-        super( ...arguments );
+        super(...arguments);
 
-        this.getTabsTemplate = this.getTabsTemplate.bind( this );
-        this.getTabs = this.getTabs.bind( this );
-        this.changeLabel = this.changeLabel.bind( this );
-        this.removeTab = this.removeTab.bind( this );
+        this.getTabsTemplate = this.getTabsTemplate.bind(this);
+        this.getTabs = this.getTabs.bind(this);
+        this.changeLabel = this.changeLabel.bind(this);
+        this.removeTab = this.removeTab.bind(this);
     }
 
     /**
@@ -69,13 +64,11 @@ class BlockEdit extends Component {
      * @return {Object[]} Tabs layout configuration.
      */
     getTabsTemplate() {
-        const {
-            tabsData
-        } = this.props.attributes;
-        
-        const result = tabsData.map( ( tabData ) => {
-            return [ 'da/wp-swiper-slide', tabData ];
-        } );
+        const { tabsData } = this.props.attributes;
+
+        const result = tabsData.map((tabData) => {
+            return ['da/wp-swiper-slide', tabData];
+        });
 
         return result;
     }
@@ -84,55 +77,61 @@ class BlockEdit extends Component {
         return this.props.block.innerBlocks;
     }
 
-    changeLabel( dataType, value, i ) {
-        const {
-            setAttributes,
-            attributes,
-            updateBlockAttributes,
-        } = this.props;
+    changeLabel(dataType, value, i) {
+        const { setAttributes, attributes, updateBlockAttributes } = this.props;
 
-        const {
-            tabsData,
-        } = attributes;
+        const { tabsData } = attributes;
 
         const tabs = this.getTabs();
 
-        if ( tabs[ i ] ) {
-            const newSlug = dataType == 'title' ? getUniqueSlug( `tab ${ value }`, tabs[ i ].clientId ) : tabsData[i].slug;
+        if (tabs[i]) {
+            const newSlug =
+                dataType == 'title'
+                    ? getUniqueSlug(`tab ${value}`, tabs[i].clientId)
+                    : tabsData[i].slug;
 
-            const newTabsData = tabsData.map( ( oldTabData, newIndex ) => {
-                if ( i === newIndex ) {
-
+            const newTabsData = tabsData.map((oldTabData, newIndex) => {
+                if (i === newIndex) {
                     return {
                         ...oldTabData,
                         ...{
-                            title: dataType == 'title' ? value : tabsData[i].title,
-                            subtitle: dataType == 'subtitle' ? value : tabsData[i].subtitle,
-                            image: dataType == 'image' ? value : tabsData[i].image,
-                            overlayImg: dataType == 'overlayImg' ? value : tabsData[i].overlayImg,
-                            overlayColor: dataType == 'overlayColor' ? value : tabsData[i].overlayColor,
+                            title:
+                                dataType == 'title' ? value : tabsData[i].title,
+                            subtitle:
+                                dataType == 'subtitle'
+                                    ? value
+                                    : tabsData[i].subtitle,
+                            image:
+                                dataType == 'image' ? value : tabsData[i].image,
+                            overlayImg:
+                                dataType == 'overlayImg'
+                                    ? value
+                                    : tabsData[i].overlayImg,
+                            overlayColor:
+                                dataType == 'overlayColor'
+                                    ? value
+                                    : tabsData[i].overlayColor,
                             slug: newSlug,
                         },
                     };
                 }
 
                 return oldTabData;
-            } );
+            });
 
-            setAttributes( {
+            setAttributes({
                 currentSlide: i,
                 tabActive: newSlug,
                 tabsData: newTabsData,
-            } );
+            });
 
-            updateBlockAttributes( tabs[ i ].clientId, {
+            updateBlockAttributes(tabs[i].clientId, {
                 slug: newSlug,
-            } );
+            });
         }
     }
 
-    
-    removeTab( i ) {
+    removeTab(i) {
         const {
             setAttributes,
             attributes,
@@ -141,27 +140,25 @@ class BlockEdit extends Component {
             replaceInnerBlocks,
         } = this.props;
 
-        const {
-            tabsData = [],
-        } = attributes;
+        const { tabsData = [] } = attributes;
 
-        if ( 1 >= block.innerBlocks.length ) {
-            this.props.removeBlock( block.clientId );
-        } else if ( block.innerBlocks[ i ] ) {
-            this.props.removeBlock( block.innerBlocks[ i ].clientId );
+        if (1 >= block.innerBlocks.length) {
+            this.props.removeBlock(block.clientId);
+        } else if (block.innerBlocks[i]) {
+            this.props.removeBlock(block.innerBlocks[i].clientId);
 
-            if ( tabsData[ i ] ) {
-                const newTabsData = [ ...tabsData ];
-                newTabsData.splice( i, 1 );
+            if (tabsData[i]) {
+                const newTabsData = [...tabsData];
+                newTabsData.splice(i, 1);
 
-                const innerBlocks = [ ...getBlocks( block.clientId ) ];
-                innerBlocks.splice( i, 1 );
+                const innerBlocks = [...getBlocks(block.clientId)];
+                innerBlocks.splice(i, 1);
 
-                replaceInnerBlocks( block.clientId, innerBlocks, false );
+                replaceInnerBlocks(block.clientId, innerBlocks, false);
 
-                setAttributes( {
+                setAttributes({
                     tabsData: newTabsData,
-                } );
+                });
             }
         }
     }
@@ -175,9 +172,9 @@ class BlockEdit extends Component {
             getBlocks,
             replaceInnerBlocks,
             updateBlockAttributes,
-            block
+            block,
         } = this.props;
-  
+
         let { className = '' } = this.props;
 
         const {
@@ -197,17 +194,15 @@ class BlockEdit extends Component {
             spaceBetween,
             navigation,
             pagination,
+            containerWidth,
         } = attributes;
-        
-        className = classnames(
-            className,
-            'wp-swiper__slides'
-        );
+
+        className = classnames(className, 'wp-swiper__slides');
 
         let buttonsAlignValForControl = buttonsAlign;
-        if ( buttonsAlignValForControl === 'start' ) {
+        if (buttonsAlignValForControl === 'start') {
             buttonsAlignValForControl = 'left';
-        } else if ( buttonsAlignValForControl === 'end' ) {
+        } else if (buttonsAlignValForControl === 'end') {
             buttonsAlignValForControl = 'right';
         }
 
@@ -215,282 +210,347 @@ class BlockEdit extends Component {
         let counter = 1;
 
         const style = txtColor ? { color: txtColor } : {};
-        
+
         return (
             <Fragment>
                 <InspectorControls>
-                    <PanelBody title={__("Overlay Settings")} initialOpen={false}>
-						<PanelRow>
+                    <PanelBody
+                        title={__('Overlay Settings')}
+                        initialOpen={false}
+                    >
+                        <PanelRow>
                             <MediaUploadCheck>
                                 <MediaUpload
-                                    value={ overlayImg }
-                                    onSelect={( media ) => {
+                                    value={overlayImg}
+                                    onSelect={(media) => {
                                         let img_url = media.sizes.full.url;
-                                        setAttributes( { overlayImg: img_url } );
+                                        setAttributes({ overlayImg: img_url });
                                     }}
-                                    type='image'
-                                    render={( open ) => {
-                                        return <Button onClick={open.open} className="button">Select overlay image</Button>;
+                                    type="image"
+                                    render={(open) => {
+                                        return (
+                                            <Button
+                                                onClick={open.open}
+                                                className="button"
+                                            >
+                                                Select overlay image
+                                            </Button>
+                                        );
                                     }}
                                 />
                             </MediaUploadCheck>
                         </PanelRow>
+                        <PanelRow>{get_image(overlayImg)}</PanelRow>
                         <PanelRow>
-                            { get_image( overlayImg ) }
+                            <Button
+                                isSecondary
+                                isSmall
+                                className="block-library-cover__reset-button"
+                                onClick={() =>
+                                    setAttributes({
+                                        overlayImg: undefined,
+                                    })
+                                }
+                            >
+                                {__('Clear Media')}
+                            </Button>
                         </PanelRow>
-                        <PanelRow>
-							<Button
-								isSecondary
-								isSmall
-								className="block-library-cover__reset-button"
-								onClick={ () =>
-									setAttributes( {
-										overlayImg: undefined
-									} )
-								}
-							>
-								{ __( 'Clear Media' ) }
-							</Button>
-						</PanelRow>
-                        <BaseControl label={ __( 'Image Overlay Opacity', '@@text_domain' ) }>
-							<RangeControl
-								label={ __( 'Opacity' ) }
-								value={ overlayImgOpacity }
-								onChange={ ( value ) =>
-									setAttributes( {
-										overlayImgOpacity: value,
-									} )
-								}
-								min={ 0 }
-								max={ 1 }
-								step={0.01}
-								required
-							/>
-						</BaseControl>
-                    </PanelBody>
-                    <PanelBody title={__("Color Settings")} initialOpen={false}>
-                        <BaseControl label={ __( 'Text Color', '@@text_domain' ) }>
-                            <ColorPicker
-                              color = {txtColor}
-                              onChangeComplete = { ( color ) => setAttributes( { txtColor: color.hex } ) }
+                        <BaseControl
+                            label={__('Image Overlay Opacity', '@@text_domain')}
+                        >
+                            <RangeControl
+                                label={__('Opacity')}
+                                value={overlayImgOpacity}
+                                onChange={(value) =>
+                                    setAttributes({
+                                        overlayImgOpacity: value,
+                                    })
+                                }
+                                min={0}
+                                max={1}
+                                step={0.01}
+                                required
                             />
                         </BaseControl>
-                        <BaseControl label={ __( 'Overlay Color', '@@text_domain' ) }>
+                        <BaseControl
+                            label={__('Overlay Color', '@@text_domain')}
+                        >
                             <ColorPicker
-                                color = {overlayColor.rgb}
-                                onChangeComplete = { ( color ) => { 
-                                    
-                                    setAttributes( { overlayColor: color } );
-                                    
+                                color={overlayColor.rgb}
+                                onChangeComplete={(color) => {
+                                    setAttributes({ overlayColor: color });
+
                                     let iBlocks = block.innerBlocks;
-                                    iBlocks.map( ( iBlock ) => {
-                                        updateBlockAttributes(
-                                            iBlock.clientId, {
+                                    iBlocks.map((iBlock) => {
+                                        updateBlockAttributes(iBlock.clientId, {
                                             overlayColor: color,
-                                        } );
+                                        });
+                                    });
+                                }}
+                            />
+                        </BaseControl>
+                    </PanelBody>
+                    <PanelBody title={__('Color Settings')} initialOpen={false}>
+                        <BaseControl label={__('Text Color', '@@text_domain')}>
+                            <ColorPicker
+                                color={txtColor}
+                                onChangeComplete={(color) =>
+                                    setAttributes({ txtColor: color.hex })
+                                }
+                            />
+                        </BaseControl>
+                    </PanelBody>
+                    <PanelBody
+                        title={__('Swiper Settings')}
+                        initialOpen={false}
+                    >
+                        <PanelRow>
+                            <RangeControl
+                                label={__('Container Max Width %')}
+                                help={__(
+                                    'Frontend: Set the max width for the content with text.'
+                                )}
+                                value={containerWidth}
+                                onChange={(value) => {
+                                    setAttributes({
+                                        containerWidth: value,
                                     });
 
-                                } }
+                                    let iBlocks = block.innerBlocks;
+                                    iBlocks.map((iBlock) => {
+                                        updateBlockAttributes(iBlock.clientId, {
+                                            containerWidth: value,
+                                        });
+                                    });
+                                }}
+                                min={1}
+                                max={100}
+                                step={1}
+                                required
                             />
-                        </BaseControl>
-                    </PanelBody>
-                    <PanelBody title={__("Swiper Settings")} initialOpen={false}>
-                        <PanelRow>
-							<ToggleControl
-								label="Show Navigation"
-                                checked={navigation}
-								onChange={() => {
-                                    setAttributes({ navigation: !navigation });
-								}}
-							/>
                         </PanelRow>
                         <PanelRow>
                             <ToggleControl
-								label="Show pagination"
+                                label="Show Navigation"
+                                checked={navigation}
+                                onChange={() => {
+                                    setAttributes({ navigation: !navigation });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <ToggleControl
+                                label="Show pagination"
                                 checked={pagination}
-								onChange={() => {
+                                onChange={() => {
                                     setAttributes({ pagination: !pagination });
-								}}
-							/>
-						</PanelRow>
+                                }}
+                            />
+                        </PanelRow>
                         <PanelRow>
                             <TextControl
                                 label="Space Beween"
                                 help="Distance between slides in px."
-								value={spaceBetween}
-								onChange={option => {
-									setAttributes({ spaceBetween: option });
-								}}
-							/>
-						</PanelRow>
+                                value={spaceBetween}
+                                onChange={(option) => {
+                                    setAttributes({ spaceBetween: option });
+                                }}
+                            />
+                        </PanelRow>
                         <PanelRow>
                             <TextControl
                                 label="Slides per view"
                                 help="Number of slides per view (slides visible at the same time on slider's container)."
-								value={slidesPerView}
-								onChange={option => {
-									setAttributes({ slidesPerView: option });
-								}}
-							/>
-						</PanelRow>
-						<PanelRow>
-							<ToggleControl
-								label="Auto Play"
-                                checked={autoplay}
-								onChange={() => {
-                                    setAttributes({ autoplay: !autoplay });
-								}}
-							/>
-						</PanelRow>
+                                value={slidesPerView}
+                                onChange={(option) => {
+                                    setAttributes({ slidesPerView: option });
+                                }}
+                            />
+                        </PanelRow>
                         <PanelRow>
-							<ToggleControl
-								label="Loop"
+                            <ToggleControl
+                                label="Auto Play"
+                                checked={autoplay}
+                                onChange={() => {
+                                    setAttributes({ autoplay: !autoplay });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <ToggleControl
+                                label="Loop"
                                 checked={loop}
-								onChange={() => {
+                                onChange={() => {
                                     setAttributes({ loop: !loop });
-								}}
-							/>
-						</PanelRow>
-						<PanelRow>
-							<TextControl
-								label="Delay"
-								value={delay}
-								onChange={option => {
-									setAttributes({ delay: option });
-								}}
-							/>
-						</PanelRow>
-						<PanelRow>
-							<TextControl
-								label="Speed"
-								value={speed}
-								onChange={option => {
-									setAttributes({ speed: option });
-								}}
-							/>
-						</PanelRow>
-						<PanelRow>
-							<SelectControl
-								label="Effect (Under Consttruction)"
-								selected={effect}
-								options={[
-									{ label: "Slide", value: "slide" },
-									{ label: "Fade", value: "fade" },
-									{ label: "Cube", value: "cube" },
-									{ label: "Coverflow", value: "coverflow" },
-									{ label: "Flip", value: "flip" }
-								]}
-								onChange={option => {
-									setAttributes({ effect: option });
-								}}
-							/>
-						</PanelRow>
-					</PanelBody>
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <TextControl
+                                label="Delay"
+                                value={delay}
+                                onChange={(option) => {
+                                    setAttributes({ delay: option });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <TextControl
+                                label="Speed"
+                                value={speed}
+                                onChange={(option) => {
+                                    setAttributes({ speed: option });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <SelectControl
+                                label="Effect (Under Consttruction)"
+                                selected={effect}
+                                options={[
+                                    { label: 'Slide', value: 'slide' },
+                                    { label: 'Fade', value: 'fade' },
+                                    { label: 'Cube', value: 'cube' },
+                                    { label: 'Coverflow', value: 'coverflow' },
+                                    { label: 'Flip', value: 'flip' },
+                                ]}
+                                onChange={(option) => {
+                                    setAttributes({ effect: option });
+                                }}
+                            />
+                        </PanelRow>
+                    </PanelBody>
                 </InspectorControls>
-                <div className={ className } data-tab-active={ tabActive }>
-                    <div className="wb-tabs-buttons-wrapper" style={ style }>
-                        <div className={ classnames(
-                            'wb-tabs-buttons',
-                            `wb-tabs-buttons-align-${ buttonsAlign }`
-                        ) }>
-                            {
-                                tabsData.map( ( tabData, i ) => {
-                                    const {
-                                        slug,
-                                    } = tabData;
-                                    const selected = tabActive === slug;
+                <div className={className} data-tab-active={tabActive}>
+                    <div className="wb-tabs-buttons-wrapper" style={style}>
+                        <div
+                            className={classnames(
+                                'wb-tabs-buttons',
+                                `wb-tabs-buttons-align-${buttonsAlign}`
+                            )}
+                        >
+                            {tabsData.map((tabData, i) => {
+                                const { slug } = tabData;
+                                const selected = tabActive === slug;
 
-                                    return (
-                                        <div
-                                            className={ classnames( 'wb-tabs-buttons-item', selected ? 'wb-tabs-buttons-item-active' : '' ) }
-                                            key={ `tab_button_${ i }` }
-                                            onClick={ () => setAttributes( { tabActive: slug } ) }
-                                        >                                            
-                                            <h4>Slide {counter++}</h4>
-        
-                                            <RemoveButton
-                                                show={ isSelectedBlockInRoot }
-                                                tooltipText={ __( 'Remove slide?', '@@text_domain' ) }
-                                                onRemove={ () => {
-                                                    this.removeTab( i );
-                                                } }
-                                            />
-                                        </div>
-                                    );
-                                } )
-                            }
-                            { isSelectedBlockInRoot ? (
-                                <Tooltip text={ __( 'Add Slide', '@@text_domain' ) }>
+                                return (
+                                    <div
+                                        className={classnames(
+                                            'wb-tabs-buttons-item',
+                                            selected
+                                                ? 'wb-tabs-buttons-item-active'
+                                                : ''
+                                        )}
+                                        key={`tab_button_${i}`}
+                                        onClick={() =>
+                                            setAttributes({ tabActive: slug })
+                                        }
+                                    >
+                                        <h4>Slide {counter++}</h4>
+
+                                        <RemoveButton
+                                            show={isSelectedBlockInRoot}
+                                            tooltipText={__(
+                                                'Remove slide?',
+                                                '@@text_domain'
+                                            )}
+                                            onRemove={() => {
+                                                this.removeTab(i);
+                                            }}
+                                        />
+                                    </div>
+                                );
+                            })}
+                            {isSelectedBlockInRoot ? (
+                                <Tooltip
+                                    text={__('Add Slide', '@@text_domain')}
+                                >
                                     <Button
-                                        icon={ 'insert' }
-                                        onClick={ () => {
+                                        icon={'insert'}
+                                        onClick={() => {
                                             let newTabsData = [];
-                                            const newDataLength = tabsData.length + 1;
-    
-                                            newTabsData = [...tabsData];
-                                            newTabsData.push( {
-                                                slug: `slide-${ newDataLength }`
-                                            } );
-                                                            
-                                            const block = createBlock('da/wp-swiper-slide', { slug: `slide-${ newDataLength }` });
+                                            const newDataLength =
+                                                tabsData.length + 1;
 
-                                            let innerBlocks = getBlocks( clientId );
+                                            newTabsData = [...tabsData];
+                                            newTabsData.push({
+                                                slug: `slide-${newDataLength}`,
+                                            });
+
+                                            const block = createBlock(
+                                                'da/wp-swiper-slide',
+                                                {
+                                                    slug: `slide-${newDataLength}`,
+                                                }
+                                            );
+
+                                            let innerBlocks = getBlocks(
+                                                clientId
+                                            );
                                             innerBlocks = [
                                                 ...innerBlocks,
-                                                block
+                                                block,
                                             ];
 
-                                            replaceInnerBlocks( clientId, innerBlocks, false );
-                                            setAttributes( { tabsData: newTabsData } );
-                                        } }
+                                            replaceInnerBlocks(
+                                                clientId,
+                                                innerBlocks,
+                                                false
+                                            );
+                                            setAttributes({
+                                                tabsData: newTabsData,
+                                            });
+                                        }}
                                     />
                                 </Tooltip>
-                            ) : '' }
+                            ) : (
+                                ''
+                            )}
                         </div>
                         <div className="wp-swiper__slide-content">
                             <InnerBlocks
-                                template={ this.getTabsTemplate() }
+                                template={this.getTabsTemplate()}
                                 templateLock="all"
-                                allowedBlocks={ [ 'da/wp-swiper-slide' ] }
+                                allowedBlocks={['da/wp-swiper-slide']}
                             />
                         </div>
                     </div>
                 </div>
                 <style>
-                    { `
-                    [data-block="${ this.props.clientId }"] .wp-swiper__slides .wp-swiper__slide-content .block-editor-inner-blocks .block-editor-block-list__layout [data-tab="${ tabActive }"] {
+                    {`
+                    [data-block="${this.props.clientId}"] .wp-swiper__slides .wp-swiper__slide-content .block-editor-inner-blocks .block-editor-block-list__layout [data-tab="${tabActive}"] {
                         display: block;
                     }
-                    ` }
+                    `}
                 </style>
             </Fragment>
         );
     }
 }
 
-export default compose( [
-    withSelect( ( select, ownProps ) => {
-        const {
-            getBlock,
-            isBlockSelected,
-            hasSelectedInnerBlock,
-        } = select( 'core/block-editor' );
+export default compose([
+    withSelect((select, ownProps) => {
+        const { getBlock, isBlockSelected, hasSelectedInnerBlock } = select(
+            'core/block-editor'
+        );
 
         const { clientId } = ownProps;
-        
+
         return {
-            block: getBlock( clientId ),
-            isSelectedBlockInRoot: isBlockSelected( clientId ) || hasSelectedInnerBlock( clientId, true ),
+            block: getBlock(clientId),
+            isSelectedBlockInRoot:
+                isBlockSelected(clientId) ||
+                hasSelectedInnerBlock(clientId, true),
         };
-    } ),
-    withDispatch( ( dispatch, ownProps, registry ) => {
+    }),
+    withDispatch((dispatch, ownProps, registry) => {
         const {
             updateBlockAttributes,
             removeBlock,
-            replaceInnerBlocks
-        } = dispatch( 'core/block-editor' );
-        
-        const { getBlocks } = registry.select( 'core/block-editor' );
+            replaceInnerBlocks,
+        } = dispatch('core/block-editor');
+
+        const { getBlocks } = registry.select('core/block-editor');
 
         return {
             replaceInnerBlocks,
@@ -498,5 +558,5 @@ export default compose( [
             updateBlockAttributes,
             removeBlock,
         };
-    } ),
-] )( BlockEdit );
+    }),
+])(BlockEdit);

@@ -59,8 +59,8 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
-= 1.0 =
-* First Release
+= 1.0.6 =
+* Added container width
 
 == Upgrade Notice ==
 

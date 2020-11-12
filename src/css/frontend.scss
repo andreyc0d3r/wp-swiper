@@ -118,6 +118,10 @@
 
         .wp-swiper__slide-content {
             position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
             z-index: 5;
         }
     }
