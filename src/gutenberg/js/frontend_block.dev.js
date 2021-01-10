@@ -58,6 +58,13 @@ var wp_swiper = new function() {
             if( swiper_container.hasAttribute( "data-spacebetween" ) ) {
                 self.options.spaceBetween = self.getNumber( swiper_container.getAttribute( "data-spacebetween" ), 0 );
             }
+            if( swiper_container.hasAttribute( "data-mousewheel" ) ) {
+                self.options.mousewheel = swiper_container.getAttribute( "data-mousewheel" );
+            }
+            if( swiper_container.hasAttribute( "data-releaseonedges" ) ) {
+                self.options.mousewheel = {};
+                self.options.mousewheel.releaseOnEdges = swiper_container.getAttribute( "data-releaseonedges" );
+            }
             window.wpSwiper[i] = new Swiper(swiper_container, self.options);
         }
         

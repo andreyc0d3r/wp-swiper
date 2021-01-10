@@ -13,6 +13,7 @@ import { Component, Fragment } from '@wordpress/element';
 
 import { createBlock } from '@wordpress/blocks';
 import {
+    Panel,
     PanelBody,
     PanelRow,
     BaseControl,
@@ -195,6 +196,8 @@ class BlockEdit extends Component {
             navigation,
             pagination,
             containerWidth,
+            mousewheel,
+            releaseOnEdges
         } = attributes;
 
         className = classnames(className, 'wp-swiper__slides');
@@ -416,6 +419,33 @@ class BlockEdit extends Component {
                                 ]}
                                 onChange={(option) => {
                                     setAttributes({ effect: option });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <h2>Mouse Settings</h2>
+                        </PanelRow>
+                        <PanelRow>
+                            <ToggleControl
+                                label="Mouse Wheel"
+                                help="Enables navigation through slides using mouse wheel."
+                                checked={mousewheel}
+                                onChange={() => {
+                                    setAttributes({ mousewheel: !mousewheel });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <ToggleControl
+                                label="Release On Edges"
+                                help="Set to true and swiper will release mousewheel event and allow page scrolling when swiper is on edge positions (in the beginning or in the end)"
+                                checked={releaseOnEdges}
+                                onChange={() => {
+                                    setAttributes({ releaseOnEdges: !releaseOnEdges });
+
+                                    if(!releaseOnEdges) {
+                                        setAttributes({ mousewheel: !releaseOnEdges });
+                                    }
                                 }}
                             />
                         </PanelRow>

@@ -39,6 +39,8 @@ class BlockSave extends Component {
             effect,
             navigation,
             pagination,
+            mousewheel,
+            releaseOnEdges
         } = this.props.attributes;
 
         let className = classnames('wp-swiper');
@@ -70,6 +72,8 @@ class BlockSave extends Component {
                         data-speed={speed}
                         data-loop={loop}
                         data-effect={effect}
+                        data-mousewheel={mousewheel}
+                        data-releaseonedges={releaseOnEdges}
                     >
                         <div className="swiper-wrapper">
                             <InnerBlocks.Content />
