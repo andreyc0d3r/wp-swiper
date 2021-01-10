@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'DAWPS_PLUGIN_VERSION', '1.0.6' );
+define( 'DAWPS_PLUGIN_VERSION', '1.0.7' );
 
 function activate_wpswiper() {
     require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper-activator.php';
