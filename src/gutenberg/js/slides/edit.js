@@ -431,6 +431,7 @@ class BlockEdit extends Component {
                                 help="Enables navigation through slides using mouse wheel."
                                 checked={mousewheel}
                                 onChange={() => {
+                                    console.log( mousewheel );
                                     setAttributes({ mousewheel: !mousewheel });
                                 }}
                             />
@@ -443,9 +444,9 @@ class BlockEdit extends Component {
                                 onChange={() => {
                                     setAttributes({ releaseOnEdges: !releaseOnEdges });
 
-                                    if(!releaseOnEdges) {
-                                        setAttributes({ mousewheel: !releaseOnEdges });
-                                    }
+                                    // if(!releaseOnEdges) {
+                                    //     setAttributes({ mousewheel: !releaseOnEdges });
+                                    // }
                                 }}
                             />
                         </PanelRow>

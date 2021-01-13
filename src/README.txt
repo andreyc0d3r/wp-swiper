@@ -58,6 +58,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.8 =
+* Avoid block validation error breaking the block
+
 = 1.0.7 =
 * Added Mouse Wheel support
 * Added release on edges support

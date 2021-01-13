@@ -8,6 +8,7 @@ const { __ } = wp.i18n;
 /**
  * Internal dependencies
  */
+import deprecated from './deprecated';
 import metadata from './block.json';
 import edit from './edit';
 import save from './save';
@@ -16,7 +17,7 @@ const { name } = metadata;
 
 export { metadata, name };
 
-export const settings = {
+const settings = {
     ...metadata,
     title: __( 'WP Swiper', '@@text_domain' ),
     description: __( 'Separate content on the tabs with titles.', '@@text_domain' ),
@@ -30,4 +31,19 @@ export const settings = {
     ],
     edit,
     save,
+    deprecated
 };
+
+settings.attributes = {
+    ...settings.attributes,
+    mousewheel: {
+        "type": "boolean",
+        "default": false
+    },
+    "releaseOnEdges": {
+        "type": "boolean",
+        "default": false
+    },
+}
+console.log( settings );
+export { settings };

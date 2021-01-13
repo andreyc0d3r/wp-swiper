@@ -23,7 +23,7 @@ const { name } = metadata;
 /**
  * Block Save Class.
  */
-class BlockSave extends Component {
+class DBlockSave extends Component {
     render() {
         const {
             overlayColor,
@@ -38,9 +38,7 @@ class BlockSave extends Component {
             loop,
             effect,
             navigation,
-            pagination,
-            mousewheel,
-            releaseOnEdges
+            pagination
         } = this.props.attributes;
 
         let className = classnames('wp-swiper');
@@ -66,11 +64,6 @@ class BlockSave extends Component {
             'data-effect': effect
         };
 
-        // if(typeof mousewheel === "undefined") {
-        //     mousewheel ? data_atts['data-mousewheel'] = true : '';
-        // }
-        console.log('mousewheel',mousewheel);
-        data_atts['data-mousewheel'] = true;
         return (
             <div className={className}>
                 {this.getOverlayImg(overlayImg, style_overlay_image)}
@@ -192,4 +185,4 @@ class BlockSave extends Component {
     }
 }
 
-export default BlockSave;
+export default DBlockSave;
