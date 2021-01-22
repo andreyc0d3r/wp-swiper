@@ -58,6 +58,12 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.10 =
+* Added pagination type
+
+= 1.0.9 =
+* Restore Mouse Wheel and RoE support
+
 = 1.0.8 =
 * Avoid block validation error breaking the block
 

@@ -40,10 +40,13 @@ settings.attributes = {
         "type": "boolean",
         "default": false
     },
-    "releaseOnEdges": {
+    releaseOnEdges: {
         "type": "boolean",
         "default": false
     },
+    pagination_type: {
+        "type": "string",
+        "default": "bullets"
+    },
 }
-console.log( settings );
 export { settings };

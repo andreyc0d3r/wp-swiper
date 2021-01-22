@@ -40,7 +40,8 @@ class BlockSave extends Component {
             navigation,
             pagination,
             mousewheel,
-            releaseOnEdges
+            releaseOnEdges,
+            pagination_type
         } = this.props.attributes;
 
         let className = classnames('wp-swiper');
@@ -66,11 +67,10 @@ class BlockSave extends Component {
             'data-effect': effect
         };
 
-        // if(typeof mousewheel === "undefined") {
-        //     mousewheel ? data_atts['data-mousewheel'] = true : '';
-        // }
-        console.log('mousewheel',mousewheel);
-        data_atts['data-mousewheel'] = true;
+        mousewheel == true ? data_atts['data-mousewheel'] = true : data_atts['data-mousewheel'] = false;
+        releaseOnEdges == true ? data_atts['data-releaseonedges'] = true : data_atts['data-releaseonedges'] = false;
+        pagination_type != 'bullets' ? data_atts['data-paginationtype'] = pagination_type : '';
+
         return (
             <div className={className}>
                 {this.getOverlayImg(overlayImg, style_overlay_image)}

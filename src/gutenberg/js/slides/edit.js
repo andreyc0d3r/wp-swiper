@@ -197,7 +197,8 @@ class BlockEdit extends Component {
             pagination,
             containerWidth,
             mousewheel,
-            releaseOnEdges
+            releaseOnEdges,
+            pagination_type
         } = attributes;
 
         className = classnames(className, 'wp-swiper__slides');
@@ -342,11 +343,28 @@ class BlockEdit extends Component {
                             />
                         </PanelRow>
                         <PanelRow>
+                            <h2>Pagination Settings</h2>
+                        </PanelRow>
+                        <PanelRow>
                             <ToggleControl
                                 label="Show pagination"
                                 checked={pagination}
                                 onChange={() => {
                                     setAttributes({ pagination: !pagination });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <SelectControl
+                                label="Type of pagination"
+                                selected={pagination_type}
+                                options={[
+                                    { label: 'Bullets', value: 'bullets' },
+                                    { label: 'Fraction', value: 'fraction' },
+                                    { label: 'Progress Bar', value: 'progressbar' }
+                                ]}
+                                onChange={(option) => {
+                                    setAttributes({ pagination_type: option });
                                 }}
                             />
                         </PanelRow>
@@ -431,7 +449,6 @@ class BlockEdit extends Component {
                                 help="Enables navigation through slides using mouse wheel."
                                 checked={mousewheel}
                                 onChange={() => {
-                                    console.log( mousewheel );
                                     setAttributes({ mousewheel: !mousewheel });
                                 }}
                             />

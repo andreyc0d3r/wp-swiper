@@ -32,6 +32,10 @@ var wp_swiper = new function() {
                     self.options.pagination = {
                         el: wpSwipers[i].querySelector( ".swiper-pagination" )
                     };
+
+                    if( ( swiper_container.getAttribute( "data-paginationtype" ) ) ) {
+                        self.options.pagination.type = swiper_container.getAttribute( "data-paginationtype" );
+                    }
                 }
             }
             if( swiper_container.hasAttribute( "data-slidespercolumn" ) ) {
