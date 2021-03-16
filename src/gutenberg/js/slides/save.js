@@ -41,7 +41,8 @@ class BlockSave extends Component {
             pagination,
             mousewheel,
             releaseOnEdges,
-            pagination_type
+            pagination_type,
+            clickable_pagination
         } = this.props.attributes;
 
         let className = classnames('wp-swiper');
@@ -70,6 +71,7 @@ class BlockSave extends Component {
         mousewheel == true ? data_atts['data-mousewheel'] = true : data_atts['data-mousewheel'] = false;
         releaseOnEdges == true ? data_atts['data-releaseonedges'] = true : data_atts['data-releaseonedges'] = false;
         pagination_type != 'bullets' ? data_atts['data-paginationtype'] = pagination_type : '';
+        clickable_pagination == true ? data_atts['data-clickablepagination'] = true : '';
 
         return (
             <div className={className}>

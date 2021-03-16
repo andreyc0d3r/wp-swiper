@@ -36,6 +36,10 @@ var wp_swiper = new function() {
                     if( ( swiper_container.getAttribute( "data-paginationtype" ) ) ) {
                         self.options.pagination.type = swiper_container.getAttribute( "data-paginationtype" );
                     }
+
+                    if( ( swiper_container.getAttribute( "data-clickablepagination" ) ) ) {
+                        self.options.pagination.clickable = swiper_container.getAttribute( "data-clickablepagination" );
+                    }
                 }
             }
             if( swiper_container.hasAttribute( "data-slidespercolumn" ) ) {
@@ -64,10 +68,12 @@ var wp_swiper = new function() {
             }
             if( swiper_container.hasAttribute( "data-mousewheel" ) ) {
                 self.options.mousewheel = swiper_container.getAttribute( "data-mousewheel" );
-            }
+            } 
             if( swiper_container.hasAttribute( "data-releaseonedges" ) ) {
-                self.options.mousewheel = {};
-                self.options.mousewheel.releaseOnEdges = swiper_container.getAttribute( "data-releaseonedges" );
+                if( "true" === swiper_container.getAttribute( "data-mousewheel" ) && "true" === swiper_container.getAttribute( "data-releaseonedges" ) ){
+                    self.options.mousewheel = {};
+                    self.options.mousewheel.releaseOnEdges = swiper_container.getAttribute( "data-releaseonedges" );
+                }
             }
             window.wpSwiper[i] = new Swiper(swiper_container, self.options);
         }

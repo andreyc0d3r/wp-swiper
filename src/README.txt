@@ -3,7 +3,7 @@ Contributors: digitalapps
 Donate link: https://digitalapps.com
 Tags: swiper, swiperjs, wpswiper, wp swiper, carousel
 Requires at least: 3.0.1
-Tested up to: 5.6
+Tested up to: 5.7
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -58,6 +58,12 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.12 =
+Fixed a bug with release on edges, and mouse wheel events always set to true
+
+= 1.0.11 =
+* Added clickable pagination
+
 = 1.0.10 =
 * Added pagination type
 

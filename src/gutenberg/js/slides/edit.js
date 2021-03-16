@@ -198,7 +198,8 @@ class BlockEdit extends Component {
             containerWidth,
             mousewheel,
             releaseOnEdges,
-            pagination_type
+            pagination_type,
+            clickable_pagination
         } = attributes;
 
         className = classnames(className, 'wp-swiper__slides');
@@ -369,6 +370,18 @@ class BlockEdit extends Component {
                             />
                         </PanelRow>
                         <PanelRow>
+                            <ToggleControl
+                                label="Clickable Pagination"
+                                checked={clickable_pagination}
+                                onChange={() => {
+                                    setAttributes({ clickable_pagination: !clickable_pagination });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <h2>Slide Settings</h2>
+                        </PanelRow>
+                        <PanelRow>
                             <TextControl
                                 label="Space Beween"
                                 help="Distance between slides in px."
@@ -387,6 +400,9 @@ class BlockEdit extends Component {
                                     setAttributes({ slidesPerView: option });
                                 }}
                             />
+                        </PanelRow>
+                        <PanelRow>
+                            <h2>Slider Settings</h2>
                         </PanelRow>
                         <PanelRow>
                             <ToggleControl
@@ -456,7 +472,7 @@ class BlockEdit extends Component {
                         <PanelRow>
                             <ToggleControl
                                 label="Release On Edges"
-                                help="Set to true and swiper will release mousewheel event and allow page scrolling when swiper is on edge positions (in the beginning or in the end)"
+                                help="Set to true and swiper will release mousewheel event and allow page scrolling when swiper is on edge positions (in the beginning or in the end) NOTE: Mouse Wheel must be set to true for this to work."
                                 checked={releaseOnEdges}
                                 onChange={() => {
                                     setAttributes({ releaseOnEdges: !releaseOnEdges });

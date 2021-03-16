@@ -60,6 +60,10 @@
             "type": "boolean",
             "default": true
         },
+        "clickable_pagination": {
+            "type": "boolean",
+            "default": false
+        },
         "loop": {
             "type": "string",
             "default": false
