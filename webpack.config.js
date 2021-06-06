@@ -9,7 +9,8 @@ const externals = {
     '@wordpress/components': ['wp', 'components'],
     '@wordpress/block-editor': ['wp', 'blockEditor'],
     '@wordpress/blocks': ['wp', 'blocks'],
-    '@wordpress/compose': ['wp', 'compose']
+    '@wordpress/compose': ['wp', 'compose'],
+    '@wordpress/keycodes': ['wp', 'keycodes'],
 };
 
 const autoprefixer = require('autoprefixer');

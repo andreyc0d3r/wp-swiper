@@ -12,6 +12,8 @@ import { Component, Fragment } from "@wordpress/element";
 
 import { withSelect } from "@wordpress/data";
 
+import BlockAlignmentMatrixControl from "../components/block-alignment-matrix-control"
+
 import {
     PanelRow,
     PanelBody,
@@ -23,14 +25,24 @@ import {
     InnerBlocks,
     BlockControls,
     InspectorControls,
-    AlignmentToolbar,
-    BlockVerticalAlignmentToolbar,
     MediaUploadCheck,
-    MediaUpload,
-    __experimentalBlockAlignmentMatrixControl as BlockAlignmentMatrixControl
+    MediaUpload
 } from "@wordpress/block-editor";
 
 import get_image from "../utils/get-image";
+
+const POSITION_CLASSNAMES = {
+	'top left': 'is-position-top-left',
+	'top center': 'is-position-top-center',
+	'top right': 'is-position-top-right',
+	'center left': 'is-position-center-left',
+	'center center': 'is-position-center-center',
+	center: 'is-position-center-center',
+	'center right': 'is-position-center-right',
+	'bottom left': 'is-position-bottom-left',
+	'bottom center': 'is-position-bottom-center',
+	'bottom right': 'is-position-bottom-right',
+};
 
 /**
  * Block Edit Class.
@@ -43,6 +55,23 @@ class BlockEdit extends Component {
 
     isEmpty = (val) => {
         return true;
+    };
+
+    isContentPositionCenter = ( contentPosition ) => {
+        return (
+            ! contentPosition ||
+            contentPosition === 'center center' ||
+            contentPosition === 'center'
+        );
+    };
+
+    getPositionClassName = ( contentPosition ) => {
+        /*
+         * Only render a className if the contentPosition is not center (the default).
+         */
+        if ( this.isContentPositionCenter( contentPosition ) ) return '';
+    
+        return POSITION_CLASSNAMES[ contentPosition ];
     };
 
     getOverlayImage = (style) => {
@@ -66,15 +95,12 @@ class BlockEdit extends Component {
 
         let { className = "" } = this.props;
 
-        const { slideImg, contentHalign, contentValign, overlayColor, contentVHalign } = attributes;
+        const { slideImg, overlayColor, contentVHalign } = attributes;
 
         className = classnames(className, "wp-swiper__slide");
         className = classnames(className, { "has-image": this.isEmpty(slideImg) });
         
-        className = classnames(className, { "valign-center": contentValign ===  'center' });
-        className = classnames(className, { "valign-bottom": contentValign ===  'bottom' });
-        className = classnames(className, { "halign-center": contentHalign ===  'center' });
-        className = classnames(className, { "halign-right": contentHalign ===  'right' });
+        className = classnames(className, this.getPositionClassName( contentVHalign ));
         
         let style_overlay_image = {};
         let style_overlay_color = {};

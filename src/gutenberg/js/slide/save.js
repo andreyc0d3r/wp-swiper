@@ -35,20 +35,6 @@ class BlockSave extends Component {
 
         let className = 'wp-swiper__slide swiper-slide';
 
-        if (contentValign != '' && typeof contentValign !== 'undefined') {
-            className = classnames(
-                className,
-                `wp-swiper--valign-${contentValign}`
-            );
-        }
-
-        if (contentHalign != '' && typeof contentHalign !== 'undefined') {
-            className = classnames(
-                className,
-                `wp-swiper--halign-${contentHalign}`
-            );
-        }
-
         const style = slideImg ? { backgroundImage: `url(${slideImg})` } : {};
         const contaienr_width_style = containerWidth
             ? { maxWidth: `${containerWidth}%` }
