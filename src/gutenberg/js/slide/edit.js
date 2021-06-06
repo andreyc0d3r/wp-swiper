@@ -16,7 +16,7 @@ import {
     PanelRow,
     PanelBody,
     BaseControl,
-    Button,
+    Button
 } from "@wordpress/components";
 
 import {
@@ -27,6 +27,7 @@ import {
     BlockVerticalAlignmentToolbar,
     MediaUploadCheck,
     MediaUpload,
+    __experimentalBlockAlignmentMatrixControl as BlockAlignmentMatrixControl
 } from "@wordpress/block-editor";
 
 import get_image from "../utils/get-image";
@@ -65,7 +66,7 @@ class BlockEdit extends Component {
 
         let { className = "" } = this.props;
 
-        const { slideImg, contentHalign, contentValign, overlayColor } = attributes;
+        const { slideImg, contentHalign, contentValign, overlayColor, contentVHalign } = attributes;
 
         className = classnames(className, "wp-swiper__slide");
         className = classnames(className, { "has-image": this.isEmpty(slideImg) });
@@ -123,19 +124,13 @@ class BlockEdit extends Component {
                         </BaseControl>
                     </PanelBody>
                 </InspectorControls>
-                <BlockControls>
-                    <AlignmentToolbar
-                        value={contentHalign}
-                        onChange={(value) => {
-                            setAttributes({ contentHalign: value });
-                        }}
-                        controls={["left", "center", "right"]}
-                    />
-                    <BlockVerticalAlignmentToolbar
-                        value={contentValign}
-                        onChange={(value) => {
-                            setAttributes({ contentValign: value });
-                        }}
+                <BlockControls group="block">
+                    <BlockAlignmentMatrixControl
+                        label={ __( 'Change content position' ) }
+                        value={contentVHalign}
+                        onChange={ ( value ) => {
+							setAttributes({ contentVHalign: value });
+						} }
                     />
                 </BlockControls>
 

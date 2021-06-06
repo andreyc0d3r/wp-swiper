@@ -58,6 +58,11 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.13 =
+* Fix Vertical Align
+* Remove slider navigation SVGs
+* Deprecate Horizontal Align controls
+
 = 1.0.12 =
 Fixed a bug with release on edges, and mouse wheel events always set to true
 

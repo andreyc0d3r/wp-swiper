@@ -23,7 +23,7 @@ import {
     ColorPicker,
     RangeControl,
     TextControl,
-    SelectControl,
+    SelectControl
 } from '@wordpress/components';
 
 import {
