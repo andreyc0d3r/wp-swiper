@@ -164,6 +164,14 @@
     display: none;
 }
 
+.wp-swiper__slides .wb-tabs-buttons {
+    margin-bottom: 0;
+}
+
+.wp-swiper__slides div[data-type="da/wp-swiper-slide"] {
+    margin-top: 0;
+}
+
 /* <remove button> */
 div[data-type="da/wp-swiper-slides"] {
     button.wb-component-remove-button {
