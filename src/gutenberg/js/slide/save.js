@@ -17,6 +17,10 @@ const { InnerBlocks } = wp.blockEditor;
  */
 import metadata from './block.json';
 
+import {
+	getPositionClassName,
+} from '../utils/shared';
+
 const { name } = metadata;
 
 /**
@@ -28,13 +32,19 @@ class BlockSave extends Component {
             overlayColor,
             slug,
             slideImg,
-            contentValign,
-            contentHalign,
+            contentVHalign,
             containerWidth,
         } = this.props.attributes;
 
         let className = 'wp-swiper__slide swiper-slide';
 
+        if (contentVHalign != '' && typeof contentVHalign !== 'undefined') {
+            className = classnames(
+                className,
+                getPositionClassName( contentVHalign )
+            );
+        }
+        
         const style = slideImg ? { backgroundImage: `url(${slideImg})` } : {};
         const contaienr_width_style = containerWidth
             ? { maxWidth: `${containerWidth}%` }
