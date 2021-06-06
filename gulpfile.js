@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 
-const $ = require('gulp-load-plugins')();
+const $ = require('gulp-load-plugins')({DEBUG: false});
 var gutil = require('gulp-util');
 
 var zip = require('gulp-vinyl-zip');
