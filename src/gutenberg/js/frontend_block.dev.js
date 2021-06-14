@@ -49,7 +49,8 @@ var wp_swiper = new function() {
                 self.options.autoplay = ( swiper_container.getAttribute( "data-autoplay" ) == "true" );
             }
             if( swiper_container.hasAttribute( "data-delay" ) ) {
-                self.options.delay = swiper_container.getAttribute( "data-delay" );
+                self.options.autoplay = {};
+                self.options.autoplay.delay = swiper_container.getAttribute( "data-delay" );
             }
             if( swiper_container.hasAttribute( "data-speed" ) ) {
                 self.options.speed = self.getNumber( swiper_container.getAttribute( "data-speed" ), 500);
