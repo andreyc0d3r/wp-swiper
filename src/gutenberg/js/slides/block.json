@@ -65,7 +65,7 @@
             "default": false
         },
         "loop": {
-            "type": "string",
+            "type": "boolean",
             "default": false
         },
         "effect": {

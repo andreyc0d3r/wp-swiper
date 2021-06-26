@@ -6,19 +6,18 @@ import classnames from 'classnames/dedupe';
 /**
  * WordPress dependencies
  */
-const { applyFilters } = wp.hooks;
 
 const { Component } = wp.element;
 
-const { RichText, InnerBlocks } = wp.blockEditor;
+const { InnerBlocks } = wp.blockEditor;
 
 /**
  * Internal dependencies
  */
 import metadata from './block.json';
-import get_image from '../utils/get-image';
+// import get_image from '../utils/get-image';
 
-const { name } = metadata;
+// const { name } = metadata;
 
 /**
  * Block Save Class.
@@ -73,6 +72,7 @@ class BlockSave extends Component {
         pagination_type != 'bullets' ? data_atts['data-paginationtype'] = pagination_type : '';
         clickable_pagination == true ? data_atts['data-clickablepagination'] = true : '';
 
+        console.log('data_atts', data_atts)
         return (
             <div className={className}>
                 {this.getOverlayImg(overlayImg, style_overlay_image)}

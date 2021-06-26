@@ -58,6 +58,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.14 =
+* Fix block validation error
+
 = 1.0.13 =
 * Fix Vertical Align
 * Remove slider navigation SVGs

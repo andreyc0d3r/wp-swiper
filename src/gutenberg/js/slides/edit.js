@@ -13,7 +13,6 @@ import { Component, Fragment } from '@wordpress/element';
 
 import { createBlock } from '@wordpress/blocks';
 import {
-    Panel,
     PanelBody,
     PanelRow,
     BaseControl,
@@ -426,8 +425,9 @@ class BlockEdit extends Component {
                             <TextControl
                                 label="Delay"
                                 value={delay}
+                                type="number"
                                 onChange={(option) => {
-                                    setAttributes({ delay: option });
+                                    setAttributes({ delay: parseInt(option) });
                                 }}
                             />
                         </PanelRow>
@@ -435,8 +435,9 @@ class BlockEdit extends Component {
                             <TextControl
                                 label="Speed"
                                 value={speed}
+                                type="number"
                                 onChange={(option) => {
-                                    setAttributes({ speed: option });
+                                    setAttributes({ speed: parseInt(option) });
                                 }}
                             />
                         </PanelRow>
