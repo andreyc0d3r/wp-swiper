@@ -393,7 +393,7 @@ class BlockEdit extends Component {
                         <PanelRow>
                             <TextControl
                                 label="Slides per view"
-                                help="Number of slides per view (slides visible at the same time on slider's container)."
+                                help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
                                 value={slidesPerView}
                                 onChange={(option) => {
                                     setAttributes({ slidesPerView: option });
