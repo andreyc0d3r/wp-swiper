@@ -40,7 +40,11 @@ var wp_swiper = new function() {
                     if( ( swiper_container.getAttribute( "data-clickablepagination" ) ) ) {
                         self.options.pagination.clickable = swiper_container.getAttribute( "data-clickablepagination" );
                     }
+                } else {
+                    self.options.pagination = false;
                 }
+            } else {
+                self.options.pagination = false;
             }
             if( swiper_container.hasAttribute( "data-slidespercolumn" ) ) {
                 self.options.slidesPerColumn = self.getNumber( swiper_container.getAttribute( "data-slidespercolumn" ), 1 );
