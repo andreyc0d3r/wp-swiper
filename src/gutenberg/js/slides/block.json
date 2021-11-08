@@ -98,6 +98,9 @@
                     "slug": "slide-2"
                 }
             ]
+        },
+        "breakpoints": {
+            "type": "string"
         }
     }
 }

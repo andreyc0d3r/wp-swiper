@@ -416,6 +416,9 @@ class BlockEdit extends Component {
                             />
                         </PanelRow>
                         <PanelRow>
+                            <p>Example: {'{"720":{"slidesPerView":2}}'} - Notice the double quotes</p>
+                        </PanelRow>
+                        <PanelRow>
                             <h2>Slider Settings</h2>
                         </PanelRow>
                         <PanelRow>

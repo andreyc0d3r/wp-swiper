@@ -20,7 +20,7 @@ var settings = {
     svn_path: '../svn',
     mac_dest:
         '/Users/andrey/Dev/server/wp-swiper/www/app/public/wp-content/plugins/wp-swiper',
-    win_dest: 'H:/dev/server/wp-swiper/www/wp-content/plugins/wp-swiper',
+    win_dest: 'H:/dev/server/wordpress/wp/app/public/wp-content/plugins/wp-swiper',
 };
 
 /**
