@@ -71,6 +71,9 @@ var wp_swiper = new function() {
             if( swiper_container.hasAttribute( "data-spacebetween" ) ) {
                 self.options.spaceBetween = self.getNumber( swiper_container.getAttribute( "data-spacebetween" ), 0 );
             }
+            if( swiper_container.hasAttribute( "data-breakpoints" ) ) {
+                self.options.breakpoints = swiper_container.getAttribute( "data-breakpoints" );
+            }
             if( swiper_container.hasAttribute( "data-mousewheel" ) ) {
                 self.options.mousewheel = swiper_container.getAttribute( "data-mousewheel" );
             } 

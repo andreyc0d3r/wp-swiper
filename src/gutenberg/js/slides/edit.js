@@ -22,7 +22,8 @@ import {
     ColorPicker,
     RangeControl,
     TextControl,
-    SelectControl
+    SelectControl,
+    TextareaControl
 } from '@wordpress/components';
 
 import {
@@ -198,7 +199,8 @@ class BlockEdit extends Component {
             mousewheel,
             releaseOnEdges,
             pagination_type,
-            clickable_pagination
+            clickable_pagination,
+            breakpoints
         } = attributes;
 
         className = classnames(className, 'wp-swiper__slides');
@@ -397,6 +399,19 @@ class BlockEdit extends Component {
                                 value={slidesPerView}
                                 onChange={(option) => {
                                     setAttributes({ slidesPerView: option });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <h2>Breakpoints</h2>
+                        </PanelRow>
+                        <PanelRow>
+                            <TextareaControl
+                                label="Responsive breakpoints (JSON Object)"
+                                help="Allows to set different parameter for different responsive breakpoints (screen sizes). Not all parameters can be changed in breakpoints, only those which are not required different layout and logic, like slidesPerView, slidesPerGroup, spaceBetween, grid.rows. Such parameters like loop and effect won't work"
+                                value={breakpoints}
+                                onChange={(option) => {
+                                    setAttributes({ breakpoints: option });
                                 }}
                             />
                         </PanelRow>

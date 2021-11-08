@@ -41,7 +41,8 @@ class BlockSave extends Component {
             mousewheel,
             releaseOnEdges,
             pagination_type,
-            clickable_pagination
+            clickable_pagination,
+            breakpoints
         } = this.props.attributes;
 
         let className = classnames('wp-swiper');
@@ -71,8 +72,8 @@ class BlockSave extends Component {
         releaseOnEdges == true ? data_atts['data-releaseonedges'] = true : data_atts['data-releaseonedges'] = false;
         pagination_type != 'bullets' ? data_atts['data-paginationtype'] = pagination_type : '';
         clickable_pagination == true ? data_atts['data-clickablepagination'] = true : '';
+        breakpoints == true ? data_atts['data-breakpoints'] = breakpoints : '';
 
-        console.log('data_atts', data_atts)
         return (
             <div className={className}>
                 {this.getOverlayImg(overlayImg, style_overlay_image)}
