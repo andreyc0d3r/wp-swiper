@@ -113,9 +113,10 @@ var wp_swiper = new (function () {
                 );
             }
             if (swiper_container.hasAttribute("data-breakpoints")) {
-                console.log( swiper_container.getAttribute("data-breakpoints").replace(/\\/g, "") );
-                self.options.breakpoints = JSON.parse(swiper_container.getAttribute("data-breakpoints").replace(/\\/g, ""));
-   
+                const breakpoints = swiper_container.getAttribute("data-breakpoints");
+                if( typeof breakpoints !== 'undefined' ) {
+                    self.options.breakpoints = JSON.parse(breakpoints.replace(/\\/g, ""));
+                }
             }
             if (swiper_container.hasAttribute("data-mousewheel")) {
                 self.options.mousewheel =
