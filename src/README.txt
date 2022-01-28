@@ -58,6 +58,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.18 =
+* Breakpoints bug
+
 = 1.0.17 =
 * Added support for responsive breakpoints
 
