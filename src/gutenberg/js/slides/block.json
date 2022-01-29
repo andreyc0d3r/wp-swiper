@@ -82,11 +82,11 @@
         },
         "slidesPerView": {
             "type": "number",
-            "default": "1"
+            "default": 1
         },
         "spaceBetween": {
             "type": "number",
-            "default": "0"
+            "default": 0
         },
         "tabsData": {
             "type": "array",

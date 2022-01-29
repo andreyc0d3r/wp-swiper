@@ -58,7 +58,6 @@ class BlockSave extends Component {
 
         const data_atts = {
             'data-slidesperview': slidesPerView,
-            'data-spacebetween': spaceBetween,
             'data-navigation': navigation,
             'data-pagination': pagination,
             'data-autoplay': autoplay,
@@ -67,6 +66,8 @@ class BlockSave extends Component {
             'data-loop': loop,
             'data-effect': effect
         };
+
+        data_atts['data-spacebetween'] = spaceBetween;
 
         mousewheel == true ? data_atts['data-mousewheel'] = true : data_atts['data-mousewheel'] = false;
         releaseOnEdges == true ? data_atts['data-releaseonedges'] = true : data_atts['data-releaseonedges'] = false;

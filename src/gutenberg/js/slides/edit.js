@@ -384,11 +384,11 @@ class BlockEdit extends Component {
                         </PanelRow>
                         <PanelRow>
                             <TextControl
-                                label="Space Beween"
+                                label="Space Between"
                                 help="Distance between slides in px."
                                 value={spaceBetween}
                                 onChange={(option) => {
-                                    setAttributes({ spaceBetween: option });
+                                    setAttributes({ spaceBetween: parseInt(option) });
                                 }}
                             />
                         </PanelRow>
@@ -398,7 +398,7 @@ class BlockEdit extends Component {
                                 help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
                                 value={slidesPerView}
                                 onChange={(option) => {
-                                    setAttributes({ slidesPerView: option });
+                                    setAttributes({ slidesPerView: parseInt(option) });
                                 }}
                             />
                         </PanelRow>
