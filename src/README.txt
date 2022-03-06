@@ -66,6 +66,7 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 = 1.0.19 =
 * Autoplay bug
+* Settings with integers bug
 
 = 1.0.18 =
 * Breakpoints bug
