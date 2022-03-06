@@ -359,7 +359,7 @@ class BlockEdit extends Component {
                         <PanelRow>
                             <SelectControl
                                 label="Type of pagination"
-                                selected={pagination_type}
+                                value={pagination_type}
                                 options={[
                                     { label: 'Bullets', value: 'bullets' },
                                     { label: 'Fraction', value: 'fraction' },
@@ -462,7 +462,7 @@ class BlockEdit extends Component {
                         <PanelRow>
                             <SelectControl
                                 label="Effect (Under Consttruction)"
-                                selected={effect}
+                                value={effect}
                                 options={[
                                     { label: 'Slide', value: 'slide' },
                                     { label: 'Fade', value: 'fade' },

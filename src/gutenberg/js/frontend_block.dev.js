@@ -2,7 +2,6 @@ import "../../css/frontend.scss";
 
 var wp_swiper = new (function () {
     var self = this;
-    var $ = jQuery;
     self.options = {};
 
     self.init = function () {
@@ -138,7 +137,7 @@ var wp_swiper = new (function () {
         }
     };
 
-    $(document).ready(function () {
+    window.addEventListener('DOMContentLoaded', (event) => {
         try {
             self.init();
         } catch (e) {

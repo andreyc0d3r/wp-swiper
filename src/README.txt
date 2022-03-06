@@ -58,6 +58,15 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.20 =
+* Removed jQuery as a dependency
+* Bullet type bug
+* Slider style bug
+* Updated Swiper bundle
+
+= 1.0.19 =
+* Autoplay bug
+
 = 1.0.18 =
 * Breakpoints bug
 

@@ -117,7 +117,7 @@ class WP_Swiper_Public {
         wp_register_script(
             $this->plugin_name . '-bundle-js',
             plugin_dir_url(__DIR__) .  'public/js/swiper-bundle.min.js',
-            array( 'jquery' ),
+            array(),
             '1.0.0'
         );
 
@@ -128,7 +128,7 @@ class WP_Swiper_Public {
         wp_register_script(
             $this->plugin_name . '-frontend-js',
             plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
-            array( 'jquery', $this->plugin_name . '-bundle-js' ),
+            array( $this->plugin_name . '-bundle-js' ),
             DAWPS_PLUGIN_VERSION
         );
 

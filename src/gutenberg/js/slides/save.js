@@ -71,7 +71,7 @@ class BlockSave extends Component {
 
         mousewheel == true ? data_atts['data-mousewheel'] = true : data_atts['data-mousewheel'] = false;
         releaseOnEdges == true ? data_atts['data-releaseonedges'] = true : data_atts['data-releaseonedges'] = false;
-        pagination_type != 'bullets' ? data_atts['data-paginationtype'] = pagination_type : '';
+        pagination_type != 'bullets' ? data_atts['data-paginationtype'] = pagination_type : 'bullets';
         clickable_pagination == true ? data_atts['data-clickablepagination'] = true : '';
 
         if( typeof breakpoints !== 'undefined' ) {
@@ -87,7 +87,7 @@ class BlockSave extends Component {
                     style={style_overlay_wrapper}
                 >
                     <div
-                        className="swiper-container"
+                        className="swiper-container swiper"
                         {...data_atts}
                     >
                         <div className="swiper-wrapper">
