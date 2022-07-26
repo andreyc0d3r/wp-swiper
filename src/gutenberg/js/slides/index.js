@@ -36,6 +36,10 @@ const settings = {
 
 settings.attributes = {
     ...settings.attributes,
+    freeMode: {
+        "type": "boolean",
+        "default": false
+    },
     mousewheel: {
         "type": "boolean",
         "default": false

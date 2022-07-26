@@ -27,6 +27,17 @@ var wp_swiper = new (function () {
             let swiper_container =
                 wpSwipers[i].querySelector(".swiper-container");
 
+            if (swiper_container.hasAttribute("data-freemode")) {
+                if (
+                    swiper_container.getAttribute("data-freemode") == "true"
+                ) {
+                    self.options.freeMode =
+                        swiper_container.getAttribute(
+                            "data-freemode"
+                        );
+                }
+            }
+
             if (swiper_container.hasAttribute("data-navigation")) {
                 if (
                     swiper_container.getAttribute("data-navigation") == "true"

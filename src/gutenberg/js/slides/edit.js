@@ -200,7 +200,8 @@ class BlockEdit extends Component {
             releaseOnEdges,
             pagination_type,
             clickable_pagination,
-            breakpoints
+            breakpoints,
+            freeMode
         } = attributes;
 
         className = classnames(className, 'wp-swiper__slides');
@@ -472,6 +473,15 @@ class BlockEdit extends Component {
                                 ]}
                                 onChange={(option) => {
                                     setAttributes({ effect: option });
+                                }}
+                            />
+                        </PanelRow>
+                        <PanelRow>
+                            <ToggleControl
+                                label="Free Mode"
+                                checked={freeMode}
+                                onChange={() => {
+                                    setAttributes({ freeMode: !freeMode });
                                 }}
                             />
                         </PanelRow>
