@@ -20,3 +20,5 @@ http://wordpress.local/
 ## WordPress SVN
 
 gulp svn
+
+#### on mac
