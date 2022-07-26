@@ -58,6 +58,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.21 =
+* Updated Swiper bundle
+
 = 1.0.20 =
 * Removed jQuery as a dependency
 * Bullet type bug
