@@ -74,11 +74,11 @@ class BlockSave extends Component {
         pagination_type != 'bullets' ? data_atts['data-paginationtype'] = pagination_type : 'bullets';
         clickable_pagination == true ? data_atts['data-clickablepagination'] = true : '';
 
-        if( typeof breakpoints !== 'undefined' ) {
-            data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm,''));
-            data_atts['data-breakpoints'] = data_atts['data-breakpoints'].substring(1, data_atts['data-breakpoints'].length-1);
+        if (typeof breakpoints !== 'undefined' && breakpoints != "") {
+            data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));
+            data_atts['data-breakpoints'] = data_atts['data-breakpoints'].substring(1, data_atts['data-breakpoints'].length - 1);
         }
-        
+
         return (
             <div className={className}>
                 {this.getOverlayImg(overlayImg, style_overlay_image)}
