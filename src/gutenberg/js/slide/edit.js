@@ -142,7 +142,6 @@ class BlockEdit extends Component {
                         <div className="wp-swiper__slide-overlay wp-swiper__slide-overlay--color" style={style_overlay_color} />
                     }
                     <InnerBlocks
-                        templateLock={false}
                         renderAppender={
                             hasChildBlocks
                                 ? undefined

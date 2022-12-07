@@ -31,6 +31,7 @@ import {
     InnerBlocks,
     MediaUploadCheck,
     MediaUpload,
+    store as blockEditorStore
 } from '@wordpress/block-editor';
 
 import { compose } from '@wordpress/compose';
@@ -43,6 +44,8 @@ import { withSelect, withDispatch } from '@wordpress/data';
 import RemoveButton from '../components/remove-button';
 import getUniqueSlug from '../utils/get-unique-slug';
 import get_image from '../utils/get-image';
+
+import { isEqual } from 'lodash';
 
 /**
  * Block Edit Class.
@@ -164,7 +167,41 @@ class BlockEdit extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        const {
+            block,
+            setAttributes,
+            replaceInnerBlocks,
+            getBlocks
+        } = this.props;
+
+        const prevClientId = prevProps.block.innerBlocks.map(function (ib) {
+            return ib.clientId;
+        });
+
+        const propClientId = block.innerBlocks.map(function (ib) {
+            return ib.clientId;
+        });
+
+        if (!isEqual(prevClientId, propClientId)) {
+            let newTabsData = [];
+            block.innerBlocks.map((tabData, i) => {
+                newTabsData.push({
+                    slug: tabData.attributes.slug,
+                });
+            });
+
+            setAttributes({
+                tabsData: newTabsData,
+            });
+
+            const innerBlocks = [...getBlocks(block.clientId)];
+            replaceInnerBlocks(block.clientId, innerBlocks, false);
+        }
+    }
+
     render() {
+        
         const {
             clientId,
             attributes,
@@ -204,6 +241,8 @@ class BlockEdit extends Component {
             freeMode
         } = attributes;
 
+        
+
         className = classnames(className, 'wp-swiper__slides');
 
         let buttonsAlignValForControl = buttonsAlign;
@@ -217,6 +256,8 @@ class BlockEdit extends Component {
         let counter = 1;
 
         const style = txtColor ? { color: txtColor } : {};
+
+        console.log('RE RENDER');
 
         return (
             <Fragment>
@@ -603,7 +644,6 @@ class BlockEdit extends Component {
                         <div className="wp-swiper__slide-content">
                             <InnerBlocks
                                 template={this.getTabsTemplate()}
-                                templateLock="all"
                                 allowedBlocks={['da/wp-swiper-slide']}
                             />
                         </div>
@@ -623,13 +663,16 @@ class BlockEdit extends Component {
 
 export default compose([
     withSelect((select, ownProps) => {
-        const { getBlock, isBlockSelected, hasSelectedInnerBlock } = select(
-            'core/block-editor'
-        );
+        const { 
+            getBlock, 
+            isBlockSelected, 
+            hasSelectedInnerBlock 
+        } = select('core/block-editor');
 
         const { clientId } = ownProps;
 
         return {
+            blocks: select( blockEditorStore ).getBlocks(),
             block: getBlock(clientId),
             isSelectedBlockInRoot:
                 isBlockSelected(clientId) ||
@@ -641,11 +684,17 @@ export default compose([
             updateBlockAttributes,
             removeBlock,
             replaceInnerBlocks,
+            moveBlockToPosition,
+            moveBlocksDown
         } = dispatch('core/block-editor');
+
+        console.log('DISPATCHER');
 
         const { getBlocks } = registry.select('core/block-editor');
 
         return {
+            moveBlocksDown,
+            moveBlockToPosition,
             replaceInnerBlocks,
             getBlocks,
             updateBlockAttributes,
