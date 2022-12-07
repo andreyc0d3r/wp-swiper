@@ -17,9 +17,9 @@ var settings = {
     repo_path: './src',
     dist_path: '../dist',
     zip_path: '../zip',
-    svn_path: '../svn',
+    svn_path: '../wp-swiper-svn',
     mac_dest:
-        '/Users/andrey/Dev/server/wp-swiper/www/app/public/wp-content/plugins/wp-swiper',
+        '/Users/andrey/Local Sites/wpswiperlocal/app/public/wp-content/plugins/wp-swiper',
     win_dest: 'H:/dev/server/wordpress/wp/app/public/wp-content/plugins/wp-swiper',
 };
 

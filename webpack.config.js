@@ -11,6 +11,7 @@ const externals = {
     '@wordpress/blocks': ['wp', 'blocks'],
     '@wordpress/compose': ['wp', 'compose'],
     '@wordpress/keycodes': ['wp', 'keycodes'],
+    'lodash': 'lodash'
 };
 
 const autoprefixer = require('autoprefixer');
