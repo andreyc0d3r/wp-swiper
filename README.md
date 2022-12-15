@@ -10,6 +10,7 @@ npm run build
 
 for windows:
 npm run dev "&&" gulp win
+npm run dev & gulp mac
 
 
 ## Test 
