@@ -202,8 +202,6 @@ class BlockEdit extends Component {
 
 		const style = txtColor ? { color: txtColor } : {};
 
-		console.log("RE RENDER");
-
 		return (
 			<Fragment>
 				<InspectorControls>
@@ -591,9 +589,6 @@ export default compose([
 	}),
 	withDispatch((dispatch, ownProps, registry) => {
 		const { updateBlockAttributes, removeBlock, replaceInnerBlocks, moveBlockToPosition, moveBlocksDown } = dispatch("core/block-editor");
-
-		console.log("DISPATCHER");
-
 		const { getBlocks } = registry.select("core/block-editor");
 
 		return {
