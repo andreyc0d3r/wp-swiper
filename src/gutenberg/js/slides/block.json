@@ -113,6 +113,10 @@
 		"thumbsSpaceBetween": {
 			"type": "number",
 			"default": 10
+		},
+		"autoHeight": {
+			"type": "boolean",
+			"default": true
 		}
 	}
 }

@@ -187,7 +187,8 @@ class BlockEdit extends Component {
 			freeMode,
 			thumbs,
 			thumbsSlidesPerView,
-			thumbsSpaceBetween
+			thumbsSpaceBetween,
+			autoHeight
 		} = attributes;
 
 		className = classnames(className, "wp-swiper__slides");
@@ -323,6 +324,16 @@ class BlockEdit extends Component {
 								checked={navigation}
 								onChange={() => {
 									setAttributes({ navigation: !navigation });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Auto Height"
+								help="Set to true and slider wrapper will adapt its height to the height of the currently active slide"
+								checked={autoHeight}
+								onChange={() => {
+									setAttributes({ autoHeight: !autoHeight });
 								}}
 							/>
 						</PanelRow>
