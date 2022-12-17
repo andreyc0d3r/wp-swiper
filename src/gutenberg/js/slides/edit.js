@@ -187,7 +187,8 @@ class BlockEdit extends Component {
 			freeMode,
 			thumbs,
 			thumbsSlidesPerView,
-			thumbsSpaceBetween
+			thumbsSpaceBetween,
+			autoHeight
 		} = attributes;
 
 		className = classnames(className, "wp-swiper__slides");
@@ -203,8 +204,6 @@ class BlockEdit extends Component {
 		let counter = 1;
 
 		const style = txtColor ? { color: txtColor } : {};
-
-		console.log("RE RENDER");
 
 		return (
 			<Fragment>
@@ -325,6 +324,16 @@ class BlockEdit extends Component {
 								checked={navigation}
 								onChange={() => {
 									setAttributes({ navigation: !navigation });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Auto Height"
+								help="Set to true and slider wrapper will adapt its height to the height of the currently active slide"
+								checked={autoHeight}
+								onChange={() => {
+									setAttributes({ autoHeight: !autoHeight });
 								}}
 							/>
 						</PanelRow>
@@ -646,9 +655,6 @@ export default compose([
 	}),
 	withDispatch((dispatch, ownProps, registry) => {
 		const { updateBlockAttributes, removeBlock, replaceInnerBlocks, moveBlockToPosition, moveBlocksDown } = dispatch("core/block-editor");
-
-		console.log("DISPATCHER");
-
 		const { getBlocks } = registry.select("core/block-editor");
 
 		return {

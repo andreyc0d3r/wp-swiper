@@ -79,12 +79,22 @@ var wp_swiper = new (function () {
 			}
 			if (swiper_container.hasAttribute("data-effect")) {
 				self.options.effect = swiper_container.getAttribute("data-effect");
+				if(self.options.effect == "fade") {
+					self.options.fadeEffect = {
+						crossFade: true
+					}
+				}
 			}
 			if (swiper_container.hasAttribute("data-slidesperview")) {
 				self.options.slidesPerView = swiper_container.getAttribute("data-slidesperview");
 			}
 			if (swiper_container.hasAttribute("data-spacebetween")) {
 				self.options.spaceBetween = self.getNumber(swiper_container.getAttribute("data-spacebetween"), 0);
+			}
+			if (swiper_container.hasAttribute("data-autoheight")) {
+				if ("true" === swiper_container.getAttribute("data-autoheight")) {
+					self.options.autoheight = true;
+				}
 			}
 			if (swiper_container.hasAttribute("data-breakpoints")) {
 				const breakpoints = swiper_container.getAttribute("data-breakpoints");
