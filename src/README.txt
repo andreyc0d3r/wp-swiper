@@ -58,6 +58,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.23 =
+* Added ability to enable Thumbs
+
 = 1.0.22 =
 * Add ability to reorder slides by drag and drop via List View
 
