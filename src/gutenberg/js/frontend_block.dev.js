@@ -23,7 +23,9 @@ var wp_swiper = new (function () {
 	self.init_options = function () {
 		var wpSwipers = document.querySelectorAll(".wp-swiper");
 		window.wpSwiper = [];
+		window.wpSwiperThumbs = [];
 		for (let i = 0; i < wpSwipers.length; i++) {
+			wpSwipers[i].classList.add(`wp-swiper--${i}`);
 			let swiper_container = wpSwipers[i].querySelector(".swiper-container");
 
 			if (swiper_container.hasAttribute("data-freemode")) {
@@ -104,6 +106,31 @@ var wp_swiper = new (function () {
 					self.options.mousewheel.releaseOnEdges = swiper_container.getAttribute("data-releaseonedges");
 				}
 			}
+
+			// Swiper Thumbs
+			if (swiper_container.hasAttribute("data-thumbsconfig")) {
+				let thumbsConfig = {
+					spaceBetween: 10,
+					slidesPerView: 4,
+					freeMode: true,
+					watchSlidesProgress: true,
+				};
+				const slides = wpSwipers[i].querySelector(".swiper-wrapper").cloneNode(true);
+				const thumbsSwiper = wpSwipers[i].querySelector(".wp-swiper__thumbs .swiper-container");
+
+				const thumbsWrapper = wpSwipers[i].querySelector(".wp-swiper__thumbs .swiper-wrapper");
+				thumbsWrapper.replaceWith(slides);
+				thumbsConfig = JSON.parse(swiper_container.getAttribute("data-thumbsconfig"));
+				window.wpSwiperThumbs[i] = new Swiper(thumbsSwiper, thumbsConfig);
+
+				self.options = {
+					...self.options,
+					thumbs: {
+						swiper: window.wpSwiperThumbs[i]
+					}
+				}
+			}
+
 			window.wpSwiper[i] = new Swiper(swiper_container, self.options);
 		}
 	};
