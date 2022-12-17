@@ -77,6 +77,11 @@ var wp_swiper = new (function () {
 			}
 			if (swiper_container.hasAttribute("data-effect")) {
 				self.options.effect = swiper_container.getAttribute("data-effect");
+				if(self.options.effect == "fade") {
+					self.options.fadeEffect = {
+						crossFade: true
+					}
+				}
 			}
 			if (swiper_container.hasAttribute("data-slidesperview")) {
 				self.options.slidesPerView = swiper_container.getAttribute("data-slidesperview");
