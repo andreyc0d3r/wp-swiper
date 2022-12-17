@@ -103,7 +103,16 @@
 			"type": "string"
 		},
 		"thumbs": {
-			"type": "boolean"
+			"type": "boolean",
+			"default": false
+		},
+		"thumbsSlidesPerView": {
+			"type": "number",
+			"default": 4
+		},
+		"thumbsSpaceBetween": {
+			"type": "number",
+			"default": 10
 		}
 	}
 }
