@@ -1,5 +1,16 @@
 .wp-swiper {
     position: relative;
+
+	&__wrapper {
+		position: relative;
+	}
+
+	&__thumbs {
+		* {
+			max-height: 200px;
+			min-height: unset;
+		}
+	}
     
     &.is-style-testimonials {
         position: relative;

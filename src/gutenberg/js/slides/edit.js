@@ -105,7 +105,6 @@ class BlockEdit extends Component {
 
 	removeTab(i) {
 		const { setAttributes, attributes, block, getBlocks, replaceInnerBlocks } = this.props;
-
 		const { tabsData = [] } = attributes;
 
 		if (1 >= block.innerBlocks.length) {
@@ -330,6 +329,9 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
 							<h2>Pagination Settings</h2>
 						</PanelRow>
 						<PanelRow>
@@ -365,6 +367,9 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
 							<h2>Slide Settings</h2>
 						</PanelRow>
 						<PanelRow>
@@ -388,6 +393,9 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
 							<h2>Breakpoints</h2>
 						</PanelRow>
 						<PanelRow>
@@ -402,6 +410,9 @@ class BlockEdit extends Component {
 						</PanelRow>
 						<PanelRow>
 							<p>Example: {'{"720":{"slidesPerView":2}}'} - Notice the double quotes</p>
+						</PanelRow>
+						<PanelRow>
+							<hr/>
 						</PanelRow>
 						<PanelRow>
 							<h2>Slider Settings</h2>
@@ -468,6 +479,9 @@ class BlockEdit extends Component {
 									setAttributes({ freeMode: !freeMode });
 								}}
 							/>
+						</PanelRow>
+						<PanelRow>
+							<hr/>
 						</PanelRow>
 						<PanelRow>
 							<h2>Mouse Settings</h2>
