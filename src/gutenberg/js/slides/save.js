@@ -43,6 +43,9 @@ class BlockSave extends Component {
 			pagination_type,
 			clickable_pagination,
 			breakpoints,
+			thumbs,
+			thumbsSpaceBetween,
+			thumbsSlidesPerView
 		} = this.props.attributes;
 
 		let className = classnames("wp-swiper");
@@ -54,7 +57,10 @@ class BlockSave extends Component {
 
 		const style_overlay_wrapper = txtColor ? { color: txtColor } : {};
 
-		const data_atts = {
+		let thumbsConfig = {
+			'data-thumbsconfig': {}
+		};
+		let data_atts = {
 			"data-slidesperview": slidesPerView,
 			"data-navigation": navigation,
 			"data-pagination": pagination,
@@ -66,38 +72,67 @@ class BlockSave extends Component {
 		};
 
 		data_atts["data-spacebetween"] = spaceBetween;
-
-		mousewheel == true ? (data_atts["data-mousewheel"] = true) : (data_atts["data-mousewheel"] = false);
-		releaseOnEdges == true ? (data_atts["data-releaseonedges"] = true) : (data_atts["data-releaseonedges"] = false);
-		pagination_type != "bullets" ? (data_atts["data-paginationtype"] = pagination_type) : "bullets";
-		clickable_pagination == true ? (data_atts["data-clickablepagination"] = true) : "";
-
+		data_atts["data-mousewheel"] = mousewheel;
+		data_atts["data-releaseonedges"] = releaseOnEdges;
+		data_atts["data-paginationtype"] = pagination_type != "bullets" ? pagination_type : "bullets";
+		data_atts["data-clickablepagination"] = clickable_pagination ? true : "";
+	
 		if (typeof breakpoints !== "undefined" && breakpoints != "") {
 			data_atts["data-breakpoints"] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ""));
 			data_atts["data-breakpoints"] = data_atts["data-breakpoints"].substring(1, data_atts["data-breakpoints"].length - 1);
 		}
 
-		return (
-			<div className={className}>
-				{this.getOverlayImg(overlayImg, style_overlay_image)}
-				<div
-					className="wp-swiper__wrapper"
-					style={style_overlay_wrapper}
-				>
-					<div
-						className="swiper-container swiper"
-						{...data_atts}
-					>
-						<div className="swiper-wrapper">
-							<InnerBlocks.Content />
-						</div>
-					</div>
-				</div>
+		if(thumbs) {
+			thumbsConfig['data-thumbsconfig'] = JSON.stringify(
+				{
+					spaceBetween: thumbsSpaceBetween,
+					slidesPerView: thumbsSlidesPerView,
+					freeMode: true,
+					watchSlidesProgress: true,
+					navigation: false
+				}
+			);
+		}
 
-				{this.getQuoteSVG(this.props)}
-				{this.getPagination(this.props)}
-				{this.getNavigation(this.props)}
-			</div>
+		return (
+			<>
+				<div className={className}>
+					{this.getOverlayImg(overlayImg, style_overlay_image)}
+					<div
+						className="wp-swiper__wrapper"
+						style={style_overlay_wrapper}
+					>
+						<div
+							className="swiper-container swiper"
+							data-swiperconfig={JSON.stringify(data_atts)}
+							{...thumbsConfig}
+							{...data_atts}
+						>
+							<div className="swiper-wrapper">
+								<InnerBlocks.Content />
+							</div>
+						</div>
+						{this.getNavigation(this.props)}
+						{this.getPagination(this.props)}
+					</div>
+
+					{this.getQuoteSVG(this.props)}
+					
+					{thumbs && <div 
+						className="wp-swiper__thumbs"
+						>
+						<div
+							className="wp-swiper__wrapper"
+							>
+							<div
+								className="swiper-container swiper"
+								>
+								<div className="swiper-wrapper"></div>
+							</div>
+						</div>
+					</div>}
+				</div>
+			</>
 		);
 	}
 

@@ -105,7 +105,6 @@ class BlockEdit extends Component {
 
 	removeTab(i) {
 		const { setAttributes, attributes, block, getBlocks, replaceInnerBlocks } = this.props;
-
 		const { tabsData = [] } = attributes;
 
 		if (1 >= block.innerBlocks.length) {
@@ -186,6 +185,9 @@ class BlockEdit extends Component {
 			clickable_pagination,
 			breakpoints,
 			freeMode,
+			thumbs,
+			thumbsSlidesPerView,
+			thumbsSpaceBetween
 		} = attributes;
 
 		className = classnames(className, "wp-swiper__slides");
@@ -327,6 +329,9 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
 							<h2>Pagination Settings</h2>
 						</PanelRow>
 						<PanelRow>
@@ -362,6 +367,9 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
 							<h2>Slide Settings</h2>
 						</PanelRow>
 						<PanelRow>
@@ -385,6 +393,9 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
 							<h2>Breakpoints</h2>
 						</PanelRow>
 						<PanelRow>
@@ -399,6 +410,9 @@ class BlockEdit extends Component {
 						</PanelRow>
 						<PanelRow>
 							<p>Example: {'{"720":{"slidesPerView":2}}'} - Notice the double quotes</p>
+						</PanelRow>
+						<PanelRow>
+							<hr/>
 						</PanelRow>
 						<PanelRow>
 							<h2>Slider Settings</h2>
@@ -467,6 +481,9 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
 							<h2>Mouse Settings</h2>
 						</PanelRow>
 						<PanelRow>
@@ -490,6 +507,44 @@ class BlockEdit extends Component {
 									// if(!releaseOnEdges) {
 									//     setAttributes({ mousewheel: !releaseOnEdges });
 									// }
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
+							<h2>Thumbs Settings</h2>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Thumbs"
+								help="Enables thumbs to be used as pagination."
+								checked={thumbs}
+								onChange={() => {
+									setAttributes({ thumbs: !thumbs });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<TextControl
+								disabled={!thumbs}
+								label="Space Between"
+								help="Distance between slides in px."
+								value={thumbsSpaceBetween}
+								onChange={(option) => {
+									setAttributes({ thumbsSpaceBetween: parseInt(option) });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<TextControl
+								disabled={!thumbs}
+								label="Slides per view"
+								help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
+								value={thumbsSlidesPerView}
+								onChange={(option) => {
+									setAttributes({ thumbsSlidesPerView: parseInt(option) });
 								}}
 							/>
 						</PanelRow>
