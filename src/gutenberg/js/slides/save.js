@@ -25,6 +25,7 @@ import metadata from "./block.json";
 class BlockSave extends Component {
 	render() {
 		const {
+			align,
 			overlayColor,
 			overlayImg,
 			overlayImgOpacity,
@@ -50,6 +51,10 @@ class BlockSave extends Component {
 		} = this.props.attributes;
 
 		let className = classnames("wp-swiper");
+
+		if(align) {
+			className = classnames(className, `wp-swiper--align-${align}`);
+		}
 
 		const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 		if (overlayImgOpacity) {

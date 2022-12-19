@@ -159,7 +159,7 @@ class BlockEdit extends Component {
 	render() {
 		const { clientId, attributes, setAttributes, isSelectedBlockInRoot, getBlocks, replaceInnerBlocks, updateBlockAttributes, block } = this.props;
 
-		let { className = "" } = this.props;
+		let { className } = this.props;
 
 		const {
 			tabActive,
