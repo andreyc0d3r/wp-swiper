@@ -58,6 +58,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.25 =
+* Fix align full, align wide
+
 = 1.0.24 =
 * Added auto height and cross fade true when effect is set to fade
 
