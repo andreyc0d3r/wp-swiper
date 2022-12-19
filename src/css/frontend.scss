@@ -1,17 +1,6 @@
 .wp-swiper {
     position: relative;
 
-	&.wp-swiper--align-full {
-        margin-left  : calc( -100vw / 2 + 100% / 2 ) !important;
-        margin-right : calc( -100vw / 2 + 100% / 2 ) !important;
-        max-width    : 100vw;
-    }
-
-	&.wp-swiper--align-wide {
-        margin-left  : -80px !important;
-        margin-right : -80px !important;
-    }
-
 	&__wrapper {
 		position: relative;
 	}

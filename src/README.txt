@@ -58,6 +58,12 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.27 =
+* allow classes to be set from the editor
+
+= 1.0.26 =
+* rename align classes
+
 = 1.0.25 =
 * Fix align full, align wide
 
