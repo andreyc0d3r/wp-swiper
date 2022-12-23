@@ -58,6 +58,10 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.29 =
+* Enable sticky mode
+* Introduce debugging tool
+
 = 1.0.28 =
 * Fix free mode feature
 * Add bundle versioning

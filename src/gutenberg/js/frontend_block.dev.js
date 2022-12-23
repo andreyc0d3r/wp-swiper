@@ -30,7 +30,14 @@ var wp_swiper = new (function () {
 
 			if (swiper_container.hasAttribute("data-freemode")) {
 				if (swiper_container.getAttribute("data-freemode") == "true") {
-					self.options.freeMode = true;
+					if (swiper_container.getAttribute("data-freemode") == "true" && swiper_container.getAttribute("data-sticky") == "true") {
+						self.options.freeMode = {
+							enabled: true,
+							sticky: true
+						}
+					} else {
+						self.options.freeMode = true;
+					}
 				}
 			}
 
@@ -133,6 +140,15 @@ var wp_swiper = new (function () {
 					thumbs: {
 						swiper: window.wpSwiperThumbs[i]
 					}
+				}
+			}
+
+			if (swiper_container.hasAttribute("data-debug")) {
+				if(swiper_container.getAttribute("data-debug") == "true") {
+					console.log({
+						swiper_container,
+						"options": self.options
+					})
 				}
 			}
 

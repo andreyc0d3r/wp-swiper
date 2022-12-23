@@ -121,6 +121,14 @@
 		"freeMode": {
 			"type": "boolean",
 			"default": false
+		},
+		"sticky": {
+			"type": "boolean",
+			"default": false
+		},
+		"debug": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

@@ -51,7 +51,9 @@ class BlockSave extends Component {
 			thumbsSpaceBetween,
 			thumbsSlidesPerView,
 			autoHeight,
-			freeMode
+			freeMode,
+			sticky,
+			debug
 		} = this.props.attributes;
 
 		className = classnames(className, "wp-swiper");
@@ -81,6 +83,13 @@ class BlockSave extends Component {
 			"data-effect": effect,
 		};
 
+		if(debug) {
+			data_atts["data-debug"] = debug;
+		}
+
+		if(freeMode && sticky) {
+			data_atts["data-sticky"] = sticky;
+		}
 		data_atts["data-freemode"] = freeMode;
 		data_atts["data-autoheight"] = autoHeight;
 		data_atts["data-spacebetween"] = spaceBetween;

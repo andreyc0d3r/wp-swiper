@@ -185,10 +185,12 @@ class BlockEdit extends Component {
 			clickable_pagination,
 			breakpoints,
 			freeMode,
+			sticky,
 			thumbs,
 			thumbsSlidesPerView,
 			thumbsSpaceBetween,
-			autoHeight
+			autoHeight,
+			debug
 		} = attributes;
 
 		className = classnames(className, "wp-swiper__slides");
@@ -483,9 +485,21 @@ class BlockEdit extends Component {
 						<PanelRow>
 							<ToggleControl
 								label="Free Mode"
+								help="Enables free mode functionality"
 								checked={freeMode}
 								onChange={() => {
 									setAttributes({ freeMode: !freeMode });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Sticky"
+								help="Set to enabled to enable snap to slides positions in free mode"
+								disabled={!freeMode}
+								checked={sticky}
+								onChange={() => {
+									setAttributes({ sticky: !sticky });
 								}}
 							/>
 						</PanelRow>
@@ -557,6 +571,20 @@ class BlockEdit extends Component {
 								}}
 							/>
 						</PanelRow>
+						<PanelRow>
+							<hr/>
+						</PanelRow>
+						<PanelRow>
+							<h2>Dev Tools</h2>
+						</PanelRow>
+						<ToggleControl
+								label="Debug"
+								help="Show (console.log) config JSON object for each slider"
+								checked={debug}
+								onChange={() => {
+									setAttributes({ debug: !debug });
+								}}
+							/>
 					</PanelBody>
 				</InspectorControls>
 				<div
