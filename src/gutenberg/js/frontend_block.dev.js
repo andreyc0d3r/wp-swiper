@@ -30,7 +30,7 @@ var wp_swiper = new (function () {
 
 			if (swiper_container.hasAttribute("data-freemode")) {
 				if (swiper_container.getAttribute("data-freemode") == "true") {
-					self.options.freeMode = swiper_container.getAttribute("data-freemode");
+					self.options.freeMode = true;
 				}
 			}
 

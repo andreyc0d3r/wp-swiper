@@ -111,14 +111,14 @@ class WP_Swiper_Public {
             $this->plugin_name . '-bundle-css',
 			plugin_dir_url(__DIR__) .  'public/css/swiper-bundle.min.css',
 			array(),
-			'1.0.0'
+			DAWPS_BUNDLE_VERSION
         );
 
         wp_register_script(
             $this->plugin_name . '-bundle-js',
             plugin_dir_url(__DIR__) .  'public/js/swiper-bundle.min.js',
             array(),
-            '1.0.0'
+            DAWPS_BUNDLE_VERSION
         );
 
         wp_enqueue_script(
