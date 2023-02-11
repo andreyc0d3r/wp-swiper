@@ -1,0 +1,56 @@
+/**
+ * WordPress dependencies
+ */
+const { __ } = wp.i18n;
+
+// Import Swiper React components
+
+/**
+ * Internal dependencies
+ */
+import deprecated from './deprecated';
+import metadata from './block.json';
+import edit from './edit';
+import save from './save';
+
+const { name } = metadata;
+
+export { metadata, name };
+
+const settings = {
+    ...metadata,
+    title: __( 'WP Swiper', '@@text_domain' ),
+    description: __( 'Separate content on the tabs with titles.', '@@text_domain' ),
+    icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 17.4444C20 17.857 19.8314 18.2527 19.5314 18.5444C19.2313 18.8361 18.8243 19 18.4 19H5.6C5.17565 19 4.76869 18.8361 4.46863 18.5444C4.16857 18.2527 4 17.857 4 17.4444V6.55556C4 6.143 4.16857 5.74733 4.46863 5.45561C4.76869 5.16389 5.17565 5 5.6 5H9.6L11.2 7.33333H18.4C18.8243 7.33333 19.2313 7.49722 19.5314 7.78894C19.8314 8.08067 20 8.47633 20 8.88889V17.4444Z" stroke="currentColor" fill="transparent" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    ,
+    keywords: [
+        __( 'swiper', '@@text_domain' ),
+        __( 'slider', '@@text_domain' ),
+    ],
+    edit,
+    save,
+    deprecated
+};
+
+settings.attributes = {
+    ...settings.attributes,
+    freeMode: {
+        "type": "boolean",
+        "default": false
+    },
+    mousewheel: {
+        "type": "boolean",
+        "default": false
+    },
+    releaseOnEdges: {
+        "type": "boolean",
+        "default": false
+    },
+    pagination_type: {
+        "type": "string",
+        "default": "bullets"
+    },
+}
+export { settings };

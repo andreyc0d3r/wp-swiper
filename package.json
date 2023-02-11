@@ -5,7 +5,8 @@
     "main": "js/block.js",
     "scripts": {
         "dev": "webpack --mode=development",
-        "build": "webpack --mode=production"
+        "build": "webpack --mode=production",
+		"docker": "docker-compose -p wp-swiper up"
     },
     "author": "Digital Apps",
     "license": "ISC",

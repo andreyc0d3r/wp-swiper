@@ -19,7 +19,7 @@ var settings = {
     zip_path: '../zip',
     svn_path: '../wp-swiper-svn',
     mac_dest:
-        '/Users/andrey/Local Sites/wpswiperlocal/app/public/wp-content/plugins/wp-swiper',
+        './docker/wp_data/wp-content/plugins/wp-swiper',
     win_dest: 'H:/dev/server/wordpress/wp/app/public/wp-content/plugins/wp-swiper',
 };
 
