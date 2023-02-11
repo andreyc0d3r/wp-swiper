@@ -92,6 +92,9 @@ var wp_swiper = new (function () {
 					}
 				}
 			}
+			if (swiper_container.hasAttribute("data-direction")) {
+				self.options.direction = swiper_container.getAttribute("data-direction");
+			}
 			if (swiper_container.hasAttribute("data-slidesperview")) {
 				self.options.slidesPerView = swiper_container.getAttribute("data-slidesperview");
 			}

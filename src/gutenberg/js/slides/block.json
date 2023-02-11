@@ -81,7 +81,7 @@
 			"default": 3000
 		},
 		"slidesPerView": {
-			"type": "number",
+			"type": "string",
 			"default": 1
 		},
 		"spaceBetween": {
@@ -129,6 +129,10 @@
 		"debug": {
 			"type": "boolean",
 			"default": false
+		},
+		"direction": {
+			"type": "string",
+			"default": "horizontal"
 		}
 	}
 }

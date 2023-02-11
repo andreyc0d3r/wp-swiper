@@ -53,7 +53,8 @@ class BlockSave extends Component {
 			autoHeight,
 			freeMode,
 			sticky,
-			debug
+			debug,
+			direction
 		} = this.props.attributes;
 
 		className = classnames(className, "wp-swiper");
@@ -90,6 +91,7 @@ class BlockSave extends Component {
 		if(freeMode && sticky) {
 			data_atts["data-sticky"] = sticky;
 		}
+		data_atts["data-direction"] = direction;
 		data_atts["data-freemode"] = freeMode;
 		data_atts["data-autoheight"] = autoHeight;
 		data_atts["data-spacebetween"] = spaceBetween;

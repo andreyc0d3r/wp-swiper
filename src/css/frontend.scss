@@ -114,18 +114,18 @@
         z-index: 5;
     }
     &__slide {
-        display: flex;
-        flex-direction: column;
+        // display: flex;
+        // flex-direction: column;
 
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
+        // position: absolute;
+        // left: 0;
+        // top: 0;
+        // right: 0;
+        // bottom: 0;
 
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
+        // background-position: center;
+        // background-repeat: no-repeat;
+        // background-size: cover;
 
         .wp-swiper__slide-content {
             position: relative;

@@ -190,7 +190,8 @@ class BlockEdit extends Component {
 			thumbsSlidesPerView,
 			thumbsSpaceBetween,
 			autoHeight,
-			debug
+			debug,
+			direction
 		} = attributes;
 
 		className = classnames(className, "wp-swiper__slides");
@@ -340,7 +341,24 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
-							<hr/>
+							<hr />
+						</PanelRow>
+						<PanelRow>
+							<h2>Direction Settings</h2>
+						</PanelRow>
+						<SelectControl
+							label="Direction"
+							value={direction}
+							options={[
+								{ label: "Horizontal", value: "horizontal" },
+								{ label: "Vertical", value: "vertical" }
+							]}
+							onChange={(option) => {
+								setAttributes({ direction: option });
+							}}
+						/>
+						<PanelRow>
+							<hr />
 						</PanelRow>
 						<PanelRow>
 							<h2>Pagination Settings</h2>
@@ -378,7 +396,7 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
-							<hr/>
+							<hr />
 						</PanelRow>
 						<PanelRow>
 							<h2>Slide Settings</h2>
@@ -399,12 +417,12 @@ class BlockEdit extends Component {
 								help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
 								value={slidesPerView}
 								onChange={(option) => {
-									setAttributes({ slidesPerView: parseInt(option) });
+									setAttributes({ slidesPerView: option });
 								}}
 							/>
 						</PanelRow>
 						<PanelRow>
-							<hr/>
+							<hr />
 						</PanelRow>
 						<PanelRow>
 							<h2>Breakpoints</h2>
@@ -423,7 +441,7 @@ class BlockEdit extends Component {
 							<p>Example: {'{"720":{"slidesPerView":2}}'} - Notice the double quotes</p>
 						</PanelRow>
 						<PanelRow>
-							<hr/>
+							<hr />
 						</PanelRow>
 						<PanelRow>
 							<h2>Slider Settings</h2>
@@ -504,7 +522,7 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
-							<hr/>
+							<hr />
 						</PanelRow>
 						<PanelRow>
 							<h2>Mouse Settings</h2>
@@ -534,7 +552,7 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
-							<hr/>
+							<hr />
 						</PanelRow>
 						<PanelRow>
 							<h2>Thumbs Settings</h2>
@@ -572,19 +590,19 @@ class BlockEdit extends Component {
 							/>
 						</PanelRow>
 						<PanelRow>
-							<hr/>
+							<hr />
 						</PanelRow>
 						<PanelRow>
 							<h2>Dev Tools</h2>
 						</PanelRow>
 						<ToggleControl
-								label="Debug"
-								help="Show (console.log) config JSON object for each slider"
-								checked={debug}
-								onChange={() => {
-									setAttributes({ debug: !debug });
-								}}
-							/>
+							label="Debug"
+							help="Show (console.log) config JSON object for each slider"
+							checked={debug}
+							onChange={() => {
+								setAttributes({ debug: !debug });
+							}}
+						/>
 					</PanelBody>
 				</InspectorControls>
 				<div
