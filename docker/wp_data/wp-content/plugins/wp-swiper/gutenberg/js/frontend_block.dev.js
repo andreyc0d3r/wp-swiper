@@ -92,6 +92,9 @@ var wp_swiper = new (function () {
 					}
 				}
 			}
+			if (swiper_container.hasAttribute("data-direction")) {
+				self.options.direction = swiper_container.getAttribute("data-direction");
+			}
 			if (swiper_container.hasAttribute("data-slidesperview")) {
 				self.options.slidesPerView = swiper_container.getAttribute("data-slidesperview");
 			}
@@ -100,7 +103,7 @@ var wp_swiper = new (function () {
 			}
 			if (swiper_container.hasAttribute("data-autoheight")) {
 				if ("true" === swiper_container.getAttribute("data-autoheight")) {
-					self.options.autoheight = true;
+					self.options.autoHeight = true;
 				}
 			}
 			if (swiper_container.hasAttribute("data-breakpoints")) {

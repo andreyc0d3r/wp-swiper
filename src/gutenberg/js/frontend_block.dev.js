@@ -103,7 +103,7 @@ var wp_swiper = new (function () {
 			}
 			if (swiper_container.hasAttribute("data-autoheight")) {
 				if ("true" === swiper_container.getAttribute("data-autoheight")) {
-					self.options.autoheight = true;
+					self.options.autoHeight = true;
 				}
 			}
 			if (swiper_container.hasAttribute("data-breakpoints")) {
