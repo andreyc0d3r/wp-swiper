@@ -58,6 +58,11 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.30 =
+* Auto Height Fix
+* Add Direction Option (Horizontal, Vertical)
+* Sliders per view fix auto
+
 = 1.0.29 =
 * Enable sticky mode
 * Introduce debugging tool
