@@ -27,8 +27,6 @@ import RemoveButton from "../components/remove-button";
 import getUniqueSlug from "../utils/get-unique-slug";
 import get_image from "../utils/get-image";
 
-import { isEqual } from "lodash";
-
 /**
  * Block Edit Class.
  */
@@ -41,6 +39,15 @@ class BlockEdit extends Component {
 		this.changeLabel = this.changeLabel.bind(this);
 		this.removeTab = this.removeTab.bind(this);
 	}
+
+	areArraysEqualWithoutOrder(arr1, arr2) {
+		if (arr1.length !== arr2.length) return false;
+	  
+		const sortedArr1 = arr1.slice().sort();
+		const sortedArr2 = arr2.slice().sort();
+	  
+		return sortedArr1.every((value, index) => value === sortedArr2[index]);
+	  };
 
 	/**
 	 * Returns the layouts configuration for a given number of tabs.
@@ -139,7 +146,7 @@ class BlockEdit extends Component {
 			return ib.clientId;
 		});
 
-		if (!isEqual(prevClientId, propClientId)) {
+		if (!this.areArraysEqualWithoutOrder(prevClientId, propClientId)) {
 			let newTabsData = [];
 			block.innerBlocks.map((tabData, i) => {
 				newTabsData.push({
@@ -348,6 +355,7 @@ class BlockEdit extends Component {
 						</PanelRow>
 						<SelectControl
 							label="Direction"
+							help="For vertical slider, Slides Per View should be set to 1"
 							value={direction}
 							options={[
 								{ label: "Horizontal", value: "horizontal" },

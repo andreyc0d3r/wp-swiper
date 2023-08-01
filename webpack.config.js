@@ -10,14 +10,10 @@ const externals = {
     '@wordpress/block-editor': ['wp', 'blockEditor'],
     '@wordpress/blocks': ['wp', 'blocks'],
     '@wordpress/compose': ['wp', 'compose'],
-    '@wordpress/keycodes': ['wp', 'keycodes'],
-    'lodash': 'lodash'
+    '@wordpress/keycodes': ['wp', 'keycodes']
 };
 
-const autoprefixer = require('autoprefixer');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
-const path = require('path');
-
 
 module.exports = {
     entry: {

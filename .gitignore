@@ -64,3 +64,7 @@ Thumbs.db
 composer.lock
 package-lock.json
 /dist
+
+docker/db_data
+docker/wp_data
+!docker/wp_data/wp-content/plugins/wp-swiper

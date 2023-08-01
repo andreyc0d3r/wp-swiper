@@ -33,8 +33,8 @@ var wp_swiper = new (function () {
 					if (swiper_container.getAttribute("data-freemode") == "true" && swiper_container.getAttribute("data-sticky") == "true") {
 						self.options.freeMode = {
 							enabled: true,
-							sticky: true
-						}
+							sticky: true,
+						};
 					} else {
 						self.options.freeMode = true;
 					}
@@ -86,10 +86,10 @@ var wp_swiper = new (function () {
 			}
 			if (swiper_container.hasAttribute("data-effect")) {
 				self.options.effect = swiper_container.getAttribute("data-effect");
-				if(self.options.effect == "fade") {
+				if (self.options.effect == "fade") {
 					self.options.fadeEffect = {
-						crossFade: true
-					}
+						crossFade: true,
+					};
 				}
 			}
 			if (swiper_container.hasAttribute("data-direction")) {
@@ -141,17 +141,32 @@ var wp_swiper = new (function () {
 				self.options = {
 					...self.options,
 					thumbs: {
-						swiper: window.wpSwiperThumbs[i]
-					}
-				}
+						swiper: window.wpSwiperThumbs[i],
+					},
+				};
+			}
+
+			if(self.options.direction == 'vertical') {
+				self.options.on = {
+					init: function () {
+						var swiperWrapper = this.wrapperEl;
+						var swiperSlideHeight = swiperWrapper.children[this.activeIndex].querySelector('.wp-swiper__slide-content').offsetHeight;
+						swiperWrapper.style.height = swiperSlideHeight + "px";
+					},
+					slideChangeTransitionEnd: function () {
+						var swiperWrapper = this.wrapperEl;
+						var swiperSlideHeight = swiperWrapper.children[this.activeIndex].querySelector('.wp-swiper__slide-content').offsetHeight;
+						swiperWrapper.style.height = swiperSlideHeight + "px";
+					},
+				};
 			}
 
 			if (swiper_container.hasAttribute("data-debug")) {
-				if(swiper_container.getAttribute("data-debug") == "true") {
+				if (swiper_container.getAttribute("data-debug") == "true") {
 					console.log({
 						swiper_container,
-						"options": self.options
-					})
+						options: self.options,
+					});
 				}
 			}
 

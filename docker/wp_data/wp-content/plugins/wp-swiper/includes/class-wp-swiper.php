@@ -12,9 +12,9 @@ class WP_Swiper {
         if ( defined( 'DAWPS_PLUGIN_VERSION' ) ) {
             $this->version = DAWPS_PLUGIN_VERSION;
         } else {
-            $this->version = '1.0.30';
+            $this->version = '1.0.32';
         }
-        $this->plguin_prefix = 'dawps';
+        $this->plugin_prefix = 'dawps';
         $this->plugin_name = 'wpswiper';
         
         $this->load_dependencies();
@@ -94,6 +94,6 @@ class WP_Swiper {
      * @return    string    The prefix of the plugin.
      */
     public function get_prefix() {
-        return $this->prefix;
+        return $this->plugin_prefix;
     }
 }

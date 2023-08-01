@@ -44,8 +44,12 @@ class BlockSave extends Component {
                 getPositionClassName( contentVHalign )
             );
         }
-        
-        const style = slideImg ? { backgroundImage: `url(${slideImg})` } : {};
+
+		// background size: cover
+		// needed becaue some people
+		// use Slide Image
+		// under Image Settings
+        const style = slideImg ? { backgroundImage: `url(${slideImg})`, backgroundSize: 'cover' } : {};
         const contaienr_width_style = containerWidth
             ? { maxWidth: `${containerWidth}%` }
             : null;

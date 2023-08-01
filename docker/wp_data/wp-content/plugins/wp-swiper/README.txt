@@ -3,7 +3,7 @@ Contributors: digitalapps
 Donate link: https://digitalapps.com
 Tags: swiper, swiperjs, wpswiper, wp swiper, carousel
 Requires at least: 3.0.1
-Tested up to: 6.0.1
+Tested up to: 6.2.0
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -12,9 +12,25 @@ Gutenberg Block The Most Modern Mobile Touch Slider. Swiper is the most modern f
 
 == Description ==
 
-[WP Swiper](https://digitalapps.com/wordpress-plugins/wp-swiper/) Gutenberg Block is the most modern free mobile touch slider with hardware accelerated transitions and amazing native behavior. It is intended to be used in mobile websites, mobile web apps, and mobile native/hybrid apps. 
+[WP Swiper](https://digitalapps.com/wordpress-plugins/wp-swiper/) Gutenberg Block is the most modern free mobile touch slider with hardware accelerated transitions and amazing native behavior. This powerful plugin is designed to be used in mobile websites, mobile web apps, and mobile native/hybrid apps, providing you with a range of features and customization options to help you create stunning slideshows, image galleries, and more.
 
-Visit the [official website](https://swiperjs.com/)
+= Features: =
+
+* Use any block available in Gutenberg to create your slider
+* Hardware accelerated transitions for fast and smooth animations
+* Customize every aspect of your slider, including navigation and pagination options, autoplay settings, and more
+* Mobile-first design ensures your sliders look great on any device
+* Multiple slide layouts to choose from, including horizontal and vertical options
+* Dynamic content support, including support for video slides and dynamic image sources
+* Easy to use and beginner-friendly, with a user-friendly interface and intuitive controls
+* Built with performance in mind, ensuring your sliders load quickly and efficiently
+
+WP Swiper Gutenberg Block is the ultimate tool for creating visually stunning displays on mobile devices. Whether you're creating a mobile website, mobile web app, or mobile native/hybrid app, WP Swiper Gutenberg Block has everything you need to create beautiful and engaging slideshows, image galleries, and more.
+
+Download WP Swiper Gutenberg Block today and take your mobile displays to the next level!
+
+Support my work and fuel my creativity by buying me a virtual coffee on [BuyMeACoffee](https://www.buymeacoffee.com/wpplugins)
+
 New Features and suggestions [Contact Me](https://digitalapps.com/contacts/)
 
 !!! IMPORTANT !!!
@@ -58,6 +74,13 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.32 =
+* Slide Image as cover
+
+= 1.0.31 =
+* Fix Vertical Orientation
+* Bundle Updated
+
 = 1.0.30 =
 * Auto Height Fix
 * Add Direction Option (Horizontal, Vertical)

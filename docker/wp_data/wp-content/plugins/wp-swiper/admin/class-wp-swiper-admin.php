@@ -38,6 +38,7 @@ class WP_Swiper_Admin {
      * @var      string    $version    The current version of this plugin.
      */
     private $error_log;
+    private $options;
 
     /**
      * Initialize the class and set its properties.
