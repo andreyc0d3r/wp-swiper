@@ -5,8 +5,6 @@ services:
     expose:
       - 3306
     image: arm64v8/mysql
-    volumes: 
-      - ./db_data:/var/lib/mysql
     restart: always
     environment:
       MYSQL_DATABASE: wp_db
@@ -53,5 +51,4 @@ services:
 networks:
   wp:
 volumes:
-  db_data:
   wp_data:
