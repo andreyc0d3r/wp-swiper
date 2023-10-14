@@ -1,9 +1,9 @@
-﻿=== Plugin Name ===
+=== Plugin Name ===
 Contributors: digitalapps
 Donate link: https://digitalapps.com
 Tags: swiper, swiperjs, wpswiper, wp swiper, carousel
 Requires at least: 3.0.1
-Tested up to: 6.2.0
+Tested up to: 6.2.2
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,10 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.0.33 =
+* no lodash
+* php 8.2 support
+
 = 1.0.32 =
 * Slide Image as cover
 

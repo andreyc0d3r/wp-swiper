@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "webpack --mode=development",
         "build": "webpack --mode=production",
-		"docker": "docker-compose -p wp-swiper up"
+		"docker": "docker compose -p wp-swiper -f ./docker/compose.yaml up"
     },
     "author": "Digital Apps",
     "license": "ISC",
