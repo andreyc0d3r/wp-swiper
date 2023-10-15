@@ -74,6 +74,10 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+
+= 1.0.34 =
+* Add focal point controls to the image
+
 = 1.0.33 =
 * no lodash
 * php 8.2 support

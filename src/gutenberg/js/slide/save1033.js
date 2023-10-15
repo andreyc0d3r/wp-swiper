@@ -34,7 +34,6 @@ class BlockSave extends Component {
             slideImg,
             contentVHalign,
             containerWidth,
-			focalPoint
         } = this.props.attributes;
 
         let className = 'wp-swiper__slide swiper-slide';
@@ -50,11 +49,7 @@ class BlockSave extends Component {
 		// needed becaue some people
 		// use Slide Image
 		// under Image Settings
-        const style = slideImg ? { 
-			backgroundImage: `url(${slideImg})`, 
-			backgroundSize: 'cover',
-			backgroundPosition: `${focalPoint.x * 100}% ${focalPoint.y * 100}%`
-		} : {};
+        const style = slideImg ? { backgroundImage: `url(${slideImg})`, backgroundSize: 'cover' } : {};
         const contaienr_width_style = containerWidth
             ? { maxWidth: `${containerWidth}%` }
             : null;
