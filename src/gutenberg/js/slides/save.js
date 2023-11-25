@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import classnames from "classnames/dedupe";
+import classnames from 'classnames/dedupe';
 
 /**
  * WordPress dependencies
@@ -14,7 +14,7 @@ const { InnerBlocks } = wp.blockEditor;
 /**
  * Internal dependencies
  */
-import metadata from "./block.json";
+import metadata from './block.json';
 // import get_image from '../utils/get-image';
 
 // const { name } = metadata;
@@ -24,9 +24,7 @@ import metadata from "./block.json";
  */
 class BlockSave extends Component {
 	render() {
-		let {
-			className
-		} = this.props.attributes;
+		let { className } = this.props.attributes;
 		const {
 			align,
 			overlayColor,
@@ -54,12 +52,12 @@ class BlockSave extends Component {
 			freeMode,
 			sticky,
 			debug,
-			direction
+			direction,
 		} = this.props.attributes;
 
-		className = classnames(className, "wp-swiper");
+		className = classnames(className, 'wp-swiper');
 
-		if(align) {
+		if (align) {
 			className = classnames(className, `align${align}`);
 		}
 
@@ -71,50 +69,48 @@ class BlockSave extends Component {
 		const style_overlay_wrapper = txtColor ? { color: txtColor } : {};
 
 		let thumbsConfig = {
-			'data-thumbsconfig': {}
+			'data-thumbsconfig': {},
 		};
 		let data_atts = {
-			"data-slidesperview": slidesPerView,
-			"data-navigation": navigation,
-			"data-pagination": pagination,
-			"data-autoplay": autoplay,
-			"data-delay": delay,
-			"data-speed": speed,
-			"data-loop": loop,
-			"data-effect": effect,
+			'data-slidesperview': slidesPerView,
+			'data-navigation': navigation,
+			'data-pagination': pagination,
+			'data-autoplay': autoplay,
+			'data-delay': delay,
+			'data-speed': speed,
+			'data-loop': loop,
+			'data-effect': effect,
 		};
 
-		if(debug) {
-			data_atts["data-debug"] = debug;
+		if (debug) {
+			data_atts['data-debug'] = debug;
 		}
 
-		if(freeMode && sticky) {
-			data_atts["data-sticky"] = sticky;
+		if (freeMode && sticky) {
+			data_atts['data-sticky'] = sticky;
 		}
-		data_atts["data-direction"] = direction;
-		data_atts["data-freemode"] = freeMode;
-		data_atts["data-autoheight"] = autoHeight;
-		data_atts["data-spacebetween"] = spaceBetween;
-		data_atts["data-mousewheel"] = mousewheel;
-		data_atts["data-releaseonedges"] = releaseOnEdges;
-		data_atts["data-paginationtype"] = pagination_type != "bullets" ? pagination_type : "bullets";
-		data_atts["data-clickablepagination"] = clickable_pagination ? true : "";
-	
-		if (typeof breakpoints !== "undefined" && breakpoints != "") {
-			data_atts["data-breakpoints"] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ""));
-			data_atts["data-breakpoints"] = data_atts["data-breakpoints"].substring(1, data_atts["data-breakpoints"].length - 1);
+		data_atts['data-direction'] = direction;
+		data_atts['data-freemode'] = freeMode;
+		data_atts['data-autoheight'] = autoHeight;
+		data_atts['data-spacebetween'] = spaceBetween;
+		data_atts['data-mousewheel'] = mousewheel;
+		data_atts['data-releaseonedges'] = releaseOnEdges;
+		data_atts['data-paginationtype'] = pagination_type != 'bullets' ? pagination_type : 'bullets';
+		data_atts['data-clickablepagination'] = clickable_pagination ? true : '';
+
+		if (typeof breakpoints !== 'undefined' && breakpoints != '') {
+			data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));
+			data_atts['data-breakpoints'] = data_atts['data-breakpoints'].substring(1, data_atts['data-breakpoints'].length - 1);
 		}
 
-		if(thumbs) {
-			thumbsConfig['data-thumbsconfig'] = JSON.stringify(
-				{
-					spaceBetween: thumbsSpaceBetween,
-					slidesPerView: thumbsSlidesPerView,
-					freeMode: true,
-					watchSlidesProgress: true,
-					navigation: false
-				}
-			);
+		if (thumbs) {
+			thumbsConfig['data-thumbsconfig'] = JSON.stringify({
+				spaceBetween: thumbsSpaceBetween,
+				slidesPerView: thumbsSlidesPerView,
+				freeMode: true,
+				watchSlidesProgress: true,
+				navigation: false,
+			});
 		}
 
 		return (
@@ -140,20 +136,16 @@ class BlockSave extends Component {
 					</div>
 
 					{this.getQuoteSVG(this.props)}
-					
-					{thumbs && <div 
-						className="wp-swiper__thumbs"
-						>
-						<div
-							className="wp-swiper__wrapper"
-							>
-							<div
-								className="swiper-container swiper"
-								>
-								<div className="swiper-wrapper"></div>
+
+					{thumbs && (
+						<div className="wp-swiper__thumbs">
+							<div className="wp-swiper__wrapper">
+								<div className="swiper-container swiper">
+									<div className="swiper-wrapper"></div>
+								</div>
 							</div>
 						</div>
-					</div>}
+					)}
 				</div>
 			</>
 		);
@@ -195,9 +187,9 @@ class BlockSave extends Component {
 	getQuoteSVG({ attributes }) {
 		let { className } = attributes;
 
-		className = className ? className.toString() : "";
+		className = className ? className.toString() : '';
 
-		if (className.indexOf("is-style-testimonials") !== -1) {
+		if (className.indexOf('is-style-testimonials') !== -1) {
 			return (
 				<>
 					<div className="wp-swiper__quotes">

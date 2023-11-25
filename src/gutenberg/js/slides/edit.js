@@ -1,31 +1,31 @@
 /**
  * External dependencies
  */
-import classnames from "classnames/dedupe";
+import classnames from 'classnames/dedupe';
 
 /**
  * WordPress dependencies
  */
 
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 
-import { Component, Fragment } from "@wordpress/element";
+import { Component, Fragment } from '@wordpress/element';
 
-import { createBlock } from "@wordpress/blocks";
-import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl } from "@wordpress/components";
+import { createBlock } from '@wordpress/blocks';
+import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl } from '@wordpress/components';
 
-import { InspectorControls, InnerBlocks, MediaUploadCheck, MediaUpload, store as blockEditorStore } from "@wordpress/block-editor";
+import { InspectorControls, InnerBlocks, MediaUploadCheck, MediaUpload, store as blockEditorStore } from '@wordpress/block-editor';
 
-import { compose } from "@wordpress/compose";
+import { compose } from '@wordpress/compose';
 
-import { withSelect, withDispatch } from "@wordpress/data";
+import { withSelect, withDispatch } from '@wordpress/data';
 
 /**
  * Internal dependencies
  */
-import RemoveButton from "../components/remove-button";
-import getUniqueSlug from "../utils/get-unique-slug";
-import get_image from "../utils/get-image";
+import RemoveButton from '../components/remove-button';
+import getUniqueSlug from '../utils/get-unique-slug';
+import get_image from '../utils/get-image';
 
 /**
  * Block Edit Class.
@@ -42,12 +42,12 @@ class BlockEdit extends Component {
 
 	areArraysEqualWithoutOrder(arr1, arr2) {
 		if (arr1.length !== arr2.length) return false;
-	  
+
 		const sortedArr1 = arr1.slice().sort();
 		const sortedArr2 = arr2.slice().sort();
-	  
+
 		return sortedArr1.every((value, index) => value === sortedArr2[index]);
-	  };
+	}
 
 	/**
 	 * Returns the layouts configuration for a given number of tabs.
@@ -60,7 +60,7 @@ class BlockEdit extends Component {
 		const { tabsData } = this.props.attributes;
 
 		const result = tabsData.map((tabData) => {
-			return ["da/wp-swiper-slide", tabData];
+			return ['da/wp-swiper-slide', tabData];
 		});
 
 		return result;
@@ -78,18 +78,18 @@ class BlockEdit extends Component {
 		const tabs = this.getTabs();
 
 		if (tabs[i]) {
-			const newSlug = dataType == "title" ? getUniqueSlug(`tab ${value}`, tabs[i].clientId) : tabsData[i].slug;
+			const newSlug = dataType == 'title' ? getUniqueSlug(`tab ${value}`, tabs[i].clientId) : tabsData[i].slug;
 
 			const newTabsData = tabsData.map((oldTabData, newIndex) => {
 				if (i === newIndex) {
 					return {
 						...oldTabData,
 						...{
-							title: dataType == "title" ? value : tabsData[i].title,
-							subtitle: dataType == "subtitle" ? value : tabsData[i].subtitle,
-							image: dataType == "image" ? value : tabsData[i].image,
-							overlayImg: dataType == "overlayImg" ? value : tabsData[i].overlayImg,
-							overlayColor: dataType == "overlayColor" ? value : tabsData[i].overlayColor,
+							title: dataType == 'title' ? value : tabsData[i].title,
+							subtitle: dataType == 'subtitle' ? value : tabsData[i].subtitle,
+							image: dataType == 'image' ? value : tabsData[i].image,
+							overlayImg: dataType == 'overlayImg' ? value : tabsData[i].overlayImg,
+							overlayColor: dataType == 'overlayColor' ? value : tabsData[i].overlayColor,
 							slug: newSlug,
 						},
 					};
@@ -198,16 +198,16 @@ class BlockEdit extends Component {
 			thumbsSpaceBetween,
 			autoHeight,
 			debug,
-			direction
+			direction,
 		} = attributes;
 
-		className = classnames(className, "wp-swiper__slides");
+		className = classnames(className, 'wp-swiper__slides');
 
 		let buttonsAlignValForControl = buttonsAlign;
-		if (buttonsAlignValForControl === "start") {
-			buttonsAlignValForControl = "left";
-		} else if (buttonsAlignValForControl === "end") {
-			buttonsAlignValForControl = "right";
+		if (buttonsAlignValForControl === 'start') {
+			buttonsAlignValForControl = 'left';
+		} else if (buttonsAlignValForControl === 'end') {
+			buttonsAlignValForControl = 'right';
 		}
 
 		// used for the map function to create numbered tabs
@@ -219,7 +219,7 @@ class BlockEdit extends Component {
 			<Fragment>
 				<InspectorControls>
 					<PanelBody
-						title={__("Overlay Settings")}
+						title={__('Overlay Settings')}
 						initialOpen={false}
 					>
 						<PanelRow>
@@ -256,12 +256,12 @@ class BlockEdit extends Component {
 									})
 								}
 							>
-								{__("Clear Media")}
+								{__('Clear Media')}
 							</Button>
 						</PanelRow>
-						<BaseControl label={__("Image Overlay Opacity", "@@text_domain")}>
+						<BaseControl label={__('Image Overlay Opacity', '@@text_domain')}>
 							<RangeControl
-								label={__("Opacity")}
+								label={__('Opacity')}
 								value={overlayImgOpacity}
 								onChange={(value) =>
 									setAttributes({
@@ -274,7 +274,7 @@ class BlockEdit extends Component {
 								required
 							/>
 						</BaseControl>
-						<BaseControl label={__("Overlay Color", "@@text_domain")}>
+						<BaseControl label={__('Overlay Color', '@@text_domain')}>
 							<ColorPicker
 								color={overlayColor.rgb}
 								onChangeComplete={(color) => {
@@ -291,10 +291,10 @@ class BlockEdit extends Component {
 						</BaseControl>
 					</PanelBody>
 					<PanelBody
-						title={__("Color Settings")}
+						title={__('Color Settings')}
 						initialOpen={false}
 					>
-						<BaseControl label={__("Text Color", "@@text_domain")}>
+						<BaseControl label={__('Text Color', '@@text_domain')}>
 							<ColorPicker
 								color={txtColor}
 								onChangeComplete={(color) => setAttributes({ txtColor: color.hex })}
@@ -302,13 +302,13 @@ class BlockEdit extends Component {
 						</BaseControl>
 					</PanelBody>
 					<PanelBody
-						title={__("Swiper Settings")}
+						title={__('Swiper Settings')}
 						initialOpen={false}
 					>
 						<PanelRow>
 							<RangeControl
-								label={__("Container Max Width %")}
-								help={__("Frontend: Set the max width for the content with text.")}
+								label={__('Container Max Width %')}
+								help={__('Frontend: Set the max width for the content with text.')}
 								value={containerWidth}
 								onChange={(value) => {
 									setAttributes({
@@ -358,8 +358,8 @@ class BlockEdit extends Component {
 							help="For vertical slider, Slides Per View should be set to 1"
 							value={direction}
 							options={[
-								{ label: "Horizontal", value: "horizontal" },
-								{ label: "Vertical", value: "vertical" }
+								{ label: 'Horizontal', value: 'horizontal' },
+								{ label: 'Vertical', value: 'vertical' },
 							]}
 							onChange={(option) => {
 								setAttributes({ direction: option });
@@ -385,9 +385,9 @@ class BlockEdit extends Component {
 								label="Type of pagination"
 								value={pagination_type}
 								options={[
-									{ label: "Bullets", value: "bullets" },
-									{ label: "Fraction", value: "fraction" },
-									{ label: "Progress Bar", value: "progressbar" },
+									{ label: 'Bullets', value: 'bullets' },
+									{ label: 'Fraction', value: 'fraction' },
+									{ label: 'Progress Bar', value: 'progressbar' },
 								]}
 								onChange={(option) => {
 									setAttributes({ pagination_type: option });
@@ -497,11 +497,11 @@ class BlockEdit extends Component {
 								label="Effect (Under Consttruction)"
 								value={effect}
 								options={[
-									{ label: "Slide", value: "slide" },
-									{ label: "Fade", value: "fade" },
-									{ label: "Cube", value: "cube" },
-									{ label: "Coverflow", value: "coverflow" },
-									{ label: "Flip", value: "flip" },
+									{ label: 'Slide', value: 'slide' },
+									{ label: 'Fade', value: 'fade' },
+									{ label: 'Cube', value: 'cube' },
+									{ label: 'Coverflow', value: 'coverflow' },
+									{ label: 'Flip', value: 'flip' },
 								]}
 								onChange={(option) => {
 									setAttributes({ effect: option });
@@ -621,14 +621,14 @@ class BlockEdit extends Component {
 						className="wb-tabs-buttons-wrapper"
 						style={style}
 					>
-						<div className={classnames("wb-tabs-buttons", `wb-tabs-buttons-align-${buttonsAlign}`)}>
+						<div className={classnames('wb-tabs-buttons', `wb-tabs-buttons-align-${buttonsAlign}`)}>
 							{tabsData.map((tabData, i) => {
 								const { slug } = tabData;
 								const selected = tabActive === slug;
 
 								return (
 									<div
-										className={classnames("wb-tabs-buttons-item", selected ? "wb-tabs-buttons-item-active" : "")}
+										className={classnames('wb-tabs-buttons-item', selected ? 'wb-tabs-buttons-item-active' : '')}
 										key={`tab_button_${i}`}
 										onClick={() => setAttributes({ tabActive: slug })}
 									>
@@ -636,7 +636,7 @@ class BlockEdit extends Component {
 
 										<RemoveButton
 											show={isSelectedBlockInRoot}
-											tooltipText={__("Remove slide?", "@@text_domain")}
+											tooltipText={__('Remove slide?', '@@text_domain')}
 											onRemove={() => {
 												this.removeTab(i);
 											}}
@@ -645,9 +645,9 @@ class BlockEdit extends Component {
 								);
 							})}
 							{isSelectedBlockInRoot ? (
-								<Tooltip text={__("Add Slide", "@@text_domain")}>
+								<Tooltip text={__('Add Slide', '@@text_domain')}>
 									<Button
-										icon={"insert"}
+										icon={'insert'}
 										onClick={() => {
 											let newTabsData = [];
 											const newDataLength = tabsData.length + 1;
@@ -657,7 +657,7 @@ class BlockEdit extends Component {
 												slug: `slide-${newDataLength}`,
 											});
 
-											const block = createBlock("da/wp-swiper-slide", {
+											const block = createBlock('da/wp-swiper-slide', {
 												slug: `slide-${newDataLength}`,
 											});
 
@@ -672,13 +672,13 @@ class BlockEdit extends Component {
 									/>
 								</Tooltip>
 							) : (
-								""
+								''
 							)}
 						</div>
 						<div className="wp-swiper__slide-content">
 							<InnerBlocks
 								template={this.getTabsTemplate()}
-								allowedBlocks={["da/wp-swiper-slide"]}
+								allowedBlocks={['da/wp-swiper-slide']}
 							/>
 						</div>
 					</div>
@@ -697,7 +697,7 @@ class BlockEdit extends Component {
 
 export default compose([
 	withSelect((select, ownProps) => {
-		const { getBlock, isBlockSelected, hasSelectedInnerBlock } = select("core/block-editor");
+		const { getBlock, isBlockSelected, hasSelectedInnerBlock } = select('core/block-editor');
 
 		const { clientId } = ownProps;
 
@@ -708,8 +708,8 @@ export default compose([
 		};
 	}),
 	withDispatch((dispatch, ownProps, registry) => {
-		const { updateBlockAttributes, removeBlock, replaceInnerBlocks, moveBlockToPosition, moveBlocksDown } = dispatch("core/block-editor");
-		const { getBlocks } = registry.select("core/block-editor");
+		const { updateBlockAttributes, removeBlock, replaceInnerBlocks, moveBlockToPosition, moveBlocksDown } = dispatch('core/block-editor');
+		const { getBlocks } = registry.select('core/block-editor');
 
 		return {
 			moveBlocksDown,
