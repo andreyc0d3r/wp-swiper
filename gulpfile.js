@@ -1,17 +1,14 @@
 const gulp = require('gulp');
-
-const $ = require('gulp-load-plugins')({DEBUG: false});
-var gutil = require('gulp-util');
-
-var zip = require('gulp-vinyl-zip');
-var rename = require('gulp-rename');
-
-var path = require('path');
-
-var del = require('del');
-var sass = require('gulp-sass');
-
+const gulpLoadPlugins = require('gulp-load-plugins');
+const gutil = require('gulp-util');
+const zip = require('gulp-vinyl-zip');
+const rename = require('gulp-rename');
+const path = require('path');
+const del = require('del');
+const sass = require('gulp-sass');
 const syncy = require('syncy');
+
+const $ = gulpLoadPlugins({ DEBUG: false });
 
 var settings = {
     repo_path: './src',

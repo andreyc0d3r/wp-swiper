@@ -14,6 +14,7 @@ const externals = {
 };
 
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
 	entry: {
@@ -23,6 +24,18 @@ module.exports = {
 	output: {
 		path: __dirname,
 		filename: './src/gutenberg/js/[name].js',
+	},
+	optimization: {
+		minimizer: [
+			new TerserPlugin({
+				terserOptions: {
+					output: {
+						comments: false, // This removes all comments, including the license comments
+					},
+				},
+				extractComments: false,
+			}),
+		],
 	},
 	plugins: [
 		new MiniCSSExtractPlugin({

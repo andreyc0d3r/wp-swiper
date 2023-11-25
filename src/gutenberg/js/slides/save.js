@@ -8,16 +8,7 @@ import classnames from 'classnames/dedupe';
  */
 
 const { Component } = wp.element;
-
 const { InnerBlocks } = wp.blockEditor;
-
-/**
- * Internal dependencies
- */
-import metadata from './block.json';
-// import get_image from '../utils/get-image';
-
-// const { name } = metadata;
 
 /**
  * Block Save Class.
@@ -115,7 +106,10 @@ class BlockSave extends Component {
 
 		return (
 			<>
-				<div className={className}>
+				<div 
+					className={className}
+					data-swiperconfig={JSON.stringify(data_atts)}
+				>
 					{this.getOverlayImg(overlayImg, style_overlay_image)}
 					<div
 						className="wp-swiper__wrapper"
@@ -123,7 +117,6 @@ class BlockSave extends Component {
 					>
 						<div
 							className="swiper-container swiper"
-							data-swiperconfig={JSON.stringify(data_atts)}
 							{...thumbsConfig}
 							{...data_atts}
 						>
