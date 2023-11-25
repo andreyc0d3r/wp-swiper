@@ -22,10 +22,13 @@ var wp_swiper = new (function () {
 
 	self.init_options = function () {
 		var wpSwipers = document.querySelectorAll('.wp-swiper');
+		
 		window.wpSwiper = [];
 		window.wpSwiperThumbs = [];
+
 		for (let i = 0; i < wpSwipers.length; i++) {
 			wpSwipers[i].classList.add(`wp-swiper--${i}`);
+			
 			let swiper_container = wpSwipers[i].querySelector('.swiper-container');
 
 			if (swiper_container.hasAttribute('data-freemode')) {
