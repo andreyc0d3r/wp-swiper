@@ -16,14 +16,14 @@ const { name } = metadata;
 export { metadata, name };
 
 export const settings = {
-    ...metadata,
-    title: __( 'Slide', '@@text_domain' ),
-    description: __( 'A single slide within a wp-swiper block.', '@@text_domain' ),
-    icon: 'admin',
-    getEditWrapperProps( attributes ) {
-        return { 'data-tab': attributes.slug };
-    },
-    edit,
-    save,
-	deprecated
+	...metadata,
+	title: __('Slide', '@@text_domain'),
+	description: __('A single slide within a wp-swiper block.', '@@text_domain'),
+	icon: 'admin',
+	getEditWrapperProps(attributes) {
+		return { 'data-tab': attributes.slug };
+	},
+	edit,
+	save,
+	deprecated,
 };
