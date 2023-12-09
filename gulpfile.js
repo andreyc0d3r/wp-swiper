@@ -4,7 +4,6 @@ const gutil = require('gulp-util');
 const zip = require('gulp-vinyl-zip');
 const rename = require('gulp-rename');
 const path = require('path');
-const del = require('del');
 const sass = require('gulp-sass');
 const syncy = require('syncy');
 
@@ -213,6 +212,7 @@ gulp.task('zip', function () {
             .on('error', gutil.log)
     );
 });
+
 gulp.task('sync_dir:win', function (done) {
     syncy(
         [

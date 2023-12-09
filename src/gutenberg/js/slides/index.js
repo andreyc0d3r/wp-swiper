@@ -20,7 +20,7 @@ export { metadata, name };
 const settings = {
 	...metadata,
 	title: __('WP Swiper', '@@text_domain'),
-	description: __('Create slider element.', '@@text_domain'),
+	description: __('Create an awesome slider.', '@@text_domain'),
 	icon: (
 		<svg
 			width="24"
@@ -39,7 +39,7 @@ const settings = {
 			/>
 		</svg>
 	),
-	keywords: [__('swiper', '@@text_domain'), __('slider', '@@text_domain'), __('wp slider', '@@text_domain'), , __('wp swiper', '@@text_domain')],
+	keywords: [__('swiper', '@@text_domain'), __('slider', '@@text_domain'), __('wp slider', '@@text_domain'), __('wp swiper', '@@text_domain')],
 	edit,
 	save,
 	deprecated,

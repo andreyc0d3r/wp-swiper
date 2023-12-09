@@ -2,14 +2,10 @@
  * Internal dependencies
  */
 import metadata from './block.json';
-import deprecated_save from './deprecated_save';
+import oldsave from './oldsave';
 
 export default [
 	{
-		supports: metadata.supports,
-		attributes: {
-			...metadata.attributes,
-		},
-		save: deprecated_save,
-	},
+		save: oldsave
+	}
 ];

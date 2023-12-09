@@ -12,6 +12,8 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
  * Block Save Class.
  */
 function save(props) {
+	console.log('using original');
+	console.log('original', props);
 	let { className } = props.attributes;
 	const {
 		align,
