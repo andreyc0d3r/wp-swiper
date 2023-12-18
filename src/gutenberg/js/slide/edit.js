@@ -24,10 +24,14 @@ import { getPositionClassName } from '../utils/shared';
  * Block Edit Class.
  */
 function edit(props) {
-	console.log('EDIT', props);
 	const onSelectImage = (media) => {
 		let img_url = media.sizes.full.url;
 		props.setAttributes({ slideImg: img_url });
+	};
+
+	const onSelectThumb = (media) => {
+		let img_url = media.sizes.full.url;
+		props.setAttributes({ thumbImg: img_url });
 	};
 
 	const isEmpty = (val) => {
@@ -57,7 +61,7 @@ function edit(props) {
 
 	let { className = '' } = props;
 
-	const { slideImg, overlayColor, contentVHalign } = attributes;
+	const { slideImg, thumbImg, overlayColor, contentVHalign } = attributes;
 
 	className = classnames(className, 'wp-swiper__slide');
 	className = classnames(className, { 'has-image': isEmpty(slideImg) });
@@ -104,30 +108,80 @@ function edit(props) {
 								/>
 							</MediaUploadCheck>
 						</PanelRow>
-						<PanelRow>
-							<FocalPointPicker
-								url={slideImg}
-								value={props.attributes.focalPoint}
-								onDragStart={setFocalPoint}
-								onDrag={setFocalPoint}
-								onChange={setFocalPoint}
-							/>
-						</PanelRow>
+						{slideImg && (
+							<PanelRow>
+								<FocalPointPicker
+									url={slideImg}
+									value={props.attributes.focalPoint}
+									onDragStart={setFocalPoint}
+									onDrag={setFocalPoint}
+									onChange={setFocalPoint}
+								/>
+							</PanelRow>
+						)}
 						{/* <PanelRow>{get_image(slideImg)}</PanelRow> */}
+						{slideImg && (
+							<PanelRow>
+								<Button
+									isSecondary
+									size="small"
+									className="block-library-cover__reset-button"
+									onClick={() =>
+										setAttributes({
+											slideImg: undefined,
+										})
+									}
+								>
+									{__('Clear Media')}
+								</Button>
+							</PanelRow>
+						)}
 						<PanelRow>
-							<Button
-								isSecondary
-								isSmall
-								className="block-library-cover__reset-button"
-								onClick={() =>
-									setAttributes({
-										slideImg: undefined,
-									})
-								}
-							>
-								{__('Clear Media')}
-							</Button>
+							<MediaUploadCheck>
+								<MediaUpload
+									value={thumbImg}
+									onSelect={onSelectThumb}
+									type="image"
+									render={(open) => {
+										return (
+											<Button
+												onClick={open.open}
+												className="button"
+											>
+												Select thumb image
+											</Button>
+										);
+									}}
+								/>
+							</MediaUploadCheck>
 						</PanelRow>
+						{thumbImg && (
+							<PanelRow>
+								<FocalPointPicker
+									url={thumbImg}
+									value={props.attributes.focalPoint}
+									onDragStart={setFocalPoint}
+									onDrag={setFocalPoint}
+									onChange={setFocalPoint}
+								/>
+							</PanelRow>
+						)}
+						{thumbImg && (
+							<PanelRow>
+								<Button
+									isSecondary
+									size="small"
+									className="block-library-cover__reset-button"
+									onClick={() =>
+										setAttributes({
+											thumbImg: undefined,
+										})
+									}
+								>
+									{__('Clear Media')}
+								</Button>
+							</PanelRow>
+						)}
 					</BaseControl>
 				</PanelBody>
 			</InspectorControls>

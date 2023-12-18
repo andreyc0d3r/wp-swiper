@@ -6,7 +6,7 @@ import classnames from 'classnames/dedupe';
 /**
  * WordPress dependencies
  */
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, useInnerBlocksProps } from '@wordpress/block-editor';
 
 /**
  * Block Save Class.
@@ -15,7 +15,6 @@ function save(props) {
 	let { className } = props.attributes;
 	const {
 		align,
-		overlayColor,
 		overlayImg,
 		overlayImgOpacity,
 		slidesPerView,
@@ -41,15 +40,32 @@ function save(props) {
 		sticky,
 		debug,
 		direction,
+		tabsData,
 	} = props.attributes;
-
-	const blockProps = useBlockProps.save();
 
 	className = classnames(className, 'wp-swiper');
 
 	if (align) {
 		className = classnames(className, `align${align}`);
 	}
+
+	const blockProps = useBlockProps.save({
+		className: className,
+	});
+	const innerBlocksProps = useInnerBlocksProps;
+
+	const thumbsElements = tabsData.map((tab, index) => (
+		<div
+			key={index}
+			className="swiper-slide"
+		>
+			{/* Your custom content here */}
+			<img
+				src={tab.thumbImg || tab.slideImg}
+				alt={`Thumbnail ${index + 1}`}
+			/>
+		</div>
+	));
 
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 	if (overlayImgOpacity) {
@@ -107,17 +123,16 @@ function save(props) {
 
 	return (
 		<div
-			className={className}
 			{...blockProps}
 		>
 			{getOverlayImg(overlayImg, style_overlay_image)}
 			<div
-				className="wp-swiper__wrapper test"
+				className="wp-swiper__wrapper"
 				style={style_overlay_wrapper}
 			>
 				<div
 					className="swiper-container swiper"
-					data-swiperconfig={JSON.stringify(data_atts)}
+					data-swiperconfig={data_atts}
 					{...thumbsConfig}
 					{...data_atts}
 				>
@@ -134,8 +149,8 @@ function save(props) {
 			{thumbs && (
 				<div className="wp-swiper__thumbs">
 					<div className="wp-swiper__wrapper">
-						<div className="swiper-container swiper">
-							<div className="swiper-wrapper"></div>
+						<div className="swiper-container">
+							<div className="swiper-wrapper">{thumbsElements}</div>
 						</div>
 					</div>
 				</div>
@@ -207,4 +222,5 @@ function save(props) {
 		}
 	}
 }
+
 export default save;

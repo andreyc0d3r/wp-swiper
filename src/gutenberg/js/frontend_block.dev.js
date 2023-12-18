@@ -133,11 +133,11 @@ var wp_swiper = new (function () {
 					freeMode: true,
 					watchSlidesProgress: true,
 				};
-				const slides = wpSwipers[i].querySelector('.swiper-wrapper').cloneNode(true);
+				// const slides = wpSwipers[i].querySelector('.swiper-wrapper').cloneNode(true);
 				const thumbsSwiper = wpSwipers[i].querySelector('.wp-swiper__thumbs .swiper-container');
 
 				const thumbsWrapper = wpSwipers[i].querySelector('.wp-swiper__thumbs .swiper-wrapper');
-				thumbsWrapper.replaceWith(slides);
+				// thumbsWrapper.replaceWith(slides);
 				thumbsConfig = JSON.parse(swiper_container.getAttribute('data-thumbsconfig'));
 				window.wpSwiperThumbs[i] = new Swiper(thumbsSwiper, thumbsConfig);
 

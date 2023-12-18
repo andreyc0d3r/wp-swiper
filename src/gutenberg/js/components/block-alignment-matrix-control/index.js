@@ -15,7 +15,7 @@ function BlockAlignmentMatrixControl(props) {
 
 	return (
 		<Dropdown
-			position="bottom right"
+			placement="bottom right"
 			className={className}
 			popoverProps={{ className: popoverClassName, isAlternate }}
 			renderToggle={({ onToggle, isOpen }) => {

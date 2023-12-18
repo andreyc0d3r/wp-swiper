@@ -10,7 +10,7 @@ import React, { useEffect } from 'react';
 
 import { __ } from '@wordpress/i18n';
 
-import { Component, Fragment } from '@wordpress/element';
+import { Fragment } from '@wordpress/element';
 
 import { createBlock } from '@wordpress/blocks';
 import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl } from '@wordpress/components';
@@ -18,7 +18,7 @@ import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, Color
 import { useBlockProps, InspectorControls, InnerBlocks, MediaUploadCheck, MediaUpload, store as blockEditorStore } from '@wordpress/block-editor';
 
 import { compose } from '@wordpress/compose';
-
+import { useSelect } from '@wordpress/data';
 import { withSelect, withDispatch } from '@wordpress/data';
 
 /**
@@ -27,6 +27,7 @@ import { withSelect, withDispatch } from '@wordpress/data';
 import RemoveButton from '../components/remove-button';
 import getUniqueSlug from '../utils/get-unique-slug';
 import get_image from '../utils/get-image';
+import { deepClone } from '../utils/shared';
 
 /**
  * Block Edit Class.
@@ -68,6 +69,27 @@ function BlockEdit(props) {
 		debug,
 		direction,
 	} = attributes;
+
+	const child_blocks = useSelect((select) => select('core/block-editor').getBlocks(clientId));
+	useEffect(() => {
+		// const child_values = child_blocks.map(({
+		// 	clientId,
+		// 	attributes: {
+		// 		thumbImg,
+		// 		slug
+		// 	}
+		// }) => ({ clientId, thumbImg }));
+		const newTabsData = block.innerBlocks.map((tabData) => ({
+			clientId: tabData.clientId,
+			slug: tabData.attributes.slug,
+			slideImg: tabData.attributes.slideImg,
+			thumbImg: tabData.attributes.thumbImg,
+		}));
+
+		setAttributes({
+			tabsData: newTabsData,
+		});
+	}, [child_blocks]);
 
 	// Function to check if two arrays are equal without considering the order of elements
 	const areArraysEqualWithoutOrder = (arr1, arr2) => {
@@ -139,22 +161,37 @@ function BlockEdit(props) {
 	};
 
 	const removeTab = (i) => {
-		const { setAttributes, attributes, block, getBlocks, replaceInnerBlocks } = props;
+		const { setAttributes, attributes, block, getBlocks, replaceInnerBlocks, removeBlock } = props;
 		const { tabsData = [] } = attributes;
 
 		if (1 >= block.innerBlocks.length) {
-			props.removeBlock(block.clientId);
+			removeBlock(block.clientId);
 		} else if (block.innerBlocks[i]) {
-			props.removeBlock(block.innerBlocks[i].clientId);
-
 			if (tabsData[i]) {
-				const newTabsData = [...tabsData];
+				const newTabsData = deepClone(tabsData);
+
 				newTabsData.splice(i, 1);
 
-				const innerBlocks = [...getBlocks(block.clientId)];
-				innerBlocks.splice(i, 1);
+				// const slug = i;
+				// tabsData[i] = {
+				// 	...tabsData[i],
+				// 	slug: `slide-${slug}`,
+				// };
+				// console.log('2', tabsData);
 
-				replaceInnerBlocks(block.clientId, innerBlocks, false);
+				// update slug attribute
+				// for inner blocks (slide)
+
+				removeBlock(block.innerBlocks[i].clientId);
+
+				for (let j = i; j < newTabsData.length; j++) {
+					const newSlug = `slide-${j + 1}`;
+
+					newTabsData[j].slug = newSlug;
+					updateBlockAttributes(newTabsData[j].clientId, {
+						slug: newSlug,
+					});
+				}
 
 				setAttributes({
 					tabsData: newTabsData,
@@ -164,6 +201,7 @@ function BlockEdit(props) {
 	};
 
 	useEffect(() => {
+		return;
 		const { block, setAttributes, replaceInnerBlocks } = props;
 
 		// Extract the client IDs of the inner blocks
@@ -622,7 +660,7 @@ function BlockEdit(props) {
 							return (
 								<div
 									className={classnames('wb-tabs-buttons-item', selected ? 'wb-tabs-buttons-item-active' : '')}
-									key={`tab_button_${i}`}
+									key={`tab_button_${tabData.clientId}`}
 									onClick={() => setAttributes({ tabActive: slug })}
 								>
 									<h4>Slide {counter++}</h4>
@@ -644,14 +682,16 @@ function BlockEdit(props) {
 									onClick={() => {
 										let newTabsData = [];
 										const newDataLength = tabsData.length + 1;
-
-										newTabsData = [...tabsData];
-										newTabsData.push({
+										const block = createBlock('da/wp-swiper-slide', {
 											slug: `slide-${newDataLength}`,
 										});
 
-										const block = createBlock('da/wp-swiper-slide', {
+										newTabsData = [...tabsData];
+										newTabsData.push({
+											clientId: block.clientId,
 											slug: `slide-${newDataLength}`,
+											slideImg: '',
+											thumbImg: '',
 										});
 
 										let innerBlocks = getBlocks(clientId);

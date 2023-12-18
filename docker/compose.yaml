@@ -40,6 +40,7 @@ services:
     image: wordpress:php8.2
     volumes:
       - ./wp_data/wp-content/plugins/wp-swiper:/var/www/html/wp-content/plugins/wp-swiper
+      - ./wp_data/php.ini:/var/www/html/php.ini
     environment:
       WORDPRESS_DB_NAME: wp_db
       WORDPRESS_DB_HOST: db:3306

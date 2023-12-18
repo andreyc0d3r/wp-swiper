@@ -16,4 +16,8 @@ registerBlockStyle(slides.name, [
 		name: 'testimonials',
 		label: 'Testimonials',
 	},
+	{
+		name: 'thumbnails-bottom-right',
+		label: 'Thumbnails Bottom Right',
+	},
 ]);
