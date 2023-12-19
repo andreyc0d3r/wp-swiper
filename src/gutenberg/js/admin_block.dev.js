@@ -20,4 +20,8 @@ registerBlockStyle(slides.name, [
 		name: 'thumbnails-bottom-right',
 		label: 'Thumbnails Bottom Right',
 	},
+	{
+		name: 'overlayed-text-right',
+		label: 'Overlayed Text Right',
+	},
 ]);

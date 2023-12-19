@@ -41,6 +41,8 @@ function save(props) {
 		debug,
 		direction,
 		tabsData,
+		previousIcon,
+		nextIcon,
 	} = props.attributes;
 
 	className = classnames(className, 'wp-swiper');
@@ -122,9 +124,7 @@ function save(props) {
 	}
 
 	return (
-		<div
-			{...blockProps}
-		>
+		<div {...blockProps}>
 			{getOverlayImg(overlayImg, style_overlay_image)}
 			<div
 				className="wp-swiper__wrapper"
@@ -184,8 +184,23 @@ function save(props) {
 		if (navigation) {
 			return (
 				<>
-					<div className="swiper-button-prev"></div>
-					<div className="swiper-button-next"></div>
+					<div className={`swiper-button-prev ${previousIcon ? 'wp_swiper__button-prev' : ''}`}>
+						{previousIcon ? (
+							<img
+								src={previousIcon}
+								alt="Previous"
+							/>
+						) : null}
+					</div>
+
+					<div className={`swiper-button-next ${nextIcon ? 'wp_swiper__button-next' : ''}`}>
+						{nextIcon ? (
+							<img
+								src={nextIcon}
+								alt="Previous"
+							/>
+						) : null}
+					</div>
 				</>
 			);
 		}

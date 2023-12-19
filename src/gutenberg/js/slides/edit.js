@@ -68,6 +68,8 @@ function BlockEdit(props) {
 		autoHeight,
 		debug,
 		direction,
+		previousIcon,
+		nextIcon,
 	} = attributes;
 
 	const child_blocks = useSelect((select) => select('core/block-editor').getBlocks(clientId));
@@ -274,36 +276,41 @@ function BlockEdit(props) {
 							/>
 						</MediaUploadCheck>
 					</PanelRow>
-					<PanelRow>{get_image(overlayImg)}</PanelRow>
-					<PanelRow>
-						<Button
-							isSecondary
-							size="small"
-							className="block-library-cover__reset-button"
-							onClick={() =>
-								setAttributes({
-									overlayImg: undefined,
-								})
-							}
-						>
-							{__('Clear Media')}
-						</Button>
-					</PanelRow>
-					<BaseControl label={__('Image Overlay Opacity', '@@text_domain')}>
-						<RangeControl
-							label={__('Opacity')}
-							value={overlayImgOpacity}
-							onChange={(value) =>
-								setAttributes({
-									overlayImgOpacity: value,
-								})
-							}
-							min={0}
-							max={1}
-							step={0.01}
-							required
-						/>
-					</BaseControl>
+					{overlayImg && <PanelRow>{get_image(overlayImg)}</PanelRow>}
+					{overlayImg && (
+						<PanelRow>
+							<Button
+								isSecondary
+								size="small"
+								className="block-library-cover__reset-button"
+								onClick={() =>
+									setAttributes({
+										overlayImg: undefined,
+									})
+								}
+							>
+								{__('Clear Media')}
+							</Button>
+						</PanelRow>
+					)}
+					{overlayImg && (
+						<BaseControl label={__('Image Overlay Opacity', '@@text_domain')}>
+							<RangeControl
+								label={__('Opacity')}
+								value={overlayImgOpacity}
+								onChange={(value) =>
+									setAttributes({
+										overlayImgOpacity: value,
+									})
+								}
+								min={0}
+								max={1}
+								step={0.01}
+								required
+							/>
+						</BaseControl>
+					)}
+					<hr />
 					<BaseControl label={__('Overlay Color', '@@text_domain')}>
 						<ColorPicker
 							color={overlayColor.rgb}
@@ -367,6 +374,76 @@ function BlockEdit(props) {
 							}}
 						/>
 					</PanelRow>
+					{navigation && (
+						<>
+							<PanelRow>
+								<p>You can customize icons by uploading your own. Default icons used otherwise.</p>
+							</PanelRow>
+							<PanelRow>
+								<MediaUploadCheck>
+									<MediaUpload
+										value={previousIcon}
+										onSelect={(media) => {
+											let img_url = media.sizes.full.url;
+											setAttributes({ previousIcon: img_url });
+										}}
+										type="image"
+										render={(open) => {
+											return (
+												<Button
+													onClick={open.open}
+													className="button"
+												>
+													Select previous slide icon
+												</Button>
+											);
+										}}
+									/>
+								</MediaUploadCheck>
+							</PanelRow>
+							{previousIcon && <PanelRow>{get_image(previousIcon)}</PanelRow>}
+							<PanelRow>
+								<MediaUploadCheck>
+									<MediaUpload
+										value={nextIcon}
+										onSelect={(media) => {
+											let img_url = media.sizes.full.url;
+											setAttributes({ nextIcon: img_url });
+										}}
+										type="image"
+										render={(open) => {
+											return (
+												<Button
+													onClick={open.open}
+													className="button"
+												>
+													Select next slide icon
+												</Button>
+											);
+										}}
+									/>
+								</MediaUploadCheck>
+								
+							</PanelRow>
+							{nextIcon && <PanelRow>{get_image(nextIcon)}</PanelRow>}
+						</>
+					)}
+					{navigation && overlayImg && (
+						<PanelRow>
+							<Button
+								isSecondary
+								size="small"
+								className="block-library-cover__reset-button"
+								onClick={() =>
+									setAttributes({
+										previousIcon: undefined,
+									})
+								}
+							>
+								{__('Clear Media')}
+							</Button>
+						</PanelRow>
+					)}
 					<PanelRow>
 						<ToggleControl
 							label="Auto Height"

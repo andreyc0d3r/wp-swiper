@@ -32,6 +32,12 @@
 		"overlayImg": {
 			"type": "string"
 		},
+		"previousIcon": {
+			"type": "string"
+		},
+		"nextIcon": {
+			"type": "string"
+		},
 		"overlayImgOpacity": {
 			"type": "number",
 			"default": 0.5
