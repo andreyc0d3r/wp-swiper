@@ -6,7 +6,7 @@ import classnames from 'classnames/dedupe';
 /**
  * WordPress dependencies
  */
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, useInnerBlocksProps } from '@wordpress/block-editor';
 
 /**
  * Block Save Class.
@@ -15,7 +15,6 @@ function save(props) {
 	let { className } = props.attributes;
 	const {
 		align,
-		overlayColor,
 		overlayImg,
 		overlayImgOpacity,
 		slidesPerView,
@@ -41,15 +40,20 @@ function save(props) {
 		sticky,
 		debug,
 		direction,
+		tabsData,
+		previousIcon,
+		nextIcon,
 	} = props.attributes;
-
-	const blockProps = useBlockProps.save();
 
 	className = classnames(className, 'wp-swiper');
 
 	if (align) {
 		className = classnames(className, `align${align}`);
 	}
+
+	const blockProps = useBlockProps.save({
+		className: className,
+	});
 
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 	if (overlayImgOpacity) {
@@ -106,13 +110,10 @@ function save(props) {
 	}
 
 	return (
-		<div
-			className={className}
-			{...blockProps}
-		>
+		<div {...blockProps}>
 			{getOverlayImg(overlayImg, style_overlay_image)}
 			<div
-				className="wp-swiper__wrapper test"
+				className="wp-swiper__wrapperx"
 				style={style_overlay_wrapper}
 			>
 				<div
@@ -134,7 +135,7 @@ function save(props) {
 			{thumbs && (
 				<div className="wp-swiper__thumbs">
 					<div className="wp-swiper__wrapper">
-						<div className="swiper-container swiper">
+						<div className="swiper-container">
 							<div className="swiper-wrapper"></div>
 						</div>
 					</div>
@@ -169,8 +170,23 @@ function save(props) {
 		if (navigation) {
 			return (
 				<>
-					<div className="swiper-button-prev"></div>
-					<div className="swiper-button-next"></div>
+					<div className={`swiper-button-prev ${previousIcon ? 'wp_swiper__button-prev' : ''}`}>
+						{previousIcon ? (
+							<img
+								src={previousIcon}
+								alt="Previous"
+							/>
+						) : null}
+					</div>
+
+					<div className={`swiper-button-next ${nextIcon ? 'wp_swiper__button-next' : ''}`}>
+						{nextIcon ? (
+							<img
+								src={nextIcon}
+								alt="Previous"
+							/>
+						) : null}
+					</div>
 				</>
 			);
 		}
@@ -207,4 +223,5 @@ function save(props) {
 		}
 	}
 }
+
 export default save;

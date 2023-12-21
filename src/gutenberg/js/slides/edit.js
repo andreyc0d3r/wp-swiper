@@ -72,7 +72,7 @@ function BlockEdit(props) {
 		nextIcon,
 	} = attributes;
 
-	const child_blocks = useSelect((select) => select('core/block-editor').getBlocks(clientId));
+	const child_blocks = getBlocks(clientId);
 	useEffect(() => {
 		// const child_values = child_blocks.map(({
 		// 	clientId,
@@ -246,7 +246,6 @@ function BlockEdit(props) {
 	let counter = 1;
 
 	const style = txtColor ? { color: txtColor } : {};
-
 	return (
 		<Fragment>
 			<InspectorControls>
@@ -737,7 +736,7 @@ function BlockEdit(props) {
 							return (
 								<div
 									className={classnames('wb-tabs-buttons-item', selected ? 'wb-tabs-buttons-item-active' : '')}
-									key={`tab_button_${tabData.clientId}`}
+									key={`tab_button_${tabData.slug}`}
 									onClick={() => setAttributes({ tabActive: slug })}
 								>
 									<h4>Slide {counter++}</h4>

@@ -56,8 +56,8 @@ function save(props) {
 	});
 	const innerBlocksProps = useInnerBlocksProps;
 
-	const thumbsElements = tabsData.map((tab, index) => (
-		<div
+	const thumbsElements = tabsData.map((tab, index) => {
+		return (tab.thumbImg || tab.slideImg) && <div
 			key={index}
 			className="swiper-slide"
 		>
@@ -67,7 +67,7 @@ function save(props) {
 				alt={`Thumbnail ${index + 1}`}
 			/>
 		</div>
-	));
+	});
 
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 	if (overlayImgOpacity) {
@@ -132,7 +132,7 @@ function save(props) {
 			>
 				<div
 					className="swiper-container swiper"
-					data-swiperconfig={data_atts}
+					data-swiperconfig={JSON.stringify(data_atts)}
 					{...thumbsConfig}
 					{...data_atts}
 				>
