@@ -54,20 +54,6 @@ function save(props) {
 	const blockProps = useBlockProps.save({
 		className: className,
 	});
-	const innerBlocksProps = useInnerBlocksProps;
-
-	const thumbsElements = tabsData.map((tab, index) => {
-		return (tab.thumbImg || tab.slideImg) && <div
-			key={index}
-			className="swiper-slide"
-		>
-			{/* Your custom content here */}
-			<img
-				src={tab.thumbImg || tab.slideImg}
-				alt={`Thumbnail ${index + 1}`}
-			/>
-		</div>
-	});
 
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 	if (overlayImgOpacity) {
@@ -127,7 +113,7 @@ function save(props) {
 		<div {...blockProps}>
 			{getOverlayImg(overlayImg, style_overlay_image)}
 			<div
-				className="wp-swiper__wrapper"
+				className="wp-swiper__wrapperx"
 				style={style_overlay_wrapper}
 			>
 				<div
@@ -150,7 +136,7 @@ function save(props) {
 				<div className="wp-swiper__thumbs">
 					<div className="wp-swiper__wrapper">
 						<div className="swiper-container">
-							<div className="swiper-wrapper">{thumbsElements}</div>
+							<div className="swiper-wrapper"></div>
 						</div>
 					</div>
 				</div>

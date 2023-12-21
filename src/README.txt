@@ -1,7 +1,7 @@
 ﻿=== Plugin Name ===
 Contributors: digitalapps
 Donate link: https://digitalapps.com
-Tags: swiper, swiperjs, wpswiper, wp swiper, carousel
+Tags: swiper, swiperjs, wpswiper, wp swiper, carousel, slider block, carousel block, swiper block, swiperjs block
 Requires at least: 3.0.1
 Tested up to: 6.4.1
 Stable tag: 1.0.0
@@ -74,6 +74,15 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+
+= 1.1.0 =
+
+* This was a big refactor, so bugs are expected, reach out to me with any issues
+* Refactor Class Based components to functional components
+* Fix slide reordering bug within the Document Overview (Left Sidebar)
+* Added support for Custom Thumbnails
+* Added support for Custom Slide Navigation Icons
+* Added 2 new slider styles (More details on Digital Apps Blog)
 
 = 1.0.34 =
 * Add focal point controls to the image

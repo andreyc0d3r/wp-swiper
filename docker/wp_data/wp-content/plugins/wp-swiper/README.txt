@@ -1,9 +1,9 @@
-=== Plugin Name ===
+﻿=== Plugin Name ===
 Contributors: digitalapps
 Donate link: https://digitalapps.com
-Tags: swiper, swiperjs, wpswiper, wp swiper, carousel
+Tags: swiper, swiperjs, wpswiper, wp swiper, carousel, slider block, carousel block, swiper block, swiperjs block
 Requires at least: 3.0.1
-Tested up to: 6.2.2
+Tested up to: 6.4.1
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,10 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+
+= 1.0.34 =
+* Add focal point controls to the image
+
 = 1.0.33 =
 * no lodash
 * php 8.2 support

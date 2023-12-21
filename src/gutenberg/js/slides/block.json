@@ -32,6 +32,12 @@
 		"overlayImg": {
 			"type": "string"
 		},
+		"previousIcon": {
+			"type": "string"
+		},
+		"nextIcon": {
+			"type": "string"
+		},
 		"overlayImgOpacity": {
 			"type": "number",
 			"default": 0.5
@@ -92,10 +98,16 @@
 			"type": "array",
 			"default": [
 				{
-					"slug": "slide-1"
+					"clientId": "",
+					"slug": "slide-1",
+					"slideImg": "",
+					"thumbImg": ""
 				},
 				{
-					"slug": "slide-2"
+					"clientId": "",
+					"slug": "slide-2",
+					"slideImg": "",
+					"thumbImg": ""
 				}
 			]
 		},
