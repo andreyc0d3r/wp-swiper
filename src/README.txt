@@ -77,6 +77,7 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 = 1.1.0 =
 
+* This was a big refactor, so bugs are expected, reach out to me with any issues
 * Refactor Class Based components to functional components
 * Fix slide reordering bug within the Document Overview (Left Sidebar)
 * Added support for Custom Thumbnails
