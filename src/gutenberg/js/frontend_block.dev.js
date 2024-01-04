@@ -22,13 +22,13 @@ var wp_swiper = new (function () {
 
 	self.init_options = function () {
 		var wpSwipers = document.querySelectorAll('.wp-swiper');
-		
+
 		window.wpSwiper = [];
 		window.wpSwiperThumbs = [];
 
 		for (let i = 0; i < wpSwipers.length; i++) {
 			wpSwipers[i].classList.add(`wp-swiper--${i}`);
-			
+
 			let swiper_container = wpSwipers[i].querySelector('.swiper-container');
 
 			if (swiper_container.hasAttribute('data-freemode')) {
@@ -75,17 +75,17 @@ var wp_swiper = new (function () {
 				self.options.slidesPerColumn = self.getNumber(swiper_container.getAttribute('data-slidespercolumn'), 1);
 			}
 			if (swiper_container.hasAttribute('data-autoplay')) {
-				self.options.autoplay = swiper_container.getAttribute('data-autoplay') == 'true' ? true : false;
+				self.options.autoplay = swiper_container.getAttribute('data-autoplay') === 'true' ? true : false;
 			}
 			if (swiper_container.hasAttribute('data-delay') && self.options.autoplay) {
 				self.options.autoplay = {};
-				self.options.autoplay.delay = swiper_container.getAttribute('data-delay');
+				self.options.autoplay.delay = self.getNumber(swiper_container.getAttribute('data-delay'));
 			}
 			if (swiper_container.hasAttribute('data-speed')) {
 				self.options.speed = self.getNumber(swiper_container.getAttribute('data-speed'), 500);
 			}
 			if (swiper_container.hasAttribute('data-loop')) {
-				self.options.loop = swiper_container.getAttribute('data-loop') == 'true';
+				self.options.loop = swiper_container.getAttribute('data-loop') === 'true' ? true : false;
 			}
 			if (swiper_container.hasAttribute('data-effect')) {
 				self.options.effect = swiper_container.getAttribute('data-effect');
@@ -99,7 +99,7 @@ var wp_swiper = new (function () {
 				self.options.direction = swiper_container.getAttribute('data-direction');
 			}
 			if (swiper_container.hasAttribute('data-slidesperview')) {
-				self.options.slidesPerView = swiper_container.getAttribute('data-slidesperview');
+				self.options.slidesPerView = self.getNumber(swiper_container.getAttribute('data-slidesperview'));
 			}
 			if (swiper_container.hasAttribute('data-spacebetween')) {
 				self.options.spaceBetween = self.getNumber(swiper_container.getAttribute('data-spacebetween'), 0);
