@@ -6,19 +6,18 @@ import classnames from 'classnames/dedupe';
 /**
  * WordPress dependencies
  */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { __ } from '@wordpress/i18n';
 
 import { Fragment } from '@wordpress/element';
 
 import { createBlock } from '@wordpress/blocks';
-import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl } from '@wordpress/components';
+import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl, __experimentalAlignmentMatrixControl as AlignmentMatrixControl } from '@wordpress/components';
 
 import { useBlockProps, InspectorControls, InnerBlocks, MediaUploadCheck, MediaUpload, store as blockEditorStore } from '@wordpress/block-editor';
 
 import { compose } from '@wordpress/compose';
-import { useSelect } from '@wordpress/data';
 import { withSelect, withDispatch } from '@wordpress/data';
 
 /**
@@ -92,6 +91,8 @@ function BlockEdit(props) {
 			tabsData: newTabsData,
 		});
 	}, [child_blocks]);
+
+	const [alignment, setAlignment] = useState('bottom center');
 
 	// Function to check if two arrays are equal without considering the order of elements
 	const areArraysEqualWithoutOrder = (arr1, arr2) => {
@@ -401,6 +402,22 @@ function BlockEdit(props) {
 								</MediaUploadCheck>
 							</PanelRow>
 							{previousIcon && <PanelRow>{get_image(previousIcon)}</PanelRow>}
+							{previousIcon && (
+								<PanelRow>
+									<Button
+										isSecondary
+										size="small"
+										className="block-library-cover__reset-button"
+										onClick={() =>
+											setAttributes({
+												previousIcon: undefined,
+											})
+										}
+									>
+										{__('Clear Media')}
+									</Button>
+								</PanelRow>
+							)}
 							<PanelRow>
 								<MediaUploadCheck>
 									<MediaUpload
@@ -422,26 +439,25 @@ function BlockEdit(props) {
 										}}
 									/>
 								</MediaUploadCheck>
-								
 							</PanelRow>
 							{nextIcon && <PanelRow>{get_image(nextIcon)}</PanelRow>}
+							{nextIcon && (
+								<PanelRow>
+									<Button
+										isSecondary
+										size="small"
+										className="block-library-cover__reset-button"
+										onClick={() =>
+											setAttributes({
+												nextIcon: undefined,
+											})
+										}
+									>
+										{__('Clear Media')}
+									</Button>
+								</PanelRow>
+							)}
 						</>
-					)}
-					{navigation && overlayImg && (
-						<PanelRow>
-							<Button
-								isSecondary
-								size="small"
-								className="block-library-cover__reset-button"
-								onClick={() =>
-									setAttributes({
-										previousIcon: undefined,
-									})
-								}
-							>
-								{__('Clear Media')}
-							</Button>
-						</PanelRow>
 					)}
 					<PanelRow>
 						<ToggleControl
@@ -701,6 +717,13 @@ function BlockEdit(props) {
 							onChange={(option) => {
 								setAttributes({ thumbsSlidesPerView: parseInt(option) });
 							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<AlignmentMatrixControl
+							disableAlignment={['center']}
+							value={alignment}
+							onChange={(newAlignment) => setAlignment(newAlignment)}
 						/>
 					</PanelRow>
 					<PanelRow>

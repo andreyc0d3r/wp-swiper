@@ -313,13 +313,13 @@ gulp.task('sync_dir:svn', function (done) {
     done();
 });
 gulp.task('clean:svn', function (done) {
-    del(settings.svn_path + '/trunk/**', { force: true }); // remove old zip file
+    // del(settings.svn_path + '/trunk/**', { force: true }); // remove old zip file
     done();
 });
 gulp.task(
     'svn',
     gulp.series(
-        'clean:svn',
+        // 'clean:svn',
         // 'admin_build_scss:prod',
         // 'build_scss:ext',
         'sync_dir:svn'
