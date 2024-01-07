@@ -57,16 +57,21 @@ function save(props) {
 	const innerBlocksProps = useInnerBlocksProps;
 
 	const thumbsElements = tabsData.map((tab, index) => {
-		return (tab.thumbImg || tab.slideImg) && <div
-			key={index}
-			className="swiper-slide"
-		>
-			{/* Your custom content here */}
-			<img
-				src={tab.thumbImg || tab.slideImg}
-				alt={`Thumbnail ${index + 1}`}
-			/>
-		</div>
+		return (
+			(tab.thumbImg || tab.slideImg) && (
+				<div
+					key={index}
+					className={`swiper-slide wp-swiper__thumb`}
+					data-thumb={index + 1}
+				>
+					{/* Your custom content here */}
+					<img
+						src={tab.thumbImg || tab.slideImg}
+						alt={`Thumbnail ${index + 1}`}
+					/>
+				</div>
+			)
+		);
 	});
 
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
@@ -184,22 +189,26 @@ function save(props) {
 		if (navigation) {
 			return (
 				<>
-					<div className={`swiper-button-prev ${previousIcon ? 'wp_swiper__button-prev' : ''}`}>
-						{previousIcon ? (
-							<img
-								src={previousIcon}
-								alt="Previous"
-							/>
-						) : null}
-					</div>
+					<div className="wp_swiper__navigation">
+						<div className="wp_swiper__navigation-container">
+							<div className={`swiper-button-prev ${previousIcon ? 'wp_swiper__button-prev' : ''}`}>
+								{previousIcon ? (
+									<img
+										src={previousIcon}
+										alt="Previous"
+									/>
+								) : null}
+							</div>
 
-					<div className={`swiper-button-next ${nextIcon ? 'wp_swiper__button-next' : ''}`}>
-						{nextIcon ? (
-							<img
-								src={nextIcon}
-								alt="Previous"
-							/>
-						) : null}
+							<div className={`swiper-button-next ${nextIcon ? 'wp_swiper__button-next' : ''}`}>
+								{nextIcon ? (
+									<img
+										src={nextIcon}
+										alt="Previous"
+									/>
+								) : null}
+							</div>
+						</div>
 					</div>
 				</>
 			);

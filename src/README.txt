@@ -75,8 +75,14 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
-= 1.1.0 =
+= 1.1.2 =
+* Support custom thumbs, and if no custom thumb is provided, use the content of the current slide.
 
+= 1.1.1 =
+* Added ability to remove Custom Slide Navigation Icons
+* Prev/Next slide buttons wrapped in a div + container
+
+= 1.1.0 =
 * This was a big refactor, so bugs are expected, reach out to me with any issues
 * Refactor Class Based components to functional components
 * Fix slide reordering bug within the Document Overview (Left Sidebar)
