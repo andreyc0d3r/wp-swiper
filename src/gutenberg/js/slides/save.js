@@ -61,7 +61,8 @@ function save(props) {
 			(tab.thumbImg || tab.slideImg) && (
 				<div
 					key={index}
-					className="swiper-slide"
+					className={`swiper-slide wp-swiper__thumb`}
+					data-thumb={index + 1}
 				>
 					{/* Your custom content here */}
 					<img

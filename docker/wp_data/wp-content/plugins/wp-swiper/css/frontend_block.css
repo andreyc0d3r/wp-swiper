@@ -26,10 +26,11 @@
   object-fit: cover;
   cursor: pointer;
 }
-.wp-swiper__thumbs .swiper-slide {
+.wp-swiper__thumbs .wp-swiper__thumb {
   box-sizing: border-box;
   height: 100px;
   width: 100px;
+  overflow: hidden;
 }
 .wp-swiper.is-style-overlayed-text-right .wp-swiper__slide-content .wp-block-columns .wp-block-column:first-child {
   margin-right: 30%;

@@ -133,11 +133,33 @@ var wp_swiper = new (function () {
 					freeMode: true,
 					watchSlidesProgress: true,
 				};
-				// const slides = wpSwipers[i].querySelector('.swiper-wrapper').cloneNode(true);
-				const thumbsSwiper = wpSwipers[i].querySelector('.wp-swiper__thumbs .swiper-container');
 
+				const slides = wpSwipers[i].querySelectorAll('.wp-swiper__slide');
+				const thumbsSwiper = wpSwipers[i].querySelector('.wp-swiper__thumbs .swiper-container');
 				const thumbsWrapper = wpSwipers[i].querySelector('.wp-swiper__thumbs .swiper-wrapper');
-				// thumbsWrapper.replaceWith(slides);
+				const existingThumbs = thumbsWrapper.querySelectorAll('.wp-swiper__thumb');
+
+				let thumbSlidesArray = [];
+
+				Array.from(slides).forEach((slide, index) => {
+					const thumbNumber = index + 1; // Assuming thumb numbers start from 1
+					const matchingThumb = Array.from(existingThumbs).find((thumb) => parseInt(thumb.getAttribute('data-thumb')) === thumbNumber);
+
+					if (matchingThumb) {
+						thumbSlidesArray[index] = matchingThumb.cloneNode(true);
+					} else {
+						thumbSlidesArray[index] = slide.cloneNode(true);
+						thumbSlidesArray[index].removeAttribute('data-tab');
+						thumbSlidesArray[index].classList.remove('wp-swiper__slide');
+						thumbSlidesArray[index].classList.add('wp-swiper__thumb');
+					}
+				});
+
+				thumbsWrapper.innerHTML = ''; // Clear existing content
+				thumbSlidesArray.forEach((element) => {
+					thumbsWrapper.appendChild(element);
+				});
+		
 				thumbsConfig = JSON.parse(swiper_container.getAttribute('data-thumbsconfig'));
 				window.wpSwiperThumbs[i] = new Swiper(thumbsSwiper, thumbsConfig);
 

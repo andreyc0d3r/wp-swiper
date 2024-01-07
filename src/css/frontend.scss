@@ -28,11 +28,11 @@
 			object-fit: cover;
 			cursor: pointer;
 		}
-		.swiper-slide {
+		.wp-swiper__thumb {
 			box-sizing: border-box;
 			height: 100px;
 			width: 100px;
-
+			overflow: hidden;
 		}
 	}
 
