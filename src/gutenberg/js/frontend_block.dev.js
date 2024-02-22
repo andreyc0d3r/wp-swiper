@@ -99,7 +99,7 @@ var wp_swiper = new (function () {
 				self.options.direction = swiper_container.getAttribute('data-direction');
 			}
 			if (swiper_container.hasAttribute('data-slidesperview')) {
-				self.options.slidesPerView = self.getNumber(swiper_container.getAttribute('data-slidesperview'));
+				self.options.slidesPerView = swiper_container.getAttribute('data-slidesperview');
 			}
 			if (swiper_container.hasAttribute('data-spacebetween')) {
 				self.options.spaceBetween = self.getNumber(swiper_container.getAttribute('data-spacebetween'), 0);

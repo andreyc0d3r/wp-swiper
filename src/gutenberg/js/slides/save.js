@@ -82,7 +82,7 @@ function save(props) {
 	const style_overlay_wrapper = txtColor ? { color: txtColor } : {};
 
 	let thumbsConfig = {
-		'data-thumbsconfig': {},
+		'data-thumbs': {},
 	};
 
 	let data_atts = {
@@ -111,15 +111,17 @@ function save(props) {
 	data_atts['data-mousewheel'] = mousewheel;
 	data_atts['data-releaseonedges'] = releaseOnEdges;
 	data_atts['data-paginationtype'] = pagination_type != 'bullets' ? pagination_type : 'bullets';
-	data_atts['data-clickablepagination'] = clickable_pagination ? true : '';
-
+	
+	if(clickable_pagination) {
+		data_atts['data-clickablepagination'] = clickable_pagination ? true : '';	
+	}
 	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
 		data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));
 		data_atts['data-breakpoints'] = data_atts['data-breakpoints'].substring(1, data_atts['data-breakpoints'].length - 1);
 	}
 
 	if (thumbs) {
-		thumbsConfig['data-thumbsconfig'] = JSON.stringify({
+		thumbsConfig['data-thumbs'] = JSON.stringify({
 			spaceBetween: thumbsSpaceBetween,
 			slidesPerView: thumbsSlidesPerView,
 			freeMode: true,
@@ -137,7 +139,7 @@ function save(props) {
 			>
 				<div
 					className="swiper-container swiper"
-					data-swiperconfig={JSON.stringify(data_atts)}
+					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}
 					{...data_atts}
 				>
