@@ -1,7 +1,7 @@
-﻿=== Plugin Name ===
+﻿=== WP Swiper ===
 Contributors: digitalapps
-Donate link: https://digitalapps.com
-Tags: swiper, swiperjs, wpswiper, wp swiper, carousel, slider block, carousel block, swiper block, swiperjs block
+Donate link: https://www.buymeacoffee.com/wpplugins
+Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 3.0.1
 Tested up to: 6.4.1
 Stable tag: 1.0.0
