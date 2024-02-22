@@ -636,6 +636,9 @@ function BlockEdit(props) {
 							help="Enables free mode functionality"
 							checked={freeMode}
 							onChange={() => {
+								if(freeMode) {
+									setAttributes({ sticky: false });
+								}
 								setAttributes({ freeMode: !freeMode });
 							}}
 						/>

@@ -75,6 +75,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.1.3 =
+* Fixed slides per view not allowing auto
+
 = 1.1.2 =
 * Support custom thumbs, and if no custom thumb is provided, use the content of the current slide.
 
