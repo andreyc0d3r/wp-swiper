@@ -75,6 +75,10 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.1.7 =
+* Multiple Sliders next/prev buttons bug Fixed
+* Added disableOnInteraction for autoplay
+
 = 1.1.6 =
 * Thumbs bug
 

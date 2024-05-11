@@ -2,7 +2,6 @@ import '../../css/frontend.scss';
 
 var wp_swiper = new (function () {
 	var self = this;
-	self.options = {};
 
 	self.init = function () {
 		self.init_options();
@@ -27,6 +26,8 @@ var wp_swiper = new (function () {
 		window.wpSwiperThumbs = [];
 
 		for (let i = 0; i < wpSwipers.length; i++) {
+			let options = {};
+			
 			wpSwipers[i].classList.add(`wp-swiper--${i}`);
 
 			let swiper_container = wpSwipers[i].querySelector('.swiper-container');
@@ -34,19 +35,19 @@ var wp_swiper = new (function () {
 			if (swiper_container.hasAttribute('data-freemode')) {
 				if (swiper_container.getAttribute('data-freemode') == 'true') {
 					if (swiper_container.getAttribute('data-freemode') == 'true' && swiper_container.getAttribute('data-sticky') == 'true') {
-						self.options.freeMode = {
+						options.freeMode = {
 							enabled: true,
 							sticky: true,
 						};
 					} else {
-						self.options.freeMode = true;
+						options.freeMode = true;
 					}
 				}
 			}
 
 			if (swiper_container.hasAttribute('data-navigation')) {
 				if (swiper_container.getAttribute('data-navigation') == 'true') {
-					self.options.navigation = {
+					options.navigation = {
 						nextEl: `.wp-swiper--${i} .swiper-button-next`,
 						prevEl: `.wp-swiper--${i} .swiper-button-prev`,
 					};
@@ -54,77 +55,77 @@ var wp_swiper = new (function () {
 			}
 			if (swiper_container.hasAttribute('data-pagination')) {
 				if (swiper_container.getAttribute('data-pagination') == 'true') {
-					self.options.pagination = {
+					options.pagination = {
 						el: wpSwipers[i].querySelector('.swiper-pagination'),
 					};
 
 					if (swiper_container.getAttribute('data-paginationtype')) {
-						self.options.pagination.type = swiper_container.getAttribute('data-paginationtype');
+						options.pagination.type = swiper_container.getAttribute('data-paginationtype');
 					}
 
 					if (swiper_container.getAttribute('data-clickablepagination')) {
-						self.options.pagination.clickable = swiper_container.getAttribute('data-clickablepagination');
+						options.pagination.clickable = swiper_container.getAttribute('data-clickablepagination');
 					}
 				} else {
-					self.options.pagination = false;
+					options.pagination = false;
 				}
 			} else {
-				self.options.pagination = false;
+				options.pagination = false;
 			}
 			if (swiper_container.hasAttribute('data-slidespercolumn')) {
-				self.options.slidesPerColumn = self.getNumber(swiper_container.getAttribute('data-slidespercolumn'), 1);
+				options.slidesPerColumn = self.getNumber(swiper_container.getAttribute('data-slidespercolumn'), 1);
 			}
 			if (swiper_container.hasAttribute('data-autoplay')) {
-				self.options.autoplay = swiper_container.getAttribute('data-autoplay') === 'true' ? true : false;
+				options.autoplay = swiper_container.getAttribute('data-autoplay') === 'true' ? true : false;
 			}
-			if (swiper_container.hasAttribute('data-delay') && self.options.autoplay) {
-				self.options.autoplay = {};
-				self.options.autoplay.delay = self.getNumber(swiper_container.getAttribute('data-delay'));
+			if (swiper_container.hasAttribute('data-delay') && options.autoplay) {
+				options.autoplay = {};
+				options.autoplay.delay = self.getNumber(swiper_container.getAttribute('data-delay'));
 			}
 			if (swiper_container.hasAttribute('data-disableOnInteraction')) {
-				self.options.autoplay.disableOnInteraction = swiper_container.getAttribute('data-disableOnInteraction') === 'true' ? true : false;
+				options.autoplay.disableOnInteraction = swiper_container.getAttribute('data-disableOnInteraction') === 'true' ? true : false;
 			}
 			if (swiper_container.hasAttribute('data-speed')) {
-				self.options.speed = self.getNumber(swiper_container.getAttribute('data-speed'), 500);
+				options.speed = self.getNumber(swiper_container.getAttribute('data-speed'), 500);
 			}
 			if (swiper_container.hasAttribute('data-loop')) {
-				self.options.loop = swiper_container.getAttribute('data-loop') === 'true' ? true : false;
+				options.loop = swiper_container.getAttribute('data-loop') === 'true' ? true : false;
 			}
 			if (swiper_container.hasAttribute('data-effect')) {
-				self.options.effect = swiper_container.getAttribute('data-effect');
-				if (self.options.effect == 'fade') {
-					self.options.fadeEffect = {
+				options.effect = swiper_container.getAttribute('data-effect');
+				if (options.effect == 'fade') {
+					options.fadeEffect = {
 						crossFade: true,
 					};
 				}
 			}
 			if (swiper_container.hasAttribute('data-direction')) {
-				self.options.direction = swiper_container.getAttribute('data-direction');
+				options.direction = swiper_container.getAttribute('data-direction');
 			}
 			if (swiper_container.hasAttribute('data-slidesperview')) {
-				self.options.slidesPerView = swiper_container.getAttribute('data-slidesperview');
+				options.slidesPerView = swiper_container.getAttribute('data-slidesperview');
 			}
 			if (swiper_container.hasAttribute('data-spacebetween')) {
-				self.options.spaceBetween = self.getNumber(swiper_container.getAttribute('data-spacebetween'), 0);
+				options.spaceBetween = self.getNumber(swiper_container.getAttribute('data-spacebetween'), 0);
 			}
 			if (swiper_container.hasAttribute('data-autoheight')) {
 				if ('true' === swiper_container.getAttribute('data-autoheight')) {
-					self.options.autoHeight = true;
+					options.autoHeight = true;
 				}
 			}
 			if (swiper_container.hasAttribute('data-breakpoints')) {
 				const breakpoints = swiper_container.getAttribute('data-breakpoints');
 				if (typeof breakpoints !== 'undefined') {
-					self.options.breakpoints = JSON.parse(breakpoints.replace(/\\/g, ''));
+					options.breakpoints = JSON.parse(breakpoints.replace(/\\/g, ''));
 				}
 			}
 			if (swiper_container.hasAttribute('data-mousewheel')) {
-				self.options.mousewheel = swiper_container.getAttribute('data-mousewheel');
+				options.mousewheel = swiper_container.getAttribute('data-mousewheel');
 			}
 			if (swiper_container.hasAttribute('data-releaseonedges')) {
 				if ('true' === swiper_container.getAttribute('data-mousewheel') && 'true' === swiper_container.getAttribute('data-releaseonedges')) {
-					self.options.mousewheel = {};
-					self.options.mousewheel.releaseOnEdges = swiper_container.getAttribute('data-releaseonedges');
+					options.mousewheel = {};
+					options.mousewheel.releaseOnEdges = swiper_container.getAttribute('data-releaseonedges');
 				}
 			}
 
@@ -166,16 +167,16 @@ var wp_swiper = new (function () {
 				thumbsConfig = JSON.parse(swiper_container.getAttribute('data-thumbs'));
 				window.wpSwiperThumbs[i] = new Swiper(thumbsSwiper, thumbsConfig);
 
-				self.options = {
-					...self.options,
+				options = {
+					...options,
 					thumbs: {
 						swiper: window.wpSwiperThumbs[i],
 					},
 				};
 			}
 
-			if (self.options.direction == 'vertical') {
-				self.options.on = {
+			if (options.direction == 'vertical') {
+				options.on = {
 					init: function () {
 						var swiperWrapper = this.wrapperEl;
 						var swiperSlideHeight = swiperWrapper.children[this.activeIndex].querySelector('.wp-swiper__slide-content').offsetHeight;
@@ -193,12 +194,12 @@ var wp_swiper = new (function () {
 				if (swiper_container.getAttribute('data-debug') == 'true') {
 					console.log({
 						swiper_container,
-						options: self.options,
+						options: options,
 					});
 				}
 			}
 
-			window.wpSwiper[i] = new Swiper(swiper_container, self.options);
+			window.wpSwiper[i] = new Swiper(swiper_container, options);
 		}
 	};
 
