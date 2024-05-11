@@ -45,6 +45,7 @@ function BlockEdit(props) {
 		overlayImg,
 		overlayImgOpacity,
 		autoplay,
+		disableOnInteraction,
 		delay,
 		speed,
 		loop,
@@ -582,6 +583,16 @@ function BlockEdit(props) {
 							checked={autoplay}
 							onChange={() => {
 								setAttributes({ autoplay: !autoplay });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Disable On Interaction"
+							checked={disableOnInteraction}
+							help="Set to false and autoplay will not be disabled after user interactions (swipes), it will be restarted every time after interaction"
+							onChange={() => {
+								setAttributes({ disableOnInteraction: !disableOnInteraction });
 							}}
 						/>
 					</PanelRow>
