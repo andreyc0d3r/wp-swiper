@@ -103,51 +103,46 @@ class WP_Swiper_Public
 	function enqueue_frontend_assets()
 	{
 		// Check if Gutenberg is active.
-		if (function_exists('register_block_type')) {
-			 // Check if the current post content contains the custom block.
-			 $post_id = get_the_ID();
-			 $post_content = get_post_field( 'post_content', $post_id );
+		// if (function_exists('register_block_type')) {
+		// 	// Check if the current post has the custom block.
+		// 	if (has_block('da/wp-swiper-slides')) {
+				
+		// 	}
+		// }
+		wp_enqueue_style(
+			$this->plugin_name . '-block-frontend',
+			plugin_dir_url(__DIR__) . 'css/frontend_block.css',
+			array(),
+			DAWPS_PLUGIN_VERSION
+		);
 
-			// Check if the current post has the custom block.
+		wp_enqueue_style(
+			$this->plugin_name . '-bundle-css',
+			plugin_dir_url(__DIR__) .  'public/css/swiper-bundle.min.css',
+			array(),
+			DAWPS_BUNDLE_VERSION
+		);
 
-			if (has_block('da/wp-swiper-slides')) {
+		wp_register_script(
+			$this->plugin_name . '-bundle-js',
+			plugin_dir_url(__DIR__) .  'public/js/swiper-bundle.min.js',
+			array(),
+			DAWPS_BUNDLE_VERSION
+		);
 
-				wp_enqueue_style(
-					$this->plugin_name . '-block-frontend',
-					plugin_dir_url(__DIR__) . 'css/frontend_block.css',
-					array(),
-					DAWPS_PLUGIN_VERSION
-				);
+		wp_enqueue_script(
+			$this->plugin_name . '-bundle-js'
+		);
 
-				wp_enqueue_style(
-					$this->plugin_name . '-bundle-css',
-					plugin_dir_url(__DIR__) .  'public/css/swiper-bundle.min.css',
-					array(),
-					DAWPS_BUNDLE_VERSION
-				);
+		wp_register_script(
+			$this->plugin_name . '-frontend-js',
+			plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
+			array($this->plugin_name . '-bundle-js'),
+			DAWPS_PLUGIN_VERSION
+		);
 
-				wp_register_script(
-					$this->plugin_name . '-bundle-js',
-					plugin_dir_url(__DIR__) .  'public/js/swiper-bundle.min.js',
-					array(),
-					DAWPS_BUNDLE_VERSION
-				);
-
-				wp_enqueue_script(
-					$this->plugin_name . '-bundle-js'
-				);
-
-				wp_register_script(
-					$this->plugin_name . '-frontend-js',
-					plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
-					array($this->plugin_name . '-bundle-js'),
-					DAWPS_PLUGIN_VERSION
-				);
-
-				wp_enqueue_script(
-					$this->plugin_name . '-frontend-js'
-				);
-			}
-		}
+		wp_enqueue_script(
+			$this->plugin_name . '-frontend-js'
+		);
 	}
 }

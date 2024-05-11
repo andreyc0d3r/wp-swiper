@@ -75,6 +75,12 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.1.6 =
+* Thumbs bug
+
+= 1.1.5 =
+* Revert: 1.1.4 as it breaks sites with custom swipers
+
 = 1.1.4 =
 * Load assets only if block used
 

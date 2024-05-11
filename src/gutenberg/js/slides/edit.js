@@ -714,7 +714,7 @@ function BlockEdit(props) {
 					<PanelRow>
 						<TextControl
 							disabled={!thumbs}
-							label="Slides per view"
+							label="Thumbs per view"
 							help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
 							value={thumbsSlidesPerView}
 							onChange={(option) => {

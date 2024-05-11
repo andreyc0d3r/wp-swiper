@@ -47,8 +47,8 @@ var wp_swiper = new (function () {
 			if (swiper_container.hasAttribute('data-navigation')) {
 				if (swiper_container.getAttribute('data-navigation') == 'true') {
 					self.options.navigation = {
-						nextEl: wpSwipers[i].querySelector('.swiper-button-next'),
-						prevEl: wpSwipers[i].querySelector('.swiper-button-prev'),
+						nextEl: `wp-swiper--${i} .swiper-button-next`,
+						prevEl: `wp-swiper--${i} .swiper-button-prev`,
 					};
 				}
 			}
@@ -126,7 +126,7 @@ var wp_swiper = new (function () {
 			}
 
 			// Swiper Thumbs
-			if (swiper_container.hasAttribute('data-thumbsconfig')) {
+			if (swiper_container.hasAttribute('data-thumbs')) {
 				let thumbsConfig = {
 					spaceBetween: 10,
 					slidesPerView: 4,
@@ -160,7 +160,7 @@ var wp_swiper = new (function () {
 					thumbsWrapper.appendChild(element);
 				});
 		
-				thumbsConfig = JSON.parse(swiper_container.getAttribute('data-thumbsconfig'));
+				thumbsConfig = JSON.parse(swiper_container.getAttribute('data-thumbs'));
 				window.wpSwiperThumbs[i] = new Swiper(thumbsSwiper, thumbsConfig);
 
 				self.options = {
