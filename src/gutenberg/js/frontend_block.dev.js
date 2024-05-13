@@ -82,8 +82,8 @@ var wp_swiper = new (function () {
 				options.autoplay = {};
 				options.autoplay.delay = self.getNumber(swiper_container.getAttribute('data-delay'));
 			}
-			if (swiper_container.hasAttribute('data-disableOnInteraction')) {
-				options.autoplay.disableOnInteraction = swiper_container.getAttribute('data-disableOnInteraction') === 'true' ? true : false;
+			if (swiper_container.hasAttribute('data-disableoninteraction') && swiper_container.getAttribute('data-autoplay') === 'true' && swiper_container.getAttribute('data-disableoninteraction') === 'true') {
+				options.autoplay.disableOnInteraction = true;
 			}
 			if (swiper_container.hasAttribute('data-speed')) {
 				options.speed = self.getNumber(swiper_container.getAttribute('data-speed'), 500);
