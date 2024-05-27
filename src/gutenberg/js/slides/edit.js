@@ -81,14 +81,35 @@ function BlockEdit(props) {
 		// 		slug
 		// 	}
 		// }) => ({ clientId, thumbImg }));
-		const newTabsData = block.innerBlocks.map((tabData) => ({
-			clientId: tabData.clientId,
-			slug: tabData.attributes.slug,
-			slideImg: tabData.attributes.slideImg,
-			thumbImg: tabData.attributes.thumbImg,
-		}));
+		// Extract the client IDs of the inner blocks
+		const prevClientIdOrder = block.innerBlocks.map((ib) => ib.clientId);
+		const propClientIdOrder = props.attributes.tabsData.map((tabData) => tabData.clientId);
+
+		// Check if the order of client IDs has changed
+		if (areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
+			return;
+		}
+
+		let counter = 0;
+		const newTabsData = block.innerBlocks.map((tabData, index) => {
+			counter++
+
+			updateBlockAttributes(tabData.clientId, {
+				slug: `slide-${counter}`,
+			});
+
+			return (
+				{
+					clientId: tabData.clientId,
+					slideImg: tabData.attributes.slideImg,
+					thumbImg: tabData.attributes.thumbImg,
+					slug: `slide-${counter}`,
+				}
+			)
+		});
 
 		setAttributes({
+			tabActive: 'slide-1',
 			tabsData: newTabsData,
 		});
 	}, [child_blocks]);
@@ -831,7 +852,7 @@ function BlockEdit(props) {
 			</div>
 			<style>
 				{`
-						[data-block="${props.clientId}"] .wp-swiper__slides .wp-swiper__slide-content .block-editor-inner-blocks .block-editor-block-list__layout [data-tab="${tabActive}"] {
+						[data-block="${props.clientId}"] .wp-swiper__slides .wp-swiper__slide-content .block-editor-inner-blocks .block-editor-block-list__layout [data-tab="${tabActive ?? 'slide-1'}"] {
 							display: block;
 						}
 						`}
