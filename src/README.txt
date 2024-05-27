@@ -75,6 +75,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.1.10 =
+* Duplicate slide bug
+
 = 1.1.9 =
 * Resolve conflict with disableOnInteraction true when autoplay false
 
