@@ -85,6 +85,9 @@ var wp_swiper = new (function () {
 			if (swiper_container.hasAttribute('data-disableoninteraction') && swiper_container.getAttribute('data-autoplay') === 'true' && swiper_container.getAttribute('data-disableoninteraction') === 'true') {
 				options.autoplay.disableOnInteraction = true;
 			}
+			if (swiper_container.hasAttribute('data-pauseonmouseenter') && swiper_container.getAttribute('data-autoplay') === 'true' && swiper_container.getAttribute('data-pauseonmouseenter') === 'true') {
+				options.autoplay.pauseOnMouseEnter = true;
+			}
 			if (swiper_container.hasAttribute('data-speed')) {
 				options.speed = self.getNumber(swiper_container.getAttribute('data-speed'), 500);
 			}

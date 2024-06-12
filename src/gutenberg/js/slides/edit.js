@@ -46,6 +46,7 @@ function BlockEdit(props) {
 		overlayImgOpacity,
 		autoplay,
 		disableOnInteraction,
+		pauseOnMouseEnter,
 		delay,
 		speed,
 		loop,
@@ -614,6 +615,16 @@ function BlockEdit(props) {
 							help="Set to false and autoplay will not be disabled after user interactions (swipes), it will be restarted every time after interaction"
 							onChange={() => {
 								setAttributes({ disableOnInteraction: !disableOnInteraction });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Pause On Mouse Enter"
+							checked={pauseOnMouseEnter}
+							help="When enabled autoplay will be paused on pointer (mouse) enter over Swiper container."
+							onChange={() => {
+								setAttributes({ pauseOnMouseEnter: !pauseOnMouseEnter });
 							}}
 						/>
 					</PanelRow>
