@@ -51,6 +51,7 @@ export default function save(props) {
 	return (
 		<div
 			{...blockProps}
+			key={slug}
 			data-tab={slug}
 			className={className}
 			style={style}

@@ -74,6 +74,7 @@ function BlockEdit(props) {
 	} = attributes;
 
 	const child_blocks = getBlocks(clientId);
+
 	useEffect(() => {
 		// const child_values = child_blocks.map(({
 		// 	clientId,
@@ -86,27 +87,27 @@ function BlockEdit(props) {
 		const prevClientIdOrder = block.innerBlocks.map((ib) => ib.clientId);
 		const propClientIdOrder = props.attributes.tabsData.map((tabData) => tabData.clientId);
 
+		// Disabled: for now, this was preventing the thumbs to update
 		// Check if the order of client IDs has changed
-		if (areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
-			return;
-		}
+		// if (areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
+		// 	return;
+		// }
 
 		let counter = 0;
+
 		const newTabsData = block.innerBlocks.map((tabData, index) => {
-			counter++
+			counter++;
 
 			updateBlockAttributes(tabData.clientId, {
 				slug: `slide-${counter}`,
 			});
 
-			return (
-				{
-					clientId: tabData.clientId,
-					slideImg: tabData.attributes.slideImg,
-					thumbImg: tabData.attributes.thumbImg,
-					slug: `slide-${counter}`,
-				}
-			)
+			return {
+				clientId: tabData.clientId,
+				slideImg: tabData.attributes.slideImg,
+				thumbImg: tabData.attributes.thumbImg,
+				slug: `slide-${counter}`,
+			};
 		});
 
 		setAttributes({
@@ -679,7 +680,7 @@ function BlockEdit(props) {
 							help="Enables free mode functionality"
 							checked={freeMode}
 							onChange={() => {
-								if(freeMode) {
+								if (freeMode) {
 									setAttributes({ sticky: false });
 								}
 								setAttributes({ freeMode: !freeMode });

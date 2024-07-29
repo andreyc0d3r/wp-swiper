@@ -56,19 +56,20 @@ function save(props) {
 	const blockProps = useBlockProps.save({
 		className: className,
 	});
+
 	const innerBlocksProps = useInnerBlocksProps;
 
 	const thumbsElements = tabsData.map((tab, index) => {
 		return (
 			(tab.thumbImg || tab.slideImg) && (
 				<div
-					key={index}
 					className={`swiper-slide wp-swiper__thumb`}
 					data-thumb={index + 1}
 				>
 					{/* Your custom content here */}
 					<img
-						src={tab.thumbImg || tab.slideImg}
+						key={index}
+						src={tab.thumbImg}
 						alt={`Thumbnail ${index + 1}`}
 					/>
 				</div>
@@ -115,9 +116,9 @@ function save(props) {
 	data_atts['data-mousewheel'] = mousewheel;
 	data_atts['data-releaseonedges'] = releaseOnEdges;
 	data_atts['data-paginationtype'] = pagination_type != 'bullets' ? pagination_type : 'bullets';
-	
-	if(clickable_pagination) {
-		data_atts['data-clickablepagination'] = clickable_pagination ? true : '';	
+
+	if (clickable_pagination) {
+		data_atts['data-clickablepagination'] = clickable_pagination ? true : '';
 	}
 	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
 		data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));

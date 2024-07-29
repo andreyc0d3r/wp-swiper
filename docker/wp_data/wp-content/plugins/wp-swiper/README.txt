@@ -3,7 +3,7 @@ Contributors: digitalapps
 Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 3.0.1
-Tested up to: 6.4.1
+Tested up to: 6.5
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+
+= 1.1.11 =
+* Add pauseOnMouseEnter
 
 = 1.1.10 =
 * Duplicate slide bug
