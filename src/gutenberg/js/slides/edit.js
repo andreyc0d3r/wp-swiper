@@ -71,6 +71,8 @@ function BlockEdit(props) {
 		direction,
 		previousIcon,
 		nextIcon,
+		slidesOffsetBefore,
+		slidesOffsetAfter,
 	} = attributes;
 
 	const child_blocks = getBlocks(clientId);
@@ -89,18 +91,16 @@ function BlockEdit(props) {
 
 		// Disabled: for now, this was preventing the thumbs to update
 		// Check if the order of client IDs has changed
-		// if (areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
-		// 	return;
-		// }
 
 		let counter = 0;
 
 		const newTabsData = block.innerBlocks.map((tabData, index) => {
 			counter++;
 
-			updateBlockAttributes(tabData.clientId, {
-				slug: `slide-${counter}`,
-			});
+			// removed: logically we do this step later in setAttributes
+			// updateBlockAttributes(tabData.clientId, {
+			// 	slug: `slide-${counter}`,
+			// });
 
 			return {
 				clientId: tabData.clientId,
@@ -110,10 +110,18 @@ function BlockEdit(props) {
 			};
 		});
 
-		setAttributes({
-			tabActive: 'slide-1',
-			tabsData: newTabsData,
-		});
+		// if we disable this line of code, then adding new slide doesnt work
+		// intorducing if else , fixed the problem, above line can be removed
+		if (areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
+			setAttributes({
+				tabsData: newTabsData,
+			});
+		} else {
+			setAttributes({
+				tabActive: 'slide-1',
+				tabsData: newTabsData,
+			});
+		}
 	}, [child_blocks]);
 
 	const [alignment, setAlignment] = useState('bottom center');
@@ -271,6 +279,22 @@ function BlockEdit(props) {
 	let counter = 1;
 
 	const style = txtColor ? { color: txtColor } : {};
+
+	const Seperator = () => {
+		return (
+			<PanelRow>
+				<div
+					style={{
+						borderTop: '1px solid #dddddd',
+						marginTop: '16px',
+						marginBottom: '16px',
+						width: '100%',
+					}}
+				></div>
+			</PanelRow>
+		);
+	};
+
 	return (
 		<Fragment>
 			<InspectorControls>
@@ -334,7 +358,7 @@ function BlockEdit(props) {
 							/>
 						</BaseControl>
 					)}
-					<hr />
+					<Seperator />
 					<BaseControl label={__('Overlay Color', '@@text_domain')}>
 						<ColorPicker
 							color={overlayColor.rgb}
@@ -367,6 +391,107 @@ function BlockEdit(props) {
 					initialOpen={false}
 				>
 					<PanelRow>
+						<h2>Slider Settings</h2>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Auto Play"
+							checked={autoplay}
+							onChange={() => {
+								setAttributes({ autoplay: !autoplay });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Disable On Interaction"
+							checked={disableOnInteraction}
+							help="Set to false and autoplay will not be disabled after user interactions (swipes), it will be restarted every time after interaction"
+							onChange={() => {
+								setAttributes({ disableOnInteraction: !disableOnInteraction });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Pause On Mouse Enter"
+							checked={pauseOnMouseEnter}
+							help="When enabled autoplay will be paused on pointer (mouse) enter over Swiper container."
+							onChange={() => {
+								setAttributes({ pauseOnMouseEnter: !pauseOnMouseEnter });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Loop"
+							checked={loop}
+							onChange={() => {
+								setAttributes({ loop: !loop });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<TextControl
+							label="Delay"
+							value={delay}
+							type="number"
+							onChange={(option) => {
+								setAttributes({ delay: parseInt(option) });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<TextControl
+							label="Speed"
+							value={speed}
+							type="number"
+							onChange={(option) => {
+								setAttributes({ speed: parseInt(option) });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<SelectControl
+							label="Effect (Under Consttruction)"
+							value={effect}
+							options={[
+								{ label: 'Slide', value: 'slide' },
+								{ label: 'Fade', value: 'fade' },
+								{ label: 'Cube', value: 'cube' },
+								{ label: 'Coverflow', value: 'coverflow' },
+								{ label: 'Flip', value: 'flip' },
+							]}
+							onChange={(option) => {
+								setAttributes({ effect: option });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Free Mode"
+							help="Enables free mode functionality"
+							checked={freeMode}
+							onChange={() => {
+								if (freeMode) {
+									setAttributes({ sticky: false });
+								}
+								setAttributes({ freeMode: !freeMode });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label="Sticky"
+							help="Set to enabled to enable snap to slides positions in free mode"
+							disabled={!freeMode}
+							checked={sticky}
+							onChange={() => {
+								setAttributes({ sticky: !sticky });
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
 						<RangeControl
 							label={__('Container Max Width %')}
 							help={__('Frontend: Set the max width for the content with text.')}
@@ -388,6 +513,10 @@ function BlockEdit(props) {
 							step={1}
 							required
 						/>
+					</PanelRow>
+					<Seperator />
+					<PanelRow>
+						<h2>Navigation Settings</h2>
 					</PanelRow>
 					<PanelRow>
 						<ToggleControl
@@ -493,9 +622,7 @@ function BlockEdit(props) {
 							}}
 						/>
 					</PanelRow>
-					<PanelRow>
-						<hr />
-					</PanelRow>
+					<Seperator />
 					<PanelRow>
 						<h2>Direction Settings</h2>
 					</PanelRow>
@@ -511,9 +638,7 @@ function BlockEdit(props) {
 							setAttributes({ direction: option });
 						}}
 					/>
-					<PanelRow>
-						<hr />
-					</PanelRow>
+					<Seperator />
 					<PanelRow>
 						<h2>Pagination Settings</h2>
 					</PanelRow>
@@ -549,9 +674,7 @@ function BlockEdit(props) {
 							}}
 						/>
 					</PanelRow>
-					<PanelRow>
-						<hr />
-					</PanelRow>
+					<Seperator />
 					<PanelRow>
 						<h2>Slide Settings</h2>
 					</PanelRow>
@@ -576,8 +699,26 @@ function BlockEdit(props) {
 						/>
 					</PanelRow>
 					<PanelRow>
-						<hr />
+						<TextControl
+							label="Slides Offset Before"
+							help="Add (in px) additional slide offset in the beginning of the container (before all slides)"
+							value={slidesOffsetBefore}
+							onChange={(option) => {
+								setAttributes({ slidesOffsetBefore: parseInt(option) });
+							}}
+						/>
 					</PanelRow>
+					<PanelRow>
+						<TextControl
+							label="Slides Offset After"
+							help="Add (in px) additional slide offset in the end of the container (after all slides)"
+							value={slidesOffsetAfter}
+							onChange={(option) => {
+								setAttributes({ slidesOffsetAfter: parseInt(option) });
+							}}
+						/>
+					</PanelRow>
+					<Seperator />
 					<PanelRow>
 						<h2>Breakpoints</h2>
 					</PanelRow>
@@ -594,113 +735,7 @@ function BlockEdit(props) {
 					<PanelRow>
 						<p>Example: {'{"720":{"slidesPerView":2}}'} - Notice the double quotes</p>
 					</PanelRow>
-					<PanelRow>
-						<hr />
-					</PanelRow>
-					<PanelRow>
-						<h2>Slider Settings</h2>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Auto Play"
-							checked={autoplay}
-							onChange={() => {
-								setAttributes({ autoplay: !autoplay });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Disable On Interaction"
-							checked={disableOnInteraction}
-							help="Set to false and autoplay will not be disabled after user interactions (swipes), it will be restarted every time after interaction"
-							onChange={() => {
-								setAttributes({ disableOnInteraction: !disableOnInteraction });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Pause On Mouse Enter"
-							checked={pauseOnMouseEnter}
-							help="When enabled autoplay will be paused on pointer (mouse) enter over Swiper container."
-							onChange={() => {
-								setAttributes({ pauseOnMouseEnter: !pauseOnMouseEnter });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Loop"
-							checked={loop}
-							onChange={() => {
-								setAttributes({ loop: !loop });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							label="Delay"
-							value={delay}
-							type="number"
-							onChange={(option) => {
-								setAttributes({ delay: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							label="Speed"
-							value={speed}
-							type="number"
-							onChange={(option) => {
-								setAttributes({ speed: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<SelectControl
-							label="Effect (Under Consttruction)"
-							value={effect}
-							options={[
-								{ label: 'Slide', value: 'slide' },
-								{ label: 'Fade', value: 'fade' },
-								{ label: 'Cube', value: 'cube' },
-								{ label: 'Coverflow', value: 'coverflow' },
-								{ label: 'Flip', value: 'flip' },
-							]}
-							onChange={(option) => {
-								setAttributes({ effect: option });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Free Mode"
-							help="Enables free mode functionality"
-							checked={freeMode}
-							onChange={() => {
-								if (freeMode) {
-									setAttributes({ sticky: false });
-								}
-								setAttributes({ freeMode: !freeMode });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Sticky"
-							help="Set to enabled to enable snap to slides positions in free mode"
-							disabled={!freeMode}
-							checked={sticky}
-							onChange={() => {
-								setAttributes({ sticky: !sticky });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<hr />
-					</PanelRow>
+					<Seperator />
 					<PanelRow>
 						<h2>Mouse Settings</h2>
 					</PanelRow>
@@ -728,9 +763,7 @@ function BlockEdit(props) {
 							}}
 						/>
 					</PanelRow>
-					<PanelRow>
-						<hr />
-					</PanelRow>
+					<Seperator />
 					<PanelRow>
 						<h2>Thumbs Settings</h2>
 					</PanelRow>
@@ -773,9 +806,7 @@ function BlockEdit(props) {
 							onChange={(newAlignment) => setAlignment(newAlignment)}
 						/>
 					</PanelRow>
-					<PanelRow>
-						<hr />
-					</PanelRow>
+					<Seperator />
 					<PanelRow>
 						<h2>Dev Tools</h2>
 					</PanelRow>

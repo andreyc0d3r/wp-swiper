@@ -75,6 +75,11 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.1.13 =
+* Fixed issue where thumbnails were not updating unless the page was refreshed and resaved.
+* Resolved problem where typing after adding a new slide caused the first slide to be selected.
+* Removed duplicate attribute state update.
+
 = 1.1.12 =
 * Thumbs were not updating, unless you refresh and resave
 

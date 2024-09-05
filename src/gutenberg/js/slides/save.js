@@ -45,6 +45,8 @@ function save(props) {
 		tabsData,
 		previousIcon,
 		nextIcon,
+		slidesOffsetBefore,
+		slidesOffsetAfter
 	} = props.attributes;
 
 	className = classnames(className, 'wp-swiper');
@@ -89,40 +91,43 @@ function save(props) {
 	};
 
 	let data_atts = {
-		'data-slidesperview': slidesPerView,
-		'data-navigation': navigation,
-		'data-pagination': pagination,
-		'data-autoplay': autoplay,
-		'data-disableOnInteraction': disableOnInteraction,
-		'data-pauseOnMouseEnter': pauseOnMouseEnter,
-		'data-delay': delay,
-		'data-speed': speed,
-		'data-loop': loop,
-		'data-effect': effect,
+		'slidesPerView-': slidesPerView,
+		'navigation': navigation,
+		'pagination': pagination,
+		'autoplay': autoplay,
+		'disableOnInteraction': disableOnInteraction,
+		'pauseOnMouseEnter': pauseOnMouseEnter,
+		'delay': delay,
+		'speed': speed,
+		'loop': loop,
+		'effect': effect,
 	};
 
 	if (debug) {
-		data_atts['data-debug'] = debug;
+		data_atts['debug'] = debug;
 	}
 
 	if (freeMode && sticky) {
-		data_atts['data-sticky'] = sticky;
+		data_atts['sticky'] = sticky;
 	}
 
-	data_atts['data-direction'] = direction;
-	data_atts['data-freemode'] = freeMode;
-	data_atts['data-autoheight'] = autoHeight;
-	data_atts['data-spacebetween'] = spaceBetween;
-	data_atts['data-mousewheel'] = mousewheel;
-	data_atts['data-releaseonedges'] = releaseOnEdges;
-	data_atts['data-paginationtype'] = pagination_type != 'bullets' ? pagination_type : 'bullets';
+	data_atts['slidesOffsetBefore'] = slidesOffsetBefore;
+	data_atts['slidesOffsetAfter'] = slidesOffsetAfter;
+
+	data_atts['direction'] = direction;
+	data_atts['freeMode'] = freeMode;
+	data_atts['autoHeight'] = autoHeight;
+	data_atts['spaceBetween'] = spaceBetween;
+	data_atts['mousewheel'] = mousewheel;
+	data_atts['releaseOnEdges'] = releaseOnEdges;
+	data_atts['type'] = pagination_type != 'bullets' ? pagination_type : 'bullets';
 
 	if (clickable_pagination) {
-		data_atts['data-clickablepagination'] = clickable_pagination ? true : '';
+		data_atts['clickable'] = clickable_pagination ? true : '';
 	}
 	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
 		data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));
-		data_atts['data-breakpoints'] = data_atts['data-breakpoints'].substring(1, data_atts['data-breakpoints'].length - 1);
+		data_atts['data-breakpoints'] = data_atts['breakpoints'].substring(1, data_atts['breakpoints'].length - 1);
 	}
 
 	if (thumbs) {
@@ -146,7 +151,6 @@ function save(props) {
 					className="swiper-container swiper"
 					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}
-					{...data_atts}
 				>
 					<div className="swiper-wrapper">
 						<InnerBlocks.Content />

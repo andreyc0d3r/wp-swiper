@@ -122,9 +122,18 @@ var wp_swiper = new (function () {
 					options.breakpoints = JSON.parse(breakpoints.replace(/\\/g, ''));
 				}
 			}
+			if (swiper_container.hasAttribute('data-slidesoffsetbefore')) {
+				options.slidesoffsetbefore = swiper_container.getAttribute('data-slidesoffsetbefore');
+			}
+
+			if (swiper_container.hasAttribute('data-slidesoffsetafter')) {
+				options.slidesoffsetafter = swiper_container.getAttribute('data-slidesoffsetafter');
+			}
+
 			if (swiper_container.hasAttribute('data-mousewheel')) {
 				options.mousewheel = swiper_container.getAttribute('data-mousewheel');
 			}
+
 			if (swiper_container.hasAttribute('data-releaseonedges')) {
 				if ('true' === swiper_container.getAttribute('data-mousewheel') && 'true' === swiper_container.getAttribute('data-releaseonedges')) {
 					options.mousewheel = {};

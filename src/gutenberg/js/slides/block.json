@@ -102,6 +102,14 @@
 			"type": "number",
 			"default": 0
 		},
+		"slidesOffsetBefore": {
+			"type": "number",
+			"default": 0
+		},
+		"slidesOffsetAfter": {
+			"type": "number",
+			"default": 0
+		},
 		"tabsData": {
 			"type": "array",
 			"default": [
