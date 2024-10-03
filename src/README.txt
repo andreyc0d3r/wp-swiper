@@ -33,6 +33,12 @@ Support my work and fuel my creativity by buying me a virtual coffee on [BuyMeAC
 
 New Features and suggestions [Contact Me](https://digitalapps.com/contacts/)
 
+== NEW RELEASE ==
+
+WP Swiper version 1.2.0 is now live! This update introduces major changes, including a streamlined configuration with the new data-swiper attribute, a new WP Swiper Settings page, optimized asset loading, and more. Please note that the legacy configuration method will be deprecated in future releases.
+
+For more details on what's new and how to migrate, check out the full update announcement on the [WP Swiper Blog](https://digitalapps.com/wp-swiper-plugin-update-exciting-new-features-and-improvements-v1-2-0/).
+
 !!! IMPORTANT !!!
 
 I use this plugin internally to build awesome sliders. At the moment only essential Swiper options are available. More to come!!!

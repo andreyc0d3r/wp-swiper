@@ -10,6 +10,12 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Gutenberg Block The Most Modern Mobile Touch Slider. Swiper is the most modern free mobile touch slider with hardware accelerated transitions and amazing native behavior. It is intended to be used in mobile websites, mobile web apps, and mobile native/hybrid apps.
 
+== NEW RELEASE ==
+
+WP Swiper version 1.2.0 is now live! This update introduces major changes, including a streamlined configuration with the new data-swiper attribute, a new WP Swiper Settings page, optimized asset loading, and more. Please note that the legacy configuration method will be deprecated in future releases.
+
+For more details on what's new and how to migrate, check out the full update announcement on the [WP Swiper Blog](https://digitalapps.com/wp-swiper-plugin-update-exciting-new-features-and-improvements-v1-2-0/).
+
 == Description ==
 
 [WP Swiper](https://digitalapps.com/wordpress-plugins/wp-swiper/) Gutenberg Block is the most modern free mobile touch slider with hardware accelerated transitions and amazing native behavior. This powerful plugin is designed to be used in mobile websites, mobile web apps, and mobile native/hybrid apps, providing you with a range of features and customization options to help you create stunning slideshows, image galleries, and more.
