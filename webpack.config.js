@@ -20,6 +20,7 @@ module.exports = {
 	entry: {
 		admin_block: './src/gutenberg/js/admin_block.dev.js',
 		frontend_block: './src/gutenberg/js/frontend_block.dev.js',
+		frontend_block_legacy: './src/gutenberg/js/frontend_block_legacy.dev.js',
 	},
 	output: {
 		path: __dirname,

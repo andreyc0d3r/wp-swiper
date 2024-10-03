@@ -21,6 +21,8 @@ function save(props) {
 		spaceBetween,
 		txtColor,
 		autoplay,
+		disableOnInteraction,
+		pauseOnMouseEnter,
 		delay,
 		speed,
 		loop,
@@ -43,6 +45,8 @@ function save(props) {
 		tabsData,
 		previousIcon,
 		nextIcon,
+		slidesOffsetBefore,
+		slidesOffsetAfter
 	} = props.attributes;
 
 	className = classnames(className, 'wp-swiper');
@@ -55,6 +59,26 @@ function save(props) {
 		className: className,
 	});
 
+	const innerBlocksProps = useInnerBlocksProps;
+
+	const thumbsElements = tabsData.map((tab, index) => {
+		return (
+			(tab.thumbImg || tab.slideImg) && (
+				<div
+					className={`swiper-slide wp-swiper__thumb`}
+					data-thumb={index + 1}
+				>
+					{/* Your custom content here */}
+					<img
+						key={index}
+						src={tab.thumbImg}
+						alt={`Thumbnail ${index + 1}`}
+					/>
+				</div>
+			)
+		);
+	});
+
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 	if (overlayImgOpacity) {
 		style_overlay_image.opacity = overlayImgOpacity;
@@ -63,44 +87,51 @@ function save(props) {
 	const style_overlay_wrapper = txtColor ? { color: txtColor } : {};
 
 	let thumbsConfig = {
-		'data-thumbsconfig': {},
+		'data-thumbs': {},
 	};
 
 	let data_atts = {
-		'data-slidesperview': slidesPerView,
-		'data-navigation': navigation,
-		'data-pagination': pagination,
-		'data-autoplay': autoplay,
-		'data-delay': delay,
-		'data-speed': speed,
-		'data-loop': loop,
-		'data-effect': effect,
+		'slidesPerView-': slidesPerView,
+		'navigation': navigation,
+		'pagination': pagination,
+		'autoplay': autoplay,
+		'disableOnInteraction': disableOnInteraction,
+		'pauseOnMouseEnter': pauseOnMouseEnter,
+		'delay': delay,
+		'speed': speed,
+		'loop': loop,
+		'effect': effect,
 	};
 
 	if (debug) {
-		data_atts['data-debug'] = debug;
+		data_atts['debug'] = debug;
 	}
 
 	if (freeMode && sticky) {
-		data_atts['data-sticky'] = sticky;
+		data_atts['sticky'] = sticky;
 	}
 
-	data_atts['data-direction'] = direction;
-	data_atts['data-freemode'] = freeMode;
-	data_atts['data-autoheight'] = autoHeight;
-	data_atts['data-spacebetween'] = spaceBetween;
-	data_atts['data-mousewheel'] = mousewheel;
-	data_atts['data-releaseonedges'] = releaseOnEdges;
-	data_atts['data-paginationtype'] = pagination_type != 'bullets' ? pagination_type : 'bullets';
-	data_atts['data-clickablepagination'] = clickable_pagination ? true : '';
+	data_atts['slidesOffsetBefore'] = slidesOffsetBefore;
+	data_atts['slidesOffsetAfter'] = slidesOffsetAfter;
 
+	data_atts['direction'] = direction;
+	data_atts['freeMode'] = freeMode;
+	data_atts['autoHeight'] = autoHeight;
+	data_atts['spaceBetween'] = spaceBetween;
+	data_atts['mousewheel'] = mousewheel;
+	data_atts['releaseOnEdges'] = releaseOnEdges;
+	data_atts['type'] = pagination_type != 'bullets' ? pagination_type : 'bullets';
+
+	if (clickable_pagination) {
+		data_atts['clickable'] = clickable_pagination ? true : '';
+	}
 	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
 		data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));
-		data_atts['data-breakpoints'] = data_atts['data-breakpoints'].substring(1, data_atts['data-breakpoints'].length - 1);
+		data_atts['data-breakpoints'] = data_atts['breakpoints'].substring(1, data_atts['breakpoints'].length - 1);
 	}
 
 	if (thumbs) {
-		thumbsConfig['data-thumbsconfig'] = JSON.stringify({
+		thumbsConfig['data-thumbs'] = JSON.stringify({
 			spaceBetween: thumbsSpaceBetween,
 			slidesPerView: thumbsSlidesPerView,
 			freeMode: true,
@@ -113,14 +144,13 @@ function save(props) {
 		<div {...blockProps}>
 			{getOverlayImg(overlayImg, style_overlay_image)}
 			<div
-				className="wp-swiper__wrapperx"
+				className="wp-swiper__wrapper"
 				style={style_overlay_wrapper}
 			>
 				<div
 					className="swiper-container swiper"
-					data-swiperconfig={JSON.stringify(data_atts)}
+					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}
-					{...data_atts}
 				>
 					<div className="swiper-wrapper">
 						<InnerBlocks.Content />
@@ -136,7 +166,7 @@ function save(props) {
 				<div className="wp-swiper__thumbs">
 					<div className="wp-swiper__wrapper">
 						<div className="swiper-container">
-							<div className="swiper-wrapper"></div>
+							<div className="swiper-wrapper">{thumbsElements}</div>
 						</div>
 					</div>
 				</div>
@@ -170,22 +200,26 @@ function save(props) {
 		if (navigation) {
 			return (
 				<>
-					<div className={`swiper-button-prev ${previousIcon ? 'wp_swiper__button-prev' : ''}`}>
-						{previousIcon ? (
-							<img
-								src={previousIcon}
-								alt="Previous"
-							/>
-						) : null}
-					</div>
+					<div className="wp_swiper__navigation">
+						<div className="wp_swiper__navigation-container">
+							<div className={`swiper-button-prev ${previousIcon ? 'wp_swiper__button-prev' : ''}`}>
+								{previousIcon ? (
+									<img
+										src={previousIcon}
+										alt="Previous"
+									/>
+								) : null}
+							</div>
 
-					<div className={`swiper-button-next ${nextIcon ? 'wp_swiper__button-next' : ''}`}>
-						{nextIcon ? (
-							<img
-								src={nextIcon}
-								alt="Previous"
-							/>
-						) : null}
+							<div className={`swiper-button-next ${nextIcon ? 'wp_swiper__button-next' : ''}`}>
+								{nextIcon ? (
+									<img
+										src={nextIcon}
+										alt="Previous"
+									/>
+								) : null}
+							</div>
+						</div>
 					</div>
 				</>
 			);

@@ -46,7 +46,7 @@ function save(props) {
 		previousIcon,
 		nextIcon,
 		slidesOffsetBefore,
-		slidesOffsetAfter
+		slidesOffsetAfter,
 	} = props.attributes;
 
 	className = classnames(className, 'wp-swiper');
@@ -91,40 +91,91 @@ function save(props) {
 	};
 
 	let data_atts = {
-		'slidesPerView-': slidesPerView,
-		'navigation': navigation,
-		'pagination': pagination,
-		'autoplay': autoplay,
-		'disableOnInteraction': disableOnInteraction,
-		'pauseOnMouseEnter': pauseOnMouseEnter,
-		'delay': delay,
-		'speed': speed,
-		'loop': loop,
-		'effect': effect,
+		slidesPerView,
+		navigation,
+		pagination: {},
+		delay: delay,
+		speed: speed,
+		loop: loop,
+		direction,
+		slidesOffsetBefore,
+		slidesOffsetAfter,
+		autoHeight,
+		spaceBetween,
+		releaseOnEdges,
 	};
+
+	// Mousewheel and release on edges logic
+	if (mousewheel && releaseOnEdges) {
+		data_atts.mousewheel = {
+			releaseOnEdges: releaseOnEdges === 'true',
+		};
+	}
+
+	// Effect logic
+	if (effect) {
+		data_atts.effect = effect;
+
+		// If the effect is 'fade', enable crossFade
+		if (effect === 'fade') {
+			data_atts.fadeEffect = {
+				crossFade: true,
+			};
+		}
+	}
+
+	// Autoplay
+	// -- START -- Autoplay logic
+	if (autoplay) {
+		data_atts.autoplay = true;
+
+		// Delay logic
+		if (delay) {
+			data_atts.autoplay = {
+				delay: Number(delay),
+			};
+		}
+
+		// Disable on interaction
+		if (disableOnInteraction) {
+			if (!data_atts.autoplay) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.disableOnInteraction = true;
+		}
+
+		// Pause on mouse enter
+		if (pauseOnMouseEnter) {
+			if (!data_atts.autoplay) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.pauseOnMouseEnter = true;
+		}
+	}
+	// -- END -- Autoplay logic
 
 	if (debug) {
 		data_atts['debug'] = debug;
 	}
 
-	if (freeMode && sticky) {
-		data_atts['sticky'] = sticky;
+	// Freemode
+	if (freeMode) {
+		data_atts.freeMode = {
+			enabled: true,
+		};
+
+		// If both freeMode and sticky are true, enable sticky mode
+		if (sticky) {
+			data_atts.freeMode.sticky = true;
+		}
 	}
 
-	data_atts['slidesOffsetBefore'] = slidesOffsetBefore;
-	data_atts['slidesOffsetAfter'] = slidesOffsetAfter;
-
-	data_atts['direction'] = direction;
-	data_atts['freeMode'] = freeMode;
-	data_atts['autoHeight'] = autoHeight;
-	data_atts['spaceBetween'] = spaceBetween;
-	data_atts['mousewheel'] = mousewheel;
-	data_atts['releaseOnEdges'] = releaseOnEdges;
-	data_atts['type'] = pagination_type != 'bullets' ? pagination_type : 'bullets';
-
+	// Pagination
+	data_atts.pagination.type = pagination_type != 'bullets' ? pagination_type : 'bullets';
 	if (clickable_pagination) {
-		data_atts['clickable'] = clickable_pagination ? true : '';
+		data_atts.pagination.clickable = clickable_pagination ? true : '';
 	}
+
 	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
 		data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));
 		data_atts['data-breakpoints'] = data_atts['breakpoints'].substring(1, data_atts['breakpoints'].length - 1);
