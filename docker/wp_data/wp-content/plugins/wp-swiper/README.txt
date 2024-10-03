@@ -75,8 +75,16 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.2.0 =
+* **Enhanced Swiper Configuration**: Swiper settings are now loaded through a single HTML element attribute (`data-swiper`), simplifying the previous method that relied on multiple `data` attributes.
+* **Deprecation Warning:** The legacy method of using multiple data-attributes will remain functional but is scheduled for deprecation in future releases. Please note that this legacy mode only works for manually updated data-attributes—updates made via Gutenberg will not affect these attributes. If you prefer to keep using the old method, do not upgrade to version 1.2.0 and continue using version 1.1.3, which is still available for download. You can also enable the old WP Swiper script (which will no longer receive updates) via Settings > WP Swiper.
+* **Swiper Bundle Update**: Upgraded Swiper to version **v11.1.14** for improved performance and features.
+* **New Settings Page**: A dedicated **WP Swiper Settings** page is now available under **Settings > WP Swiper** for easy management and configuration.
+* **Optimized Asset Loading**: Swiper assets (JS and CSS) are now loaded only on pages that utilize Swiper, improving site performance. To revert to the previous behavior (loading Swiper assets on every page), you can adjust this in **Settings > WP Swiper**.
+
+
 = 1.1.13 =
-*Fixed issue where thumbnails were not updating unless the page was refreshed and resaved.
+* Fixed issue where thumbnails were not updating unless the page was refreshed and resaved.
 * Resolved problem where typing after adding a new slide caused the first slide to be selected.
 * Removed duplicate attribute state update.
 
