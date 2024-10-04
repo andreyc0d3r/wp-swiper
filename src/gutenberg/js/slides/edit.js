@@ -78,47 +78,46 @@ function BlockEdit(props) {
 	const child_blocks = getBlocks(clientId);
 
 	useEffect(() => {
-		// const child_values = child_blocks.map(({
-		// 	clientId,
-		// 	attributes: {
-		// 		thumbImg,
-		// 		slug
-		// 	}
-		// }) => ({ clientId, thumbImg }));
 		// Extract the client IDs of the inner blocks
-		const prevClientIdOrder = block.innerBlocks.map((ib) => ib.clientId);
-		const propClientIdOrder = props.attributes.tabsData.map((tabData) => tabData.clientId);
+		const prevClientIdOrder = block.innerBlocks.map((ib) => ib.attributes.slug);
+		const propClientIdOrder = props.attributes.tabsData.map((tabData) => tabData.slug);
+
+		// console.log({
+		// 	child_blocks,
+		// 	innerBlocks: block.innerBlocks,
+		// 	prevClientIdOrder,
+		// 	propClientIdOrder,
+		// 	areArraysEqualWithoutOrder: areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder),
+		// });
 
 		// Disabled: for now, this was preventing the thumbs to update
 		// Check if the order of client IDs has changed
 
 		let counter = 0;
 
-		const newTabsData = block.innerBlocks.map((tabData, index) => {
-			counter++;
-
-			// removed: logically we do this step later in setAttributes
-			// updateBlockAttributes(tabData.clientId, {
-			// 	slug: `slide-${counter}`,
-			// });
-
-			return {
-				clientId: tabData.clientId,
-				slideImg: tabData.attributes.slideImg,
-				thumbImg: tabData.attributes.thumbImg,
-				slug: `slide-${counter}`,
-			};
-		});
-
 		// if we disable this line of code, then adding new slide doesnt work
 		// intorducing if else , fixed the problem, above line can be removed
-		if (areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
-			setAttributes({
-				tabsData: newTabsData,
+		if (!areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
+			const newTabsData = block.innerBlocks.map((tabData, index) => {
+				counter++;
+
+				// removed: logically we do this step later in setAttributes
+				// updateBlockAttributes(tabData.clientId, {
+				// 	slug: `slide-${counter}`,
+				// });
+
+
+				return {
+					clientId: tabData.clientId,
+					slideImg: tabData.attributes.slideImg,
+					thumbImg: tabData.attributes.thumbImg,
+					slug: `slide-${counter}`,
+				};
 			});
-		} else {
+
+			updateSlugsForInnerBlocks(block.innerBlocks);
+
 			setAttributes({
-				tabActive: 'slide-1',
 				tabsData: newTabsData,
 			});
 		}
@@ -833,8 +832,8 @@ function BlockEdit(props) {
 						>
 							Fix Slide Slugs
 						</Button>
-						</PanelRow>
-						<PanelRow>
+					</PanelRow>
+					<PanelRow>
 						<p
 							style={{
 								marginTop: 'calc(8px)',

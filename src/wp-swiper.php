@@ -16,7 +16,7 @@
  * Plugin Name:       WP Swiper
  * Plugin URI:        https://digitalapps.com/wp-swiper/
  * Description:       Swiper JS as a Gutenberg Block.
- * Version:           1.2.8
+ * Version:           1.2.9
  * Author:            Digital Apps
  * Author URI:        https://digitalapps.com/
  * License:           GPL-2.0+
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'DAWPS_PLUGIN_VERSION', '1.2.8' );
+define( 'DAWPS_PLUGIN_VERSION', '1.2.9' );
 define( 'DAWPS_BUNDLE_VERSION', '11.1.14' );
 
 function activate_wpswiper() {
