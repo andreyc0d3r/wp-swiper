@@ -113,7 +113,7 @@ class WP_Swiper_Public
 				'wp_swiper_version' => DAWPS_PLUGIN_VERSION,
 				'load_swiper' => $load_swiper,
 				'has_block_wp_swiper_slides' => has_block('da/wp-swiper-slides'),
-				'found_wp_swiper_class' => strpos($post->post_content, 'wp-swiper')
+				'found_wp_swiper_class' => isset($post->post_content) ? strpos($post->post_content, 'wp-swiper') : false
 			]);
 			echo '</div>';
 		}
@@ -123,7 +123,10 @@ class WP_Swiper_Public
 			$this->loadWpSwiper();
 		} else {
 			if (function_exists('register_block_type')) {
-				if (!$load_swiper && (has_block('da/wp-swiper-slides') || strpos($post->post_content, 'wp-swiper') !== false)) {
+				if (
+					!$load_swiper && 
+					(has_block('da/wp-swiper-slides') || (isset($post->post_content) && strpos($post->post_content, 'wp-swiper') !== false))
+				) {
 					$this->loadWpSwiper();
 				}
 			}

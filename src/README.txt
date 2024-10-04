@@ -80,6 +80,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.2.8 =
+* Fix null reference bug for post_content
+
 = 1.2.7 =
 * Added debug setting to the settings page that outputs debug info to the frontend
 

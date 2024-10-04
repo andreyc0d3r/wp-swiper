@@ -1,4 +1,4 @@
-﻿=== WP Swiper ===
+=== WP Swiper ===
 Contributors: digitalapps
 Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
@@ -80,6 +80,12 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.2.8 =
+* Fix null reference bug for post_content
+
+= 1.2.7 =
+* Added debug setting to the settings page that outputs debug info to the frontend
+
 = 1.2.6 =
 * Added a debugging tool that allows users to reset slide slugs for each slide, ensuring proper synchronization with slide data in the parent block.
 
