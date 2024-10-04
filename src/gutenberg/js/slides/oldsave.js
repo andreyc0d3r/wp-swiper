@@ -61,17 +61,16 @@ function save(props) {
 
 	const innerBlocksProps = useInnerBlocksProps;
 
-	const thumbsElements = tabsData.map((tab, index) => {
+	const thumbsElements = (typeof tabsData !== 'undefined' ? tabsData : []).map((tab, index) => {
 		return (
 			(tab.thumbImg || tab.slideImg) && (
 				<div
-					className={`swiper-slide wp-swiper__thumb`}
+					key={index}
+					className="swiper-slide wp-swiper__thumb"
 					data-thumb={index + 1}
 				>
-					{/* Your custom content here */}
 					<img
-						key={index}
-						src={tab.thumbImg}
+						src={tab.thumbImg || tab.slideImg}
 						alt={`Thumbnail ${index + 1}`}
 					/>
 				</div>

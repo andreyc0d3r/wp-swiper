@@ -80,6 +80,26 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.2.7 =
+* Added debug setting to the settings page that outputs debug info to the frontend
+
+= 1.2.6 =
+* Added a debugging tool that allows users to reset slide slugs for each slide, ensuring proper synchronization with slide data in the parent block.
+
+= 1.2.5 =
+* Fix breakpoints
+
+= 1.2.4 =
+* Fix legacy code toggle
+
+= 1.2.3 =
+* fixed condition on swiper load
+
+= 1.2.2 =
+* Fixed breakpoints bug
+
+= 1.2.1 =
+* Missing files
 
 = 1.2.0 =
 * **Enhanced Swiper Configuration**: Swiper settings are now loaded through a single HTML element attribute (`data-swiper`), simplifying the previous method that relied on multiple `data` attributes.

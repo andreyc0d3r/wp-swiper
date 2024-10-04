@@ -32,7 +32,7 @@ import { deepClone } from '../utils/shared';
  * Block Edit Class.
  */
 function BlockEdit(props) {
-	const { clientId, attributes, setAttributes, isSelectedBlockInRoot, getBlocks, replaceInnerBlocks, updateBlockAttributes, block } = props;
+	const { clientId, attributes, setAttributes, isSelectedBlockInRoot, getBlocks, replaceInnerBlocks, updateBlockAttributes, block, updateSlugsForInnerBlocks } = props;
 	let { className } = props;
 	const blockProps = useBlockProps();
 
@@ -818,6 +818,36 @@ function BlockEdit(props) {
 							setAttributes({ debug: !debug });
 						}}
 					/>
+					<PanelRow>
+						<Button
+							onClick={() => {
+								let counter = 1;
+								tabsData.forEach((tab, index) => {
+									tab.slug = `slide-${counter}`;
+									counter++;
+								});
+								setAttributes({ tabsData });
+								updateSlugsForInnerBlocks(block.innerBlocks);
+							}}
+							className="button"
+						>
+							Fix Slide Slugs
+						</Button>
+						</PanelRow>
+						<PanelRow>
+						<p
+							style={{
+								marginTop: 'calc(8px)',
+								fontSize: '12px',
+								fontStyle: 'normal',
+								color: 'rgb(117, 117, 117)',
+								marginBottom: 'revert',
+							}}
+						>
+							On rare occasions, if the slide slugs become out of sync with the slide data stored in the parent block, you might notice all slide contents appearing under a single tab. Clicking this button could help resolve the issue. This action iterates over each slide and resets
+							the slugs in ascending order (e.g., slide-1, slide-2, etc.), ensuring that each tab properly corresponds to its respective slide.
+						</p>
+					</PanelRow>
 				</PanelBody>
 			</InspectorControls>
 			<div
@@ -907,18 +937,28 @@ function BlockEdit(props) {
 export default compose([
 	withSelect((select, ownProps) => {
 		const { getBlock, isBlockSelected, hasSelectedInnerBlock } = select('core/block-editor');
-
 		const { clientId } = ownProps;
+		const block = getBlock(clientId);
 
 		return {
+			innerBlocks: block ? block.innerBlocks : [], // Get inner blocks if the block exists
 			blocks: select(blockEditorStore).getBlocks(),
-			block: getBlock(clientId),
+			block,
 			isSelectedBlockInRoot: isBlockSelected(clientId) || hasSelectedInnerBlock(clientId, true),
 		};
 	}),
 	withDispatch((dispatch, ownProps, registry) => {
 		const { updateBlockAttributes, removeBlock, replaceInnerBlocks, moveBlockToPosition, moveBlocksDown } = dispatch('core/block-editor');
 		const { getBlocks } = registry.select('core/block-editor');
+
+		// Function to update slug attribute for inner blocks
+		const updateSlugsForInnerBlocks = (innerBlocks) => {
+			let counter = 1;
+			innerBlocks.forEach((innerBlock, index) => {
+				updateBlockAttributes(innerBlock.clientId, { slug: `slide-${counter}` });
+				counter++;
+			});
+		};
 
 		return {
 			moveBlocksDown,
@@ -927,6 +967,7 @@ export default compose([
 			getBlocks,
 			updateBlockAttributes,
 			removeBlock,
+			updateSlugsForInnerBlocks,
 		};
 	}),
 ])(BlockEdit);
