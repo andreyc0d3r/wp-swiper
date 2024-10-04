@@ -58,6 +58,28 @@ if (! class_exists('WP_Swiper_Settings')) {
 				'wp_swiper_settings',        // Page slug
 				'wp_swiper_section'          // Section ID
 			);
+
+			add_settings_field(
+				'wp_swiper_debug_toggle',   // Field ID
+				__('Output debug info to the frontend', 'wp_swiper'), // Field title
+				[$this, 'debug_toggle_render'],   // Callback function to render the checkbox
+				'wp_swiper_settings',        // Page slug
+				'wp_swiper_section'          // Section ID
+			);
+		}
+		public function debug_toggle_render()
+		{
+			$options = get_option('wp_swiper_options');
+			$checked = isset($options['debug_swiper']) && $options['debug_swiper'] === 'on' ? 'checked' : '';
+			?>
+			<input type='checkbox' name='wp_swiper_options[debug_swiper]' <?php echo $checked; ?> value='on'>
+			<label for='wp_swiper_options[debug_swiper]'><?php _e('Debug Mode', 'wp_swiper'); ?></label>
+			<p class="description">
+				<?php _e('If checked we output debug information that can be viewed in the source code on the frontend. Look for a div with a .wp-swiper-debug class', 'wp_swiper'); ?>
+			</p>
+
+		<?php
+
 		}
 
 		// Function to render the checkbox for "Use Legacy Code"
@@ -65,28 +87,29 @@ if (! class_exists('WP_Swiper_Settings')) {
 		{
 			$options = get_option('wp_swiper_options');
 			$checked = isset($options['legacy_toggle']) && $options['legacy_toggle'] === 'on' ? 'checked' : '';
-?>
+		?>
 			<input type='checkbox' name='wp_swiper_options[legacy_toggle]' <?php echo $checked; ?> value='on'>
 			<label for='wp_swiper_options[legacy_toggle]'><?php _e('Enable legacy code', 'wp_swiper'); ?></label>
 			<p class="description">
-                <?php _e( 'Legacy code relies on embedding configuration details directly into the HTML elements through data attributes, which is a more traditional approach. The newer implementation uses a modern technique where a JavaScript object (in JSON format) is passed to configure Swiper. This method allows for greater flexibility and is generally easier to maintain and scale.', 'wp_swiper' ); ?>
-            </p>
-			
+				<?php _e('TO BE DEPRECATED. I adivce that you transition away using legacy code at some point. Legacy code relies on embedding configuration details directly into the HTML elements through data attributes, which is a more traditional approach. The newer implementation uses a modern technique where a JavaScript object (in JSON format) is passed to configure Swiper. This method allows for greater flexibility and is generally easier to maintain and scale.', 'wp_swiper'); ?>
+			</p>
+
 		<?php
-		
+
 		}
 
 		// Function to render the checkbox for "Load Swiper JS if Gutenberg Block is used"
-		public function enqueue_toggle_render() {
+		public function enqueue_toggle_render()
+		{
 			$options = get_option('wp_swiper_options');
 			$checked = isset($options['enqueue_swiper']) && $options['enqueue_swiper'] === 'on' ? 'checked' : '';
-			?>
+		?>
 			<input type='checkbox' name='wp_swiper_options[enqueue_swiper]' <?php echo $checked; ?> value='on'>
 			<label for='wp_swiper_options[enqueue_swiper]'><?php _e('Always load Swiper JS bundle on every page.', 'wp_swiper'); ?></label>
 			<p class="description">
-				<?php _e( 'Enable this to load the Swiper JavaScript file on all pages instead of only when the WP-Swiper Gutenberg block is used. Helps with custom setups.', 'wp_swiper' ); ?>
+				<?php _e('Enable this to load the Swiper JavaScript file on all pages instead of only when the WP-Swiper Gutenberg block is used. Helps with custom setups.', 'wp_swiper'); ?>
 			</p>
-			<?php
+		<?php
 		}
 
 		// Callback to render the section description

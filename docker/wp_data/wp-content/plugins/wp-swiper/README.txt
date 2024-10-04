@@ -10,12 +10,6 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Gutenberg Block The Most Modern Mobile Touch Slider. Swiper is the most modern free mobile touch slider with hardware accelerated transitions and amazing native behavior. It is intended to be used in mobile websites, mobile web apps, and mobile native/hybrid apps.
 
-== NEW RELEASE ==
-
-WP Swiper version 1.2.0 is now live! This update introduces major changes, including a streamlined configuration with the new data-swiper attribute, a new WP Swiper Settings page, optimized asset loading, and more. Please note that the legacy configuration method will be deprecated in future releases.
-
-For more details on what's new and how to migrate, check out the full update announcement on the [WP Swiper Blog](https://digitalapps.com/wp-swiper-plugin-update-exciting-new-features-and-improvements-v1-2-0/).
-
 == Description ==
 
 [WP Swiper](https://digitalapps.com/wordpress-plugins/wp-swiper/) Gutenberg Block is the most modern free mobile touch slider with hardware accelerated transitions and amazing native behavior. This powerful plugin is designed to be used in mobile websites, mobile web apps, and mobile native/hybrid apps, providing you with a range of features and customization options to help you create stunning slideshows, image galleries, and more.
@@ -38,6 +32,12 @@ Download WP Swiper Gutenberg Block today and take your mobile displays to the ne
 Support my work and fuel my creativity by buying me a virtual coffee on [BuyMeACoffee](https://www.buymeacoffee.com/wpplugins)
 
 New Features and suggestions [Contact Me](https://digitalapps.com/contacts/)
+
+== NEW RELEASE ==
+
+WP Swiper version 1.2.0 is now live! This update introduces major changes, including a streamlined configuration with the new data-swiper attribute, a new WP Swiper Settings page, optimized asset loading, and more. Please note that the legacy configuration method will be deprecated in future releases.
+
+For more details on what's new and how to migrate, check out the full update announcement on the [WP Swiper Blog](https://digitalapps.com/wp-swiper-plugin-update-exciting-new-features-and-improvements-v1-2-0/).
 
 !!! IMPORTANT !!!
 
@@ -80,6 +80,23 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.2.6 =
+* Added a debugging tool that allows users to reset slide slugs for each slide, ensuring proper synchronization with slide data in the parent block.
+
+= 1.2.5 =
+* Fix breakpoints
+
+= 1.2.4 =
+* Fix legacy code toggle
+
+= 1.2.3 =
+* fixed condition on swiper load
+
+= 1.2.2 =
+* Fixed breakpoints bug
+
+= 1.2.1 =
+* Missing files
 
 = 1.2.0 =
 * **Enhanced Swiper Configuration**: Swiper settings are now loaded through a single HTML element attribute (`data-swiper`), simplifying the previous method that relied on multiple `data` attributes.

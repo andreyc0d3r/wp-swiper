@@ -61,17 +61,16 @@ function save(props) {
 
 	const innerBlocksProps = useInnerBlocksProps;
 
-	const thumbsElements = tabsData.map((tab, index) => {
+	const thumbsElements = (typeof tabsData !== 'undefined' ? tabsData : []).map((tab, index) => {
 		return (
 			(tab.thumbImg || tab.slideImg) && (
 				<div
-					className={`swiper-slide wp-swiper__thumb`}
+					key={index}
+					className="swiper-slide wp-swiper__thumb"
 					data-thumb={index + 1}
 				>
-					{/* Your custom content here */}
 					<img
-						key={index}
-						src={tab.thumbImg}
+						src={tab.thumbImg || tab.slideImg}
 						alt={`Thumbnail ${index + 1}`}
 					/>
 				</div>
@@ -154,10 +153,6 @@ function save(props) {
 	}
 	// -- END -- Autoplay logic
 
-	if (debug) {
-		data_atts['debug'] = debug;
-	}
-
 	// Freemode
 	if (freeMode) {
 		data_atts.freeMode = {
@@ -177,8 +172,7 @@ function save(props) {
 	}
 
 	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
-		data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));
-		data_atts['data-breakpoints'] = data_atts['breakpoints'].substring(1, data_atts['breakpoints'].length - 1);
+		data_atts['breakpoints'] = JSON.parse(breakpoints);
 	}
 
 	if (thumbs) {
@@ -200,6 +194,7 @@ function save(props) {
 			>
 				<div
 					className="swiper-container swiper"
+					{...(debug ? { 'data-debug': true } : {})} // Only include data-debug if debug is true
 					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}
 				>
