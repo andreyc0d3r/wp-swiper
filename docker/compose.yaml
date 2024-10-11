@@ -39,6 +39,7 @@ services:
       - db
     image: wordpress:php8.2
     volumes:
+      - ./wp_data/wp-content/themes:/var/www/html/wp-content/themes
       - ./wp_data/wp-content/plugins:/var/www/html/wp-content/plugins
       - ./wp_data/php.ini:/var/www/html/php.ini
     environment:

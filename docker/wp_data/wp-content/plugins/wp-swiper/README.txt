@@ -80,6 +80,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.2.9 =
+* Improve swiper block detection within content. Applicable for conditional bundle loading.
+
 = 1.2.8 =
 * Fix null reference bug for post_content
 
