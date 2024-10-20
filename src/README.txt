@@ -80,6 +80,10 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+
+= 1.2.10 =
+* Further improvments to swiper block detection within content. Applicable for conditional bundle loading.
+
 = 1.2.9 =
 * Improve swiper block detection within content. Applicable for conditional bundle loading.
 

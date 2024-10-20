@@ -50,6 +50,7 @@ class WP_Swiper_Public
 	 */
 	private $file_name;
 	private $settings;
+	protected $block_detector = null;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -64,6 +65,7 @@ class WP_Swiper_Public
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->settings = $this->get_options_data();
+		$this->block_detector = new WP_Swiper_Block_Detector();
 	}
 
 	/**
@@ -100,69 +102,6 @@ class WP_Swiper_Public
 		return $settings;
 	}
 
-	/**
-	 * Function to check if a post contains a 'da/wp-swiper-slides' block.
-	 * This function handles reusable blocks (core/block) and standard blocks.
-	 *
-	 * @param WP_Post $post The post object to check.
-	 * @return bool Returns true if the 'da/wp-swiper-slides' block is found, false otherwise.
-	 */
-	function contains_wp_swiper_block($post)
-	{
-		if (!isset($post->post_content)) {
-			return false; // No content to parse.
-		}
-
-		// Parse the blocks in the post content
-		$blocks = parse_blocks($post->post_content);
-
-		// Recursively search for the 'da/wp-swiper-slides' block in parsed blocks
-		function has_wp_swiper_block($blocks)
-		{
-			foreach ($blocks as $block) {
-				// Check if the block is a reusable block (core/block)
-				if ($block['blockName'] === 'core/block' && isset($block['attrs']['ref'])) {
-					// Fetch the reusable block content by reference (ref)
-					$reusable_block = get_post($block['attrs']['ref']);
-
-					// Parse the reusable block content
-					if ($reusable_block && !empty($reusable_block->post_content)) {
-						$reusable_blocks = parse_blocks($reusable_block->post_content);
-						// Recursively check the parsed reusable block
-						if (has_wp_swiper_block($reusable_blocks)) {
-							return true;
-						}
-					}
-				}
-
-				// Check if the block is of the type 'da/wp-swiper-slides'
-				if ($block['blockName'] === 'da/wp-swiper-slides') {
-					return true;
-				}
-
-				// Recursively check inner blocks, if any
-				if (!empty($block['innerBlocks'])) {
-					if (has_wp_swiper_block($block['innerBlocks'])) {
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-
-		// Check if the block exists in the parsed blocks
-		if (has_wp_swiper_block($blocks)) {
-			return true;
-		}
-
-		// Fallback: Check if 'wp-swiper' exists in post_content
-		if (strpos($post->post_content, 'wp-swiper') !== false) {
-			return true;
-		}
-
-		return false;
-	}
-
 
 	function enqueue_frontend_assets()
 	{
@@ -189,7 +128,7 @@ class WP_Swiper_Public
 			if (function_exists('register_block_type')) {
 				if (
 					!$load_swiper &&
-					$this->contains_wp_swiper_block($post)
+					$this->block_detector->contains_wp_swiper_block($post)
 				) {
 					$this->loadWpSwiper();
 				}

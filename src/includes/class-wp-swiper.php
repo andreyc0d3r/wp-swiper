@@ -12,7 +12,7 @@ class WP_Swiper {
         if ( defined( 'DAWPS_PLUGIN_VERSION' ) ) {
             $this->version = DAWPS_PLUGIN_VERSION;
         } else {
-            $this->version = '1.2.9';
+            $this->version = '1.2.10';
         }
         $this->plugin_prefix = 'dawps';
         $this->plugin_name = 'wpswiper';
@@ -27,6 +27,7 @@ class WP_Swiper {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-settings.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-loader.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-swiper-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-block-detector.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-swiper-public.php';
 
         $this->loader = new WP_Swiper_Loader();
