@@ -15,12 +15,6 @@ class WP_Swiper_Block_Detector
 
 		// Parse the blocks in the post content
 		$blocks = parse_blocks($post->post_content);
-		var_dump(print_r([
-			'has_wp_swiper_block' => $this->has_wp_swiper_block($blocks),
-			'check_template_parts_for_block' => $this->check_template_parts_for_block($blocks),
-			'check_used_templates_for_block' => $this->check_used_templates_for_block(),
-			'strpos' => strpos($post->post_content, 'wp-swiper')
-		], true));
 
 		// Check for the block in the post content, template parts, and theme template files
 		return $this->has_wp_swiper_block($blocks)
