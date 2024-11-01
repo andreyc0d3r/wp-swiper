@@ -12,7 +12,7 @@ class WP_Swiper {
         if ( defined( 'DAWPS_PLUGIN_VERSION' ) ) {
             $this->version = DAWPS_PLUGIN_VERSION;
         } else {
-            $this->version = '1.2.11';
+            $this->version = '1.2.12';
         }
         $this->plugin_prefix = 'dawps';
         $this->plugin_name = 'wpswiper';

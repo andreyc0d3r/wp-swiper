@@ -39,6 +39,39 @@ WP Swiper version 1.2.0 is now live! This update introduces major changes, inclu
 
 For more details on what's new and how to migrate, check out the full update announcement on the [WP Swiper Blog](https://digitalapps.com/wp-swiper-plugin-update-exciting-new-features-and-improvements-v1-2-0/).
 
+
+### `wpswiper_frontend_js_register_args` Filter
+
+The `wpswiper_frontend_js_register_args` filter allows users to customize parameters when enqueueing the `frontend-js` script. This filter enables you to modify the script's dependencies, control whether it loads in the footer, and specify additional loading strategies such as `async` or `defer`.
+
+#### Parameters
+
+- **`deps`**: (array) The script dependencies for `frontend-js`. Default value is `['wpswiper-bundle-js']`. You can modify this to include additional dependencies or remove existing ones.
+  
+- **`args`**: (array|bool) An optional array for additional script loading strategies. If provided, it may be an array with a `strategy` key (set to either `'async'` or `'defer'`). If not specified, it defaults to `false`, indicating that no special loading strategy is applied.
+
+For more information, read the [WordPress documentation on wp_enqueue_script](https://developer.wordpress.org/reference/functions/wp_enqueue_script/).
+
+#### Example Usage
+
+To modify the default values, add the following code to your `functions.php` file or your custom plugin:
+
+```php
+add_filter('wpswiper_frontend_js_register_args', function($args) {
+    // Modify script dependencies
+    $args['deps'] = ['wpswiper-bundle-js', 'jquery', 'your-custom-dependency'];
+
+    // Specify an additional loading strategy, such as async or defer
+    $args['args'] = ['in_footer' => false, 'strategy' => 'defer']; // Options: 'async' or 'defer'
+
+    return $args;
+});
+```
+
+This filter provides flexibility in how the `frontend-js` script is loaded, allowing for optimizations tailored to your specific site needs.
+
+--- 
+
 !!! IMPORTANT !!!
 
 I use this plugin internally to build awesome sliders. At the moment only essential Swiper options are available. More to come!!!
@@ -80,6 +113,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+
+= 1.2.12 =
+* Added support for additional script loading strategies, allowing users to modify dependencies (deps), specify whether the script loads in the footer (in_footer), and set async or defer loading options through a new filter when enqueueing frontend-js.
 
 = 1.2.11 =
 * Cleanup debug logs

@@ -166,24 +166,42 @@ class WP_Swiper_Public
 		$options = get_option('wp_swiper_options');
 		$legacy_toggle = isset($options['legacy_toggle']) && $options['legacy_toggle'] === 'on';
 
-		if ($legacy_toggle) {
-			wp_register_script(
-				$this->plugin_name . '-frontend-js',
-				plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block_legacy.js',
-				array($this->plugin_name . '-bundle-js'),
-				DAWPS_PLUGIN_VERSION
-			);
-		} else {
-			wp_register_script(
-				$this->plugin_name . '-frontend-js',
-				plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
-				array($this->plugin_name . '-bundle-js'),
-				DAWPS_PLUGIN_VERSION
-			);
-		}
+		// ---------
 
-		wp_enqueue_script(
-			$this->plugin_name . '-frontend-js'
+		// Set up default arguments, with conditional logic based on $legacy_toggle.
+		$register_args = [
+			'handle'    => $this->plugin_name . '-frontend-js',
+			'src'       => $legacy_toggle
+				? plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block_legacy.js'
+				: plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
+			'deps'      => [$this->plugin_name . '-bundle-js'],
+			'ver'       => DAWPS_PLUGIN_VERSION,
+			'in_footer' => false,
+		];
+
+		// Allow only 'deps' and 'in_footer' to be modified through filters.
+		$filtered_args = apply_filters(
+			"{$this->plugin_name}_frontend_js_register_args",
+			[
+				'deps'      => $register_args['deps'],
+				'in_footer' => $register_args['in_footer'],
+			]
 		);
+
+		// Merge the filtered 'deps' and 'in_footer' values back with the default arguments.
+		$register_args['deps'] = $filtered_args['deps'];
+		$register_args['in_footer'] = $filtered_args['in_footer'];
+
+		// Register the script with merged arguments.
+		wp_register_script(
+			$register_args['handle'],
+			$register_args['src'],
+			$register_args['deps'],
+			$register_args['ver'],
+			$register_args['in_footer']
+		);
+
+		// Enqueue the script.
+		wp_enqueue_script($register_args['handle']);
 	}
 }
