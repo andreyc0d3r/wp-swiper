@@ -153,14 +153,14 @@ class WP_Swiper_Public
 		);
 
 		wp_register_script(
-			$this->plugin_name . '-bundle-js',
+			$this->plugin_name . '-bundle',
 			plugin_dir_url(__DIR__) .  'public/js/swiper-bundle.min.js',
 			array(),
 			DAWPS_BUNDLE_VERSION
 		);
 
 		wp_enqueue_script(
-			$this->plugin_name . '-bundle-js'
+			$this->plugin_name . '-bundle'
 		);
 
 		$options = get_option('wp_swiper_options');
@@ -174,7 +174,7 @@ class WP_Swiper_Public
 			'src'       => $legacy_toggle
 				? plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block_legacy.js'
 				: plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
-			'deps'      => [$this->plugin_name . '-bundle-js'],
+			'deps'      => [$this->plugin_name . '-bundle'],
 			'ver'       => DAWPS_PLUGIN_VERSION,
 			'in_footer' => false,
 		];

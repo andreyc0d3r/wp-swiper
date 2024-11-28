@@ -106,7 +106,6 @@ function BlockEdit(props) {
 				// 	slug: `slide-${counter}`,
 				// });
 
-
 				return {
 					clientId: tabData.clientId,
 					slideImg: tabData.attributes.slideImg,
