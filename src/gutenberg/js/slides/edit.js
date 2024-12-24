@@ -81,6 +81,9 @@ function BlockEdit(props) {
 		// Extract the client IDs of the inner blocks
 		const prevClientIdOrder = block.innerBlocks.map((ib) => ib.attributes.slug);
 		const propClientIdOrder = props.attributes.tabsData.map((tabData) => tabData.slug);
+		
+		const prevThumbImg = block.innerBlocks.map((ib) => ib.attributes.thumbImg);
+		const propThumbImg= props.attributes.tabsData.map((tabData) => tabData.thumbImg);
 
 		// console.log({
 		// 	child_blocks,
@@ -97,12 +100,21 @@ function BlockEdit(props) {
 
 		// if we disable this line of code, then adding new slide doesnt work
 		// intorducing if else , fixed the problem, above line can be removed
-		if (!areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
+		// && is important to make sure both conditions are evaluated before proceeding
+		if (!areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder && !areArraysEqualWithoutOrder(prevThumbImg, propThumbImg))) {
 			const newTabsData = block.innerBlocks.map((tabData, index) => {
 				counter++;
 
 				// removed: logically we do this step later in setAttributes
 				// updateBlockAttributes(tabData.clientId, {
+				// 	slug: `slide-${counter}`,
+				// });
+
+				// console.log({
+				// 	"trigger": "child_blocks",
+				// 	clientId: tabData.clientId,
+				// 	slideImg: tabData.attributes.slideImg,
+				// 	thumbImg: tabData.attributes.thumbImg,
 				// 	slug: `slide-${counter}`,
 				// });
 
@@ -133,7 +145,10 @@ function BlockEdit(props) {
 		}
 
 		// Use the every() method to check if every element at the same index is equal
-		return arr1.every((value, index) => value === arr2[index]);
+		return arr1.every((value, index) => {
+			// console.log(`Comparing: "${value}" === "${arr2[index]}"`);
+			return value === arr2[index];
+		});
 	};
 
 	/**

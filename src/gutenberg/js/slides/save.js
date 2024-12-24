@@ -61,23 +61,6 @@ function save(props) {
 
 	const innerBlocksProps = useInnerBlocksProps;
 
-	const thumbsElements = (typeof tabsData !== 'undefined' ? tabsData : []).map((tab, index) => {
-		return (
-			(tab.thumbImg || tab.slideImg) && (
-				<div
-					key={index}
-					className="swiper-slide wp-swiper__thumb"
-					data-thumb={index + 1}
-				>
-					<img
-						src={tab.thumbImg || tab.slideImg}
-						alt={`Thumbnail ${index + 1}`}
-					/>
-				</div>
-			)
-		);
-	});
-
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 	if (overlayImgOpacity) {
 		style_overlay_image.opacity = overlayImgOpacity;
@@ -172,7 +155,7 @@ function save(props) {
 	}
 
 	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
-		data_atts['breakpoints'] = JSON.parse(breakpoints);
+		data_atts.breakpoints = breakpoints;
 	}
 
 	if (thumbs) {
@@ -185,6 +168,23 @@ function save(props) {
 		});
 	}
 
+	const thumbsElements = (typeof tabsData !== 'undefined' ? tabsData : []).map((tab, index) => {
+		return (
+			(tab.thumbImg || tab.slideImg) && (
+				<div
+					key={index}
+					className="swiper-slide wp-swiper__thumb"
+					data-thumb={index + 1}
+				>
+					<img
+						src={tab.thumbImg || tab.slideImg}
+						alt={`Thumbnail ${index + 1}`}
+					/>
+				</div>
+			)
+		);
+	});
+	
 	return (
 		<div {...blockProps}>
 			{getOverlayImg(overlayImg, style_overlay_image)}

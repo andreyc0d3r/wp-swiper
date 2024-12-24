@@ -116,6 +116,12 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.2.15 =
+* Fix Breakpoints
+
+= 1.2.14 =
+* Thumbs were not updating. 
+
 = 1.2.13 =
 * script id rename from wpswiper-bundle-js-js to wpswiper-bundle-js
 

@@ -32,7 +32,7 @@ var wp_swiper = new (function () {
 
 			let swiper_container = wpSwipers[i].querySelector('.swiper-container');
 			let swiper_config = JSON.parse(swiper_container.getAttribute('data-swiper'));
-	
+
 			options = swiper_config;
 
 			if (options.navigation) {
@@ -48,11 +48,8 @@ var wp_swiper = new (function () {
 				options.pagination = false;
 			}
 
-			if (swiper_container.hasAttribute('data-breakpoints')) {
-				const breakpoints = swiper_container.getAttribute('data-breakpoints');
-				if (typeof breakpoints !== 'undefined') {
-					options.breakpoints = JSON.parse(breakpoints.replace(/\\/g, ''));
-				}
+			if (options.breakpoints) {
+				options.breakpoints = JSON.parse(options.breakpoints.replace(/\\/g, ''));
 			}
 
 			// Swiper Thumbs
