@@ -49,7 +49,9 @@ var wp_swiper = new (function () {
 			}
 
 			if (options.breakpoints) {
-				options.breakpoints = JSON.parse(options.breakpoints.replace(/\\/g, ''));
+				if (typeof options.breakpoints === "string") {
+					options.breakpoints = JSON.parse(options.breakpoints.replace(/\\/g, ''));
+				}				
 			}
 
 			// Swiper Thumbs

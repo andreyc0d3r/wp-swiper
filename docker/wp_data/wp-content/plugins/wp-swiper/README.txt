@@ -116,6 +116,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.2.16 =
+* Fix breakpoints for custom swipers
+
 = 1.2.15 =
 * Fix Breakpoints
 
