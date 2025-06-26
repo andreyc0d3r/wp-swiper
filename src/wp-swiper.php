@@ -23,6 +23,7 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wpswiper
  * Domain Path:       /languages
+ * Tested up to:      6.8.1
  */
 
 // If this file is called directly, abort.
