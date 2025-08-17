@@ -138,12 +138,18 @@ class WP_Swiper_Public
 
 	function loadWpSwiper()
 	{
-		wp_enqueue_style(
-			$this->plugin_name . '-block-frontend',
-			plugin_dir_url(__DIR__) . 'css/frontend_block.css',
-			array(),
-			DAWPS_PLUGIN_VERSION
-		);
+		// Check if frontend assets exist and enqueue them
+		$frontend_css_path = plugin_dir_path(__DIR__) . 'build/frontend.css';
+		$frontend_js_path = plugin_dir_path(__DIR__) . 'build/frontend.build.js';
+
+		if (file_exists($frontend_css_path)) {
+			wp_enqueue_style(
+				$this->plugin_name . '-block-frontend',
+				plugin_dir_url(__DIR__) . 'build/frontend.css',
+				array(),
+				DAWPS_PLUGIN_VERSION
+			);
+		}
 
 		wp_enqueue_style(
 			$this->plugin_name . '-bundle-css',
@@ -163,48 +169,44 @@ class WP_Swiper_Public
 			$this->plugin_name . '-bundle'
 		);
 
-		$options = get_option('wp_swiper_options');
-		$legacy_toggle = isset($options['legacy_toggle']) && $options['legacy_toggle'] === 'on';
+		// Only enqueue frontend JS if it exists
+		if (file_exists($frontend_js_path)) {
+			// Set up default arguments
+			$register_args = [
+				'handle'    => $this->plugin_name . '-frontend-js',
+				'src'       => plugin_dir_url(__DIR__) . 'build/frontend.build.js',
+				'deps'      => [$this->plugin_name . '-bundle'],
+				'ver'       => DAWPS_PLUGIN_VERSION,
+				'args'   => [
+					'in_footer' => false,
+					'strategy'  => false, // default none, can be 'async' or 'defer'
+				],
+			];
 
-		// ---------
+			// Allow only 'deps' and 'in_footer' to be modified through filters.
+			$filtered_args = apply_filters(
+				"{$this->plugin_name}_frontend_js_register_args",
+				[
+					'deps'		=> $register_args['deps'],
+					'args' 		=> $register_args['args'],
+				]
+			);
 
-		// Set up default arguments, with conditional logic based on $legacy_toggle.
-		$register_args = [
-			'handle'    => $this->plugin_name . '-frontend-js',
-			'src'       => $legacy_toggle
-				? plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block_legacy.js'
-				: plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
-			'deps'      => [$this->plugin_name . '-bundle'],
-			'ver'       => DAWPS_PLUGIN_VERSION,
-			'args'   => [
-				'in_footer' => false,
-				'strategy'  => false, // default none, can be 'async' or 'defer'
-			],
-		];
+			// Merge the filtered 'deps' and 'in_footer' values back with the default arguments.
+			$register_args['deps'] = $filtered_args['deps'];
+			$register_args['args'] = $filtered_args['args'];
 
-		// Allow only 'deps' and 'in_footer' to be modified through filters.
-		$filtered_args = apply_filters(
-			"{$this->plugin_name}_frontend_js_register_args",
-			[
-				'deps'		=> $register_args['deps'],
-				'args' 		=> $register_args['args'],
-			]
-		);
+			// Register the script with merged arguments.
+			wp_register_script(
+				$register_args['handle'],
+				$register_args['src'],
+				$register_args['deps'],
+				$register_args['ver'],
+				$register_args['args']
+			);
 
-		// Merge the filtered 'deps' and 'in_footer' values back with the default arguments.
-		$register_args['deps'] = $filtered_args['deps'];
-		$register_args['args'] = $filtered_args['args'];
-
-		// Register the script with merged arguments.
-		wp_register_script(
-			$register_args['handle'],
-			$register_args['src'],
-			$register_args['deps'],
-			$register_args['ver'],
-			$register_args['args']
-		);
-
-		// Enqueue the script.
-		wp_enqueue_script($register_args['handle']);
+			// Enqueue the script.
+			wp_enqueue_script($register_args['handle']);
+		}
 	}
 }

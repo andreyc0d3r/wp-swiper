@@ -23,7 +23,7 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wpswiper
  * Domain Path:       /languages
- * Tested up to:      6.8.1
+ * Tested up to:      6.8.2
  */
 
 // If this file is called directly, abort.
@@ -31,7 +31,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'DAWPS_PLUGIN_VERSION', '1.2.18' );
+define( 'DAWPS_PLUGIN_VERSION', '1.3.0' );
 define( 'DAWPS_BUNDLE_VERSION', '11.1.14' );
 
 function activate_wpswiper() {

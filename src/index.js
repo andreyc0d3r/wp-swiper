@@ -1,4 +1,4 @@
-import '../../css/editor.scss';
+import './scss/editor.scss';
 
 import * as slides from './slides';
 import * as slide from './slide';

@@ -1,4 +1,4 @@
-import '../../css/frontend.scss';
+import './scss/frontend.scss';
 
 var wp_swiper = new (function () {
 	var self = this;

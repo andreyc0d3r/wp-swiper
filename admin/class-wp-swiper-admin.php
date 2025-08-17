@@ -98,26 +98,30 @@ class WP_Swiper_Admin {
 			return;
 		}
 
+        // Check if we have the new build assets
+        $asset_file_path = plugin_dir_path( __DIR__ ) . 'build/index.build.asset.php';
+
+        if (file_exists($asset_file_path)) {
+            $asset_file = include($asset_file_path);
+            $dependencies = isset($asset_file['dependencies']) ? $asset_file['dependencies'] : array('wp-blocks', 'wp-element');
+            $version = isset($asset_file['version']) ? $asset_file['version'] : DAWPS_PLUGIN_VERSION;
+            $script_url = plugin_dir_url( __DIR__ ) . 'build/index.build.js';
+        } else {
+            // Minimal fallback - let WordPress handle most dependencies automatically
+            $dependencies = array('wp-blocks', 'wp-element');
+            $version = DAWPS_PLUGIN_VERSION;
+            $script_url = plugin_dir_url( __DIR__ ) . 'gutenberg/js/admin_block.js';
+        }
+
 		wp_register_script(
 			'wpswiper-block-editor',
-			plugin_dir_url( __DIR__ ) . 'gutenberg/js/admin_block.js',
-			array(
-                'wp-block-editor',
-				'wp-blocks',
-				'wp-i18n',
-				'wp-element',
-				'wp-data',
-				'wp-compose',
-                'wp-components',
-                'wp-api',
-                'wp-api-request',
-                'wp-i18n'
-			),
-			'1.0.0'
+			$script_url,
+			$dependencies,
+			$version
         );
 
         wp_enqueue_script( 'wpswiper-block-editor' );
-    
+
     }
     
 
