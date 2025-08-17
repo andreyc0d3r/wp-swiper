@@ -63,7 +63,10 @@ add_filter('wpswiper_frontend_js_register_args', function($args) {
     $args['deps'] = ['wpswiper-bundle', 'jquery', 'your-custom-dependency'];
 
     // Specify an additional loading strategy, such as async or defer
-    $args['args'] = ['in_footer' => false, 'strategy' => 'defer']; // Options: 'async' or 'defer'
+    $args['args'] = [
+		'in_footer' => false, 
+		'strategy' => 'defer'
+	]; // Options: 'async' or 'defer'
 
     return $args;
 });

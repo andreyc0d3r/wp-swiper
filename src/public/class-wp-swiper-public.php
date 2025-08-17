@@ -176,21 +176,24 @@ class WP_Swiper_Public
 				: plugin_dir_url(__DIR__) . 'gutenberg/js/frontend_block.js',
 			'deps'      => [$this->plugin_name . '-bundle'],
 			'ver'       => DAWPS_PLUGIN_VERSION,
-			'in_footer' => false,
+			'args'   => [
+				'in_footer' => false,
+				'strategy'  => false, // default none, can be 'async' or 'defer'
+			],
 		];
 
 		// Allow only 'deps' and 'in_footer' to be modified through filters.
 		$filtered_args = apply_filters(
 			"{$this->plugin_name}_frontend_js_register_args",
 			[
-				'deps'      => $register_args['deps'],
-				'in_footer' => $register_args['in_footer'],
+				'deps'		=> $register_args['deps'],
+				'args' 		=> $register_args['args'],
 			]
 		);
 
 		// Merge the filtered 'deps' and 'in_footer' values back with the default arguments.
 		$register_args['deps'] = $filtered_args['deps'];
-		$register_args['in_footer'] = $filtered_args['in_footer'];
+		$register_args['args'] = $filtered_args['args'];
 
 		// Register the script with merged arguments.
 		wp_register_script(
@@ -198,7 +201,7 @@ class WP_Swiper_Public
 			$register_args['src'],
 			$register_args['deps'],
 			$register_args['ver'],
-			$register_args['in_footer']
+			$register_args['args']
 		);
 
 		// Enqueue the script.
