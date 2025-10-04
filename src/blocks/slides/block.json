@@ -110,23 +110,17 @@
 			"type": "number",
 			"default": 0
 		},
-		"tabsData": {
-			"type": "array",
-			"default": [
-				{
-					"clientId": "",
-					"slug": "slide-1",
-					"slideImg": "",
-					"thumbImg": ""
-				},
-				{
-					"clientId": "",
-					"slug": "slide-2",
-					"slideImg": "",
-					"thumbImg": ""
-				}
-			]
-		},
+	"tabsData": {
+		"type": "array",
+		"default": [
+			{
+				"clientId": "",
+				"slug": "slide-1",
+				"slideImg": "",
+				"thumbImg": ""
+			}
+		]
+	},
 		"breakpoints": {
 			"type": "string"
 		},

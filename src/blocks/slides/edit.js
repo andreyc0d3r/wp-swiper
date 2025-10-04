@@ -28,6 +28,11 @@ import getUniqueSlug from '../../utils/get-unique-slug';
 import get_image from '../../utils/get-image';
 import { deepClone } from '../../utils/shared';
 
+// Template for default inner blocks (one slide by default)
+const INNER_BLOCKS_TEMPLATE = [
+	['da/wp-swiper-slide', { slug: 'slide-1' }]
+];
+
 /**
  * Block Edit Class.
  */
@@ -928,12 +933,13 @@ function BlockEdit(props) {
 							''
 						)}
 					</div>
-					<div className="wp-swiper__slide-content">
-						<InnerBlocks
-							template={getTabsTemplate()}
-							allowedBlocks={['da/wp-swiper-slide']}
-						/>
-					</div>
+				<div className="wp-swiper__slide-content">
+					<InnerBlocks
+						template={INNER_BLOCKS_TEMPLATE}
+						templateLock={false}
+						allowedBlocks={['da/wp-swiper-slide']}
+					/>
+				</div>
 				</div>
 			</div>
 			<style>
