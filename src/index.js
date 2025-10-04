@@ -1,7 +1,7 @@
-import './scss/editor.scss';
+import './styles/editor.scss';
 
-import * as slides from './slides';
-import * as slide from './slide';
+import * as slides from './blocks/slides';
+import * as slide from './blocks/slide';
 
 const { registerBlockType, registerBlockStyle } = wp.blocks;
 

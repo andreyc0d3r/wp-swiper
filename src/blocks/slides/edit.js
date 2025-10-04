@@ -23,10 +23,10 @@ import { withSelect, withDispatch } from '@wordpress/data';
 /**
  * Internal dependencies
  */
-import RemoveButton from '../components/remove-button';
-import getUniqueSlug from '../utils/get-unique-slug';
-import get_image from '../utils/get-image';
-import { deepClone } from '../utils/shared';
+import RemoveButton from '../../components/remove-button';
+import getUniqueSlug from '../../utils/get-unique-slug';
+import get_image from '../../utils/get-image';
+import { deepClone } from '../../utils/shared';
 
 /**
  * Block Edit Class.

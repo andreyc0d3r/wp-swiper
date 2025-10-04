@@ -18,7 +18,7 @@
  *
  * @package    WP_Swiper
  * @subpackage WP_Swiper/public
- * @author     Andrey Matveyev <andrey@digitalapps.co>
+ * @author     Andrey Matveyev <andrey@digitalapps.com>
  */
 class WP_Swiper_Public
 {
@@ -151,19 +151,19 @@ class WP_Swiper_Public
 			);
 		}
 
-		wp_enqueue_style(
-			$this->plugin_name . '-bundle-css',
-			plugin_dir_url(__DIR__) .  'public/css/swiper-bundle.min.css',
-			array(),
-			DAWPS_BUNDLE_VERSION
-		);
+	wp_enqueue_style(
+		$this->plugin_name . '-bundle-css',
+		plugin_dir_url(dirname(__DIR__)) .  'assets/swiper/swiper-bundle.min.css',
+		array(),
+		DAWPS_BUNDLE_VERSION
+	);
 
-		wp_register_script(
-			$this->plugin_name . '-bundle',
-			plugin_dir_url(__DIR__) .  'public/js/swiper-bundle.min.js',
-			array(),
-			DAWPS_BUNDLE_VERSION
-		);
+	wp_register_script(
+		$this->plugin_name . '-bundle',
+		plugin_dir_url(dirname(__DIR__)) .  'assets/swiper/swiper-bundle.min.js',
+		array(),
+		DAWPS_BUNDLE_VERSION
+	);
 
 		wp_enqueue_script(
 			$this->plugin_name . '-bundle'

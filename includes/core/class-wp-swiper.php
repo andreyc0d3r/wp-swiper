@@ -25,13 +25,13 @@ class WP_Swiper {
     }
     
     private function load_dependencies() {
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-settings.php';
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-swiper-settings.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/class-wp-swiper-loader.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-swiper-admin.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-block-detector.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'blocks/class-wp-swiper-block-detector.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-swiper-public.php';
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-renderer.php';
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-swiper-block-registration.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'blocks/class-wp-swiper-renderer.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'blocks/class-wp-swiper-block-registration.php';
 
         $this->loader = new WP_Swiper_Loader();
     }

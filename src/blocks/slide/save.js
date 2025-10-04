@@ -11,7 +11,7 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 /**
  * Internal dependencies
  */
-import { getPositionClassName } from '../utils/shared';
+import { getPositionClassName } from '../../utils/shared';
 
 /**
  * Block Save Class.

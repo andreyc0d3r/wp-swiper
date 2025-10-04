@@ -12,13 +12,13 @@ import { Fragment } from '@wordpress/element';
 
 import { withSelect } from '@wordpress/data';
 
-import BlockAlignmentMatrixControl from '../components/block-alignment-matrix-control';
+import BlockAlignmentMatrixControl from '../../components/block-alignment-matrix-control';
 
 import { PanelRow, PanelBody, BaseControl, Button, FocalPointPicker } from '@wordpress/components';
 
 import { InnerBlocks, BlockControls, InspectorControls, MediaUploadCheck, MediaUpload } from '@wordpress/block-editor';
 
-import { getPositionClassName } from '../utils/shared';
+import { getPositionClassName } from '../../utils/shared';
 
 /**
  * Block Edit Class.

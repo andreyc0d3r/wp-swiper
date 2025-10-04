@@ -19,7 +19,7 @@ import metadata from './block.json';
 
 import {
 	getPositionClassName,
-} from '../utils/shared';
+} from '../../utils/shared';
 
 const { name } = metadata;
 

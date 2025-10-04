@@ -35,12 +35,12 @@ define( 'DAWPS_PLUGIN_VERSION', '1.3.0' );
 define( 'DAWPS_BUNDLE_VERSION', '11.1.14' );
 
 function activate_wpswiper() {
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper-activator.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/core/class-wp-swiper-activator.php';
     WP_Swiper_Activator::activate();
 }
 
 function deactivate_wpswiper() {
-    require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper-deactivator.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/core/class-wp-swiper-deactivator.php';
     WP_Swiper_Deactivator::deactivate();
 }
 
@@ -51,7 +51,7 @@ register_deactivation_hook( __FILE__, 'deactivate_wpswiper' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wp-swiper.php';
+require plugin_dir_path( __FILE__ ) . 'includes/core/class-wp-swiper.php';
 
 /**
  * Begins execution of the plugin.
