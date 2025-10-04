@@ -404,469 +404,490 @@ function BlockEdit(props) {
 						/>
 					</BaseControl>
 				</PanelBody>
-				<PanelBody
-					title={__('Swiper Settings')}
-					initialOpen={false}
-				>
-					<PanelRow>
-						<h2>Slider Settings</h2>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Auto Play"
-							checked={autoplay}
-							onChange={() => {
-								setAttributes({ autoplay: !autoplay });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Disable On Interaction"
-							checked={disableOnInteraction}
-							help="Set to false and autoplay will not be disabled after user interactions (swipes), it will be restarted every time after interaction"
-							onChange={() => {
-								setAttributes({ disableOnInteraction: !disableOnInteraction });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Pause On Mouse Enter"
-							checked={pauseOnMouseEnter}
-							help="When enabled autoplay will be paused on pointer (mouse) enter over Swiper container."
-							onChange={() => {
-								setAttributes({ pauseOnMouseEnter: !pauseOnMouseEnter });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Loop"
-							checked={loop}
-							onChange={() => {
-								setAttributes({ loop: !loop });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							label="Delay"
-							value={delay}
-							type="number"
-							onChange={(option) => {
-								setAttributes({ delay: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							label="Speed"
-							value={speed}
-							type="number"
-							onChange={(option) => {
-								setAttributes({ speed: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<SelectControl
-							label="Effect (Under Consttruction)"
-							value={effect}
-							options={[
-								{ label: 'Slide', value: 'slide' },
-								{ label: 'Fade', value: 'fade' },
-								{ label: 'Cube', value: 'cube' },
-								{ label: 'Coverflow', value: 'coverflow' },
-								{ label: 'Flip', value: 'flip' },
-							]}
-							onChange={(option) => {
-								setAttributes({ effect: option });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Free Mode"
-							help="Enables free mode functionality"
-							checked={freeMode}
-							onChange={() => {
-								if (freeMode) {
-									setAttributes({ sticky: false });
-								}
-								setAttributes({ freeMode: !freeMode });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Sticky"
-							help="Set to enabled to enable snap to slides positions in free mode"
-							disabled={!freeMode}
-							checked={sticky}
-							onChange={() => {
-								setAttributes({ sticky: !sticky });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<RangeControl
-							label={__('Container Max Width %')}
-							help={__('Frontend: Set the max width for the content with text.')}
-							value={containerWidth}
-							onChange={(value) => {
-								setAttributes({
+			<PanelBody
+				title={__('Basic Slider Settings')}
+				icon="controls-play"
+				initialOpen={true}
+			>
+				<PanelRow>
+					<ToggleControl
+						label="Auto Play"
+						checked={autoplay}
+						onChange={() => {
+							setAttributes({ autoplay: !autoplay });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Loop"
+						checked={loop}
+						onChange={() => {
+							setAttributes({ loop: !loop });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<TextControl
+						label="Speed"
+						help="Duration of transition between slides (in ms)"
+						value={speed}
+						type="number"
+						onChange={(option) => {
+							setAttributes({ speed: parseInt(option) });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<TextControl
+						label="Delay"
+						help="Delay between transitions (in ms)"
+						value={delay}
+						type="number"
+						onChange={(option) => {
+							setAttributes({ delay: parseInt(option) });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<RangeControl
+						label={__('Container Max Width %')}
+						help={__('Frontend: Set the max width for the content with text.')}
+						value={containerWidth}
+						onChange={(value) => {
+							setAttributes({
+								containerWidth: value,
+							});
+
+							let iBlocks = block.innerBlocks;
+							iBlocks.map((iBlock) => {
+								updateBlockAttributes(iBlock.clientId, {
 									containerWidth: value,
 								});
-
-								let iBlocks = block.innerBlocks;
-								iBlocks.map((iBlock) => {
-									updateBlockAttributes(iBlock.clientId, {
-										containerWidth: value,
-									});
-								});
-							}}
-							min={1}
-							max={100}
-							step={1}
-							required
-						/>
-					</PanelRow>
-					<Seperator />
-					<PanelRow>
-						<h2>Navigation Settings</h2>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Show Navigation"
-							checked={navigation}
-							onChange={() => {
-								setAttributes({ navigation: !navigation });
-							}}
-						/>
-					</PanelRow>
-					{navigation && (
-						<>
+							});
+						}}
+						min={1}
+						max={100}
+						step={1}
+						required
+					/>
+				</PanelRow>
+			</PanelBody>
+			<PanelBody
+				title={__('Slides Configuration')}
+				icon="grid-view"
+				initialOpen={false}
+			>
+				<PanelRow>
+					<TextControl
+						label="Slides per view"
+						help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
+						value={slidesPerView}
+						onChange={(option) => {
+							setAttributes({ slidesPerView: option });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<TextControl
+						label="Space Between"
+						help="Distance between slides in px."
+						value={spaceBetween}
+						onChange={(option) => {
+							setAttributes({ spaceBetween: parseInt(option) });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<TextControl
+						label="Slides Offset Before"
+						help="Add (in px) additional slide offset in the beginning of the container (before all slides)"
+						value={slidesOffsetBefore}
+						onChange={(option) => {
+							setAttributes({ slidesOffsetBefore: parseInt(option) });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<TextControl
+						label="Slides Offset After"
+						help="Add (in px) additional slide offset in the end of the container (after all slides)"
+						value={slidesOffsetAfter}
+						onChange={(option) => {
+							setAttributes({ slidesOffsetAfter: parseInt(option) });
+						}}
+					/>
+				</PanelRow>
+			</PanelBody>
+			<PanelBody
+				title={__('Navigation & Controls')}
+				icon="leftright"
+				initialOpen={false}
+			>
+				<PanelRow>
+					<ToggleControl
+						label="Show Navigation"
+						checked={navigation}
+						onChange={() => {
+							setAttributes({ navigation: !navigation });
+						}}
+					/>
+				</PanelRow>
+				{navigation && (
+					<>
+						<PanelRow>
+							<p>You can customize icons by uploading your own. Default icons used otherwise.</p>
+						</PanelRow>
+						<PanelRow>
+							<MediaUploadCheck>
+								<MediaUpload
+									value={previousIcon}
+									onSelect={(media) => {
+										let img_url = media.sizes.full.url;
+										setAttributes({ previousIcon: img_url });
+									}}
+									type="image"
+									render={(open) => {
+										return (
+											<Button
+												onClick={open.open}
+												className="button"
+											>
+												Select previous slide icon
+											</Button>
+										);
+									}}
+								/>
+							</MediaUploadCheck>
+						</PanelRow>
+						{previousIcon && <PanelRow>{get_image(previousIcon)}</PanelRow>}
+						{previousIcon && (
 							<PanelRow>
-								<p>You can customize icons by uploading your own. Default icons used otherwise.</p>
+								<Button
+									isSecondary
+									size="small"
+									className="block-library-cover__reset-button"
+									onClick={() =>
+										setAttributes({
+											previousIcon: undefined,
+										})
+									}
+								>
+									{__('Clear Media')}
+								</Button>
 							</PanelRow>
+						)}
+						<PanelRow>
+							<MediaUploadCheck>
+								<MediaUpload
+									value={nextIcon}
+									onSelect={(media) => {
+										let img_url = media.sizes.full.url;
+										setAttributes({ nextIcon: img_url });
+									}}
+									type="image"
+									render={(open) => {
+										return (
+											<Button
+												onClick={open.open}
+												className="button"
+											>
+												Select next slide icon
+											</Button>
+										);
+									}}
+								/>
+							</MediaUploadCheck>
+						</PanelRow>
+						{nextIcon && <PanelRow>{get_image(nextIcon)}</PanelRow>}
+						{nextIcon && (
 							<PanelRow>
-								<MediaUploadCheck>
-									<MediaUpload
-										value={previousIcon}
-										onSelect={(media) => {
-											let img_url = media.sizes.full.url;
-											setAttributes({ previousIcon: img_url });
-										}}
-										type="image"
-										render={(open) => {
-											return (
-												<Button
-													onClick={open.open}
-													className="button"
-												>
-													Select previous slide icon
-												</Button>
-											);
-										}}
-									/>
-								</MediaUploadCheck>
+								<Button
+									isSecondary
+									size="small"
+									className="block-library-cover__reset-button"
+									onClick={() =>
+										setAttributes({
+											nextIcon: undefined,
+										})
+									}
+								>
+									{__('Clear Media')}
+								</Button>
 							</PanelRow>
-							{previousIcon && <PanelRow>{get_image(previousIcon)}</PanelRow>}
-							{previousIcon && (
-								<PanelRow>
-									<Button
-										isSecondary
-										size="small"
-										className="block-library-cover__reset-button"
-										onClick={() =>
-											setAttributes({
-												previousIcon: undefined,
-											})
-										}
-									>
-										{__('Clear Media')}
-									</Button>
-								</PanelRow>
-							)}
-							<PanelRow>
-								<MediaUploadCheck>
-									<MediaUpload
-										value={nextIcon}
-										onSelect={(media) => {
-											let img_url = media.sizes.full.url;
-											setAttributes({ nextIcon: img_url });
-										}}
-										type="image"
-										render={(open) => {
-											return (
-												<Button
-													onClick={open.open}
-													className="button"
-												>
-													Select next slide icon
-												</Button>
-											);
-										}}
-									/>
-								</MediaUploadCheck>
-							</PanelRow>
-							{nextIcon && <PanelRow>{get_image(nextIcon)}</PanelRow>}
-							{nextIcon && (
-								<PanelRow>
-									<Button
-										isSecondary
-										size="small"
-										className="block-library-cover__reset-button"
-										onClick={() =>
-											setAttributes({
-												nextIcon: undefined,
-											})
-										}
-									>
-										{__('Clear Media')}
-									</Button>
-								</PanelRow>
-							)}
-						</>
-					)}
-					<PanelRow>
-						<ToggleControl
-							label="Auto Height"
-							help="Set to true and slider wrapper will adapt its height to the height of the currently active slide"
-							checked={autoHeight}
-							onChange={() => {
-								setAttributes({ autoHeight: !autoHeight });
-							}}
-						/>
-					</PanelRow>
-					<Seperator />
-					<PanelRow>
-						<h2>Direction Settings</h2>
-					</PanelRow>
+						)}
+					</>
+				)}
+				<Seperator />
+				<PanelRow>
+					<ToggleControl
+						label="Show Pagination"
+						checked={pagination}
+						onChange={() => {
+							setAttributes({ pagination: !pagination });
+						}}
+					/>
+				</PanelRow>
+				{pagination && (
+					<>
+						<PanelRow>
+							<SelectControl
+								label="Type of pagination"
+								value={pagination_type}
+								options={[
+									{ label: 'Bullets', value: 'bullets' },
+									{ label: 'Fraction', value: 'fraction' },
+									{ label: 'Progress Bar', value: 'progressbar' },
+								]}
+								onChange={(option) => {
+									setAttributes({ pagination_type: option });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Clickable Pagination"
+								checked={clickable_pagination}
+								onChange={() => {
+									setAttributes({ clickable_pagination: !clickable_pagination });
+								}}
+							/>
+						</PanelRow>
+					</>
+				)}
+				<Seperator />
+				<PanelRow>
+					<ToggleControl
+						label="Auto Height"
+						help="Set to true and slider wrapper will adapt its height to the height of the currently active slide"
+						checked={autoHeight}
+						onChange={() => {
+							setAttributes({ autoHeight: !autoHeight });
+						}}
+					/>
+				</PanelRow>
+			</PanelBody>
+			<PanelBody
+				title={__('Direction Settings')}
+				icon="sort"
+				initialOpen={false}
+			>
+				<SelectControl
+					label="Direction"
+					help="For vertical slider, Slides Per View should be set to 1"
+					value={direction}
+					options={[
+						{ label: 'Horizontal', value: 'horizontal' },
+						{ label: 'Vertical', value: 'vertical' },
+					]}
+					onChange={(option) => {
+						setAttributes({ direction: option });
+					}}
+				/>
+			</PanelBody>
+			<PanelBody
+				title={__('Autoplay Behavior')}
+				icon="controls-repeat"
+				initialOpen={false}
+			>
+				<PanelRow>
+					<ToggleControl
+						label="Disable On Interaction"
+						checked={disableOnInteraction}
+						help="Set to false and autoplay will not be disabled after user interactions (swipes), it will be restarted every time after interaction"
+						onChange={() => {
+							setAttributes({ disableOnInteraction: !disableOnInteraction });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Pause On Mouse Enter"
+						checked={pauseOnMouseEnter}
+						help="When enabled autoplay will be paused on pointer (mouse) enter over Swiper container."
+						onChange={() => {
+							setAttributes({ pauseOnMouseEnter: !pauseOnMouseEnter });
+						}}
+					/>
+				</PanelRow>
+			</PanelBody>
+			<PanelBody
+				title={__('Advanced Features')}
+				icon="admin-generic"
+				initialOpen={false}
+			>
+				<PanelRow>
 					<SelectControl
-						label="Direction"
-						help="For vertical slider, Slides Per View should be set to 1"
-						value={direction}
+						label="Effect (Under Construction)"
+						value={effect}
 						options={[
-							{ label: 'Horizontal', value: 'horizontal' },
-							{ label: 'Vertical', value: 'vertical' },
+							{ label: 'Slide', value: 'slide' },
+							{ label: 'Fade', value: 'fade' },
+							{ label: 'Cube', value: 'cube' },
+							{ label: 'Coverflow', value: 'coverflow' },
+							{ label: 'Flip', value: 'flip' },
 						]}
 						onChange={(option) => {
-							setAttributes({ direction: option });
+							setAttributes({ effect: option });
 						}}
 					/>
-					<Seperator />
-					<PanelRow>
-						<h2>Pagination Settings</h2>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Show pagination"
-							checked={pagination}
-							onChange={() => {
-								setAttributes({ pagination: !pagination });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<SelectControl
-							label="Type of pagination"
-							value={pagination_type}
-							options={[
-								{ label: 'Bullets', value: 'bullets' },
-								{ label: 'Fraction', value: 'fraction' },
-								{ label: 'Progress Bar', value: 'progressbar' },
-							]}
-							onChange={(option) => {
-								setAttributes({ pagination_type: option });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Clickable Pagination"
-							checked={clickable_pagination}
-							onChange={() => {
-								setAttributes({ clickable_pagination: !clickable_pagination });
-							}}
-						/>
-					</PanelRow>
-					<Seperator />
-					<PanelRow>
-						<h2>Slide Settings</h2>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							label="Space Between"
-							help="Distance between slides in px."
-							value={spaceBetween}
-							onChange={(option) => {
-								setAttributes({ spaceBetween: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							label="Slides per view"
-							help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
-							value={slidesPerView}
-							onChange={(option) => {
-								setAttributes({ slidesPerView: option });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							label="Slides Offset Before"
-							help="Add (in px) additional slide offset in the beginning of the container (before all slides)"
-							value={slidesOffsetBefore}
-							onChange={(option) => {
-								setAttributes({ slidesOffsetBefore: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							label="Slides Offset After"
-							help="Add (in px) additional slide offset in the end of the container (after all slides)"
-							value={slidesOffsetAfter}
-							onChange={(option) => {
-								setAttributes({ slidesOffsetAfter: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<Seperator />
-					<PanelRow>
-						<h2>Breakpoints</h2>
-					</PanelRow>
-					<PanelRow>
-						<TextareaControl
-							label="Responsive breakpoints (JSON Object)"
-							help="Allows to set different parameter for different responsive breakpoints (screen sizes). Not all parameters can be changed in breakpoints, only those which are not required different layout and logic, like slidesPerView, slidesPerGroup, spaceBetween, grid.rows. Such parameters like loop and effect won't work"
-							value={breakpoints}
-							onChange={(option) => {
-								setAttributes({ breakpoints: option });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<p>Example: {'{"720":{"slidesPerView":2}}'} - Notice the double quotes</p>
-					</PanelRow>
-					<Seperator />
-					<PanelRow>
-						<h2>Mouse Settings</h2>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Mouse Wheel"
-							help="Enables navigation through slides using mouse wheel."
-							checked={mousewheel}
-							onChange={() => {
-								setAttributes({ mousewheel: !mousewheel });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Release On Edges"
-							help="Set to true and swiper will release mousewheel event and allow page scrolling when swiper is on edge positions (in the beginning or in the end) NOTE: Mouse Wheel must be set to true for this to work."
-							checked={releaseOnEdges}
-							onChange={() => {
-								setAttributes({ releaseOnEdges: !releaseOnEdges });
-
-								// if(!releaseOnEdges) {
-								//     setAttributes({ mousewheel: !releaseOnEdges });
-								// }
-							}}
-						/>
-					</PanelRow>
-					<Seperator />
-					<PanelRow>
-						<h2>Thumbs Settings</h2>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label="Thumbs"
-							help="Enables thumbs to be used as pagination."
-							checked={thumbs}
-							onChange={() => {
-								setAttributes({ thumbs: !thumbs });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							disabled={!thumbs}
-							label="Space Between"
-							help="Distance between slides in px."
-							value={thumbsSpaceBetween}
-							onChange={(option) => {
-								setAttributes({ thumbsSpaceBetween: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<TextControl
-							disabled={!thumbs}
-							label="Thumbs per view"
-							help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
-							value={thumbsSlidesPerView}
-							onChange={(option) => {
-								setAttributes({ thumbsSlidesPerView: parseInt(option) });
-							}}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<AlignmentMatrixControl
-							disableAlignment={['center']}
-							value={alignment}
-							onChange={(newAlignment) => setAlignment(newAlignment)}
-						/>
-					</PanelRow>
-					<Seperator />
-					<PanelRow>
-						<h2>Dev Tools</h2>
-					</PanelRow>
+				</PanelRow>
+				<PanelRow>
 					<ToggleControl
-						label="Debug"
-						help="Show (console.log) config JSON object for each slider"
-						checked={debug}
+						label="Free Mode"
+						help="Enables free mode functionality"
+						checked={freeMode}
 						onChange={() => {
-							setAttributes({ debug: !debug });
+							if (freeMode) {
+								setAttributes({ sticky: false });
+							}
+							setAttributes({ freeMode: !freeMode });
 						}}
 					/>
-					<PanelRow>
-						<Button
-							onClick={() => {
-								let counter = 1;
-								tabsData.forEach((tab, index) => {
-									tab.slug = `slide-${counter}`;
-									counter++;
-								});
-								setAttributes({ tabsData });
-								updateSlugsForInnerBlocks(block.innerBlocks);
-							}}
-							className="button"
-						>
-							Fix Slide Slugs
-						</Button>
-					</PanelRow>
-					<PanelRow>
-						<p
-							style={{
-								marginTop: 'calc(8px)',
-								fontSize: '12px',
-								fontStyle: 'normal',
-								color: 'rgb(117, 117, 117)',
-								marginBottom: 'revert',
-							}}
-						>
-							On rare occasions, if the slide slugs become out of sync with the slide data stored in the parent block, you might notice all slide contents appearing under a single tab. Clicking this button could help resolve the issue. This action iterates over each slide and resets
-							the slugs in ascending order (e.g., slide-1, slide-2, etc.), ensuring that each tab properly corresponds to its respective slide.
-						</p>
-					</PanelRow>
-				</PanelBody>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Sticky"
+						help="Set to enabled to enable snap to slides positions in free mode"
+						disabled={!freeMode}
+						checked={sticky}
+						onChange={() => {
+							setAttributes({ sticky: !sticky });
+						}}
+					/>
+				</PanelRow>
+				<Seperator />
+				<PanelRow>
+					<ToggleControl
+						label="Mouse Wheel"
+						help="Enables navigation through slides using mouse wheel."
+						checked={mousewheel}
+						onChange={() => {
+							setAttributes({ mousewheel: !mousewheel });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Release On Edges"
+						help="Set to true and swiper will release mousewheel event and allow page scrolling when swiper is on edge positions (in the beginning or in the end) NOTE: Mouse Wheel must be set to true for this to work."
+						checked={releaseOnEdges}
+						onChange={() => {
+							setAttributes({ releaseOnEdges: !releaseOnEdges });
+						}}
+					/>
+				</PanelRow>
+			</PanelBody>
+			<PanelBody
+				title={__('Responsive Breakpoints')}
+				icon="smartphone"
+				initialOpen={false}
+			>
+				<PanelRow>
+					<TextareaControl
+						label="Responsive breakpoints (JSON Object)"
+						help="Allows to set different parameter for different responsive breakpoints (screen sizes). Not all parameters can be changed in breakpoints, only those which are not required different layout and logic, like slidesPerView, slidesPerGroup, spaceBetween, grid.rows. Such parameters like loop and effect won't work"
+						value={breakpoints}
+						onChange={(option) => {
+							setAttributes({ breakpoints: option });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<p>Example: {'{\"720\":{\"slidesPerView\":2}}'} - Notice the double quotes</p>
+				</PanelRow>
+			</PanelBody>
+			<PanelBody
+				title={__('Thumbnails')}
+				icon="images-alt2"
+				initialOpen={false}
+			>
+				<PanelRow>
+					<ToggleControl
+						label="Thumbs"
+						help="Enables thumbs to be used as pagination."
+						checked={thumbs}
+						onChange={() => {
+							setAttributes({ thumbs: !thumbs });
+						}}
+					/>
+				</PanelRow>
+				{thumbs && (
+					<>
+						<PanelRow>
+							<TextControl
+								label="Space Between"
+								help="Distance between slides in px."
+								value={thumbsSpaceBetween}
+								onChange={(option) => {
+									setAttributes({ thumbsSpaceBetween: parseInt(option) });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<TextControl
+								label="Thumbs per view"
+								help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
+								value={thumbsSlidesPerView}
+								onChange={(option) => {
+									setAttributes({ thumbsSlidesPerView: parseInt(option) });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<AlignmentMatrixControl
+								disableAlignment={['center']}
+								value={alignment}
+								onChange={(newAlignment) => setAlignment(newAlignment)}
+							/>
+						</PanelRow>
+					</>
+				)}
+			</PanelBody>
+			<PanelBody
+				title={__('Developer Tools')}
+				icon="admin-tools"
+				initialOpen={false}
+			>
+				<ToggleControl
+					label="Debug"
+					help="Show (console.log) config JSON object for each slider"
+					checked={debug}
+					onChange={() => {
+						setAttributes({ debug: !debug });
+					}}
+				/>
+				<PanelRow>
+					<Button
+						onClick={() => {
+							let counter = 1;
+							tabsData.forEach((tab, index) => {
+								tab.slug = `slide-${counter}`;
+								counter++;
+							});
+							setAttributes({ tabsData });
+							updateSlugsForInnerBlocks(block.innerBlocks);
+						}}
+						className="button"
+					>
+						Fix Slide Slugs
+					</Button>
+				</PanelRow>
+				<PanelRow>
+					<p
+						style={{
+							marginTop: 'calc(8px)',
+							fontSize: '12px',
+							fontStyle: 'normal',
+							color: 'rgb(117, 117, 117)',
+							marginBottom: 'revert',
+						}}
+					>
+						On rare occasions, if the slide slugs become out of sync with the slide data stored in the parent block, you might notice all slide contents appearing under a single tab. Clicking this button could help resolve the issue. This action iterates over each slide and resets
+						the slugs in ascending order (e.g., slide-1, slide-2, etc.), ensuring that each tab properly corresponds to its respective slide.
+					</p>
+				</PanelRow>
+			</PanelBody>
 			</InspectorControls>
 			<div
 				{...blockProps}
