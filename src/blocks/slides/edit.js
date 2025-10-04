@@ -57,6 +57,9 @@ function BlockEdit(props) {
 		loop,
 		effect,
 		slidesPerView,
+		slidesPerGroup,
+		slidesPerGroupAuto,
+		slidesPerGroupSkip,
 		spaceBetween,
 		navigation,
 		pagination,
@@ -478,26 +481,58 @@ function BlockEdit(props) {
 				icon="grid-view"
 				initialOpen={false}
 			>
-				<PanelRow>
-					<TextControl
-						label="Slides per view"
-						help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
-						value={slidesPerView}
-						onChange={(option) => {
-							setAttributes({ slidesPerView: option });
-						}}
-					/>
-				</PanelRow>
-				<PanelRow>
-					<TextControl
-						label="Space Between"
-						help="Distance between slides in px."
-						value={spaceBetween}
-						onChange={(option) => {
-							setAttributes({ spaceBetween: parseInt(option) });
-						}}
-					/>
-				</PanelRow>
+			<PanelRow>
+				<TextControl
+					label="Slides per view"
+					help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
+					value={slidesPerView}
+					onChange={(option) => {
+						setAttributes({ slidesPerView: option });
+					}}
+				/>
+			</PanelRow>
+			<PanelRow>
+				<TextControl
+					label="Slides Per Group"
+					help="Set numbers of slides to define and enable group sliding. Useful to use with slidesPerView > 1"
+					value={slidesPerGroup}
+					type="number"
+					onChange={(option) => {
+						setAttributes({ slidesPerGroup: parseInt(option) });
+					}}
+				/>
+			</PanelRow>
+			<PanelRow>
+				<ToggleControl
+					label="Slides Per Group Auto"
+					help="This param intended to be used only with slidesPerView: 'auto' and slidesPerGroup: 1. When enabled, it will skip all slides in view on .slideNext() & .slidePrev() methods calls, on Navigation buttons clicks and in autoplay."
+					checked={slidesPerGroupAuto}
+					onChange={() => {
+						setAttributes({ slidesPerGroupAuto: !slidesPerGroupAuto });
+					}}
+				/>
+			</PanelRow>
+			<PanelRow>
+				<TextControl
+					label="Slides Per Group Skip"
+					help="If slidesPerGroupSkip equals 0 (default), no slides are excluded from grouping. If slidesPerGroupSkip is equal or greater than 1, the first X slides are treated as single groups, whereas all following slides are grouped by the slidesPerGroup value."
+					value={slidesPerGroupSkip}
+					type="number"
+					onChange={(option) => {
+						setAttributes({ slidesPerGroupSkip: parseInt(option) });
+					}}
+				/>
+			</PanelRow>
+			<PanelRow>
+				<TextControl
+					label="Space Between"
+					help="Distance between slides in px."
+					value={spaceBetween}
+					onChange={(option) => {
+						setAttributes({ spaceBetween: parseInt(option) });
+					}}
+				/>
+			</PanelRow>
 				<PanelRow>
 					<TextControl
 						label="Slides Offset Before"

@@ -101,6 +101,18 @@
       "type": "string",
       "default": "1"
     },
+    "slidesPerGroup": {
+      "type": "number",
+      "default": 1
+    },
+    "slidesPerGroupAuto": {
+      "type": "boolean",
+      "default": false
+    },
+    "slidesPerGroupSkip": {
+      "type": "number",
+      "default": 0
+    },
     "spaceBetween": {
       "type": "number",
       "default": 0

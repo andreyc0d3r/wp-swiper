@@ -18,6 +18,9 @@ function save(props) {
 		overlayImg,
 		overlayImgOpacity,
 		slidesPerView,
+		slidesPerGroup,
+		slidesPerGroupAuto,
+		slidesPerGroupSkip,
 		spaceBetween,
 		txtColor,
 		autoplay,
@@ -74,6 +77,9 @@ function save(props) {
 
 	let data_atts = {
 		slidesPerView,
+		slidesPerGroup,
+		slidesPerGroupAuto,
+		slidesPerGroupSkip,
 		navigation,
 		pagination: {},
 		delay: delay,
