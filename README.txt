@@ -119,6 +119,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.3.1 =
+* Added an ability to reset Overlay Color by pressing a button
+
 = 1.3.0 =
 * Plugin Structure Update
 * Improved UI for better UX
