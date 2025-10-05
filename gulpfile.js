@@ -5,12 +5,13 @@ const del = require('del');
 
 const pluginName = 'wp-swiper';
 const zipDist = 'dist-zip';
-const svnPath = '../wp-swiper-svn/trunk';
+const svnPath = '/Users/andrey/Projects/wp-swiper-svn/trunk';
 
 // Files to include in the zip package and SVN
 const packageFiles = [
     '**/*',
     // Exclude development files
+    '!dist-zip/**',
     '!node_modules/**',
     '!memory-bank/**',
     '!docs/**',
@@ -51,8 +52,7 @@ gulp.task('zip:pack', () => {
             nodir: true,
             base: zipDist,
         })
-        .pipe(zip.dest(`${pluginName}.zip`))
-        .pipe(gulp.dest(zipDist));
+        .pipe(zip.dest(`${zipDist}/${pluginName}.zip`));
 });
 
 gulp.task('zip', gulp.series('zip:clean', 'zip:copy', 'zip:pack'));
