@@ -119,6 +119,12 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.3.0 =
+* Plugin Structure Update
+* Improved UI for better UX
+* Swiper Bundle Update
+* Added support for slidesPerGroup
+
 = 1.2.18 =
 * Added support for the strategy parameter (async / defer) when registering frontend scripts.
 * The wpswiper_frontend_js_register_args filter now allows modifying deps, in_footer, and strategy.
