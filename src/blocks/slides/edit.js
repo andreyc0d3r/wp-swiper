@@ -395,6 +395,29 @@ function BlockEdit(props) {
 							}}
 						/>
 					</BaseControl>
+					{overlayColor.rgb.a > 0 && (
+						<PanelRow>
+							<Button
+								isSecondary
+								size="small"
+								className="block-library-cover__reset-button"
+								onClick={() => {
+									const defaultColor = { rgb: { r: 0, g: 0, b: 0, a: 0 } };
+									setAttributes({ overlayColor: defaultColor });
+
+									// Update all inner blocks
+									let iBlocks = block.innerBlocks;
+									iBlocks.map((iBlock) => {
+										updateBlockAttributes(iBlock.clientId, {
+											overlayColor: defaultColor,
+										});
+									});
+								}}
+							>
+								{__('Clear Color')}
+							</Button>
+						</PanelRow>
+					)}
 				</PanelBody>
 				<PanelBody
 					title={__('Color Settings')}
