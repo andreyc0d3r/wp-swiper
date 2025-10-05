@@ -69,3 +69,4 @@ docker/wp_data
 !docker/wp_data/wp-content/plugins/wp-swiper
 
 svn/
+dist-zip
