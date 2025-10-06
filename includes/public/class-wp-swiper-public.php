@@ -142,28 +142,28 @@ class WP_Swiper_Public
 		$frontend_css_path = plugin_dir_path(__DIR__) . 'build/frontend.css';
 		$frontend_js_path = plugin_dir_path(__DIR__) . 'build/frontend.build.js';
 
-		if (file_exists($frontend_css_path)) {
-			wp_enqueue_style(
-				$this->plugin_name . '-block-frontend',
-				plugin_dir_url(__DIR__) . 'build/frontend.css',
-				array(),
-				DAWPS_PLUGIN_VERSION
-			);
-		}
+	if (file_exists($frontend_css_path)) {
+		wp_enqueue_style(
+			$this->plugin_name . '-block-frontend',
+			DAWPS_PLUGIN_URL . 'build/frontend.css',
+			array(),
+			DAWPS_PLUGIN_VERSION
+		);
+	}
 
 	wp_enqueue_style(
-		$this->plugin_name . '-bundle-css',
-		plugin_dir_url(dirname(__DIR__)) .  'assets/swiper/swiper-bundle.min.css',
-		array(),
-		DAWPS_BUNDLE_VERSION
-	);
+	$this->plugin_name . '-bundle-css',
+	DAWPS_PLUGIN_URL .  'assets/swiper/swiper-bundle.min.css',
+	array(),
+	DAWPS_BUNDLE_VERSION
+);
 
-	wp_register_script(
-		$this->plugin_name . '-bundle',
-		plugin_dir_url(dirname(__DIR__)) .  'assets/swiper/swiper-bundle.min.js',
-		array(),
-		DAWPS_BUNDLE_VERSION
-	);
+wp_register_script(
+	$this->plugin_name . '-bundle',
+	DAWPS_PLUGIN_URL .  'assets/swiper/swiper-bundle.min.js',
+	array(),
+	DAWPS_BUNDLE_VERSION
+);
 
 		wp_enqueue_script(
 			$this->plugin_name . '-bundle'
@@ -174,7 +174,7 @@ class WP_Swiper_Public
 			// Set up default arguments
 			$register_args = [
 				'handle'    => $this->plugin_name . '-frontend-js',
-				'src'       => plugin_dir_url(__DIR__) . 'build/frontend.build.js',
+				'src'       => DAWPS_PLUGIN_URL . 'build/frontend.build.js',
 				'deps'      => [$this->plugin_name . '-bundle'],
 				'ver'       => DAWPS_PLUGIN_VERSION,
 				'args'   => [

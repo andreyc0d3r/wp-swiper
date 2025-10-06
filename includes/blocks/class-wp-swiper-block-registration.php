@@ -64,7 +64,7 @@ class WP_Swiper_Block_Registration {
      */
     function read_json() {
         // Define the path to the JSON file - use slides block.json as primary
-        $filePath = plugin_dir_path(dirname(dirname(__FILE__))) . 'build/blocks/slides/block.json';
+        $filePath = DAWPS_PLUGIN_PATH . 'build/blocks/slides/block.json';
 
         // Check if the file exists and is readable
         if (file_exists($filePath) && is_readable($filePath)) {
@@ -99,9 +99,7 @@ class WP_Swiper_Block_Registration {
             return;
         }
 
-        $plugin_dir_path = plugin_dir_path(dirname(dirname(__FILE__)));
-        $plugin_dir_url = plugin_dir_url(dirname(dirname(__FILE__)));
-        $asset_file_path = $plugin_dir_path . 'build/index.build.asset.php';
+        $asset_file_path = DAWPS_PLUGIN_PATH . 'build/index.build.asset.php';
         
         if (file_exists($asset_file_path)) {
             $asset_file = include($asset_file_path);
@@ -115,7 +113,7 @@ class WP_Swiper_Block_Registration {
 
         wp_register_script(
             $this->block_name,
-            $plugin_dir_url . 'build/index.build.js',
+            DAWPS_PLUGIN_URL . 'build/index.build.js',
             $dependencies,
             $version
         );
@@ -123,11 +121,11 @@ class WP_Swiper_Block_Registration {
         wp_enqueue_script($this->block_name);
         
         // Enqueue editor styles
-        $editor_css_path = $plugin_dir_path . 'build/index.css';
+        $editor_css_path = DAWPS_PLUGIN_PATH . 'build/index.css';
         if (file_exists($editor_css_path)) {
             wp_enqueue_style(
                 $this->block_name . '-editor', 
-                $plugin_dir_url . 'build/index.css',
+                DAWPS_PLUGIN_URL . 'build/index.css',
                 array(),
                 $version
             );
@@ -145,10 +143,9 @@ class WP_Swiper_Block_Registration {
         }
 
         $renderer = new WP_Swiper_Renderer();
-        $plugin_dir_path = plugin_dir_path(dirname(dirname(__FILE__)));
 
         // Register slides block
-        $slides_block_path = $plugin_dir_path . 'build/blocks/slides';
+        $slides_block_path = DAWPS_PLUGIN_PATH . 'build/blocks/slides';
         if (file_exists($slides_block_path . '/block.json')) {
             register_block_type($slides_block_path, array(
                 'render_callback' => [$renderer, 'render_callback']
@@ -156,7 +153,7 @@ class WP_Swiper_Block_Registration {
         }
 
         // Register slide block
-        $slide_block_path = $plugin_dir_path . 'build/blocks/slide';
+        $slide_block_path = DAWPS_PLUGIN_PATH . 'build/blocks/slide';
         if (file_exists($slide_block_path . '/block.json')) {
             register_block_type($slide_block_path, array(
                 'render_callback' => [$renderer, 'render_callback']
@@ -170,19 +167,16 @@ class WP_Swiper_Block_Registration {
      * @since    1.0.0
      */
     function enqueue_frontend_assets() {
-        if (!is_admin()) { // Ensures the styles are not loaded in the admin area
-            $plugin_dir_path = plugin_dir_path(dirname(dirname(__FILE__)));
-            $plugin_dir_url = plugin_dir_url(dirname(dirname(__FILE__)));
-            
+        if (!is_admin()) { // Ensures the styles are not loaded in the admin area            
             // Convert the URL to a file path
-            $script_path = $plugin_dir_path . 'build/frontend.build.js';
-            $style_path = $plugin_dir_path . 'build/frontend.css';
+            $script_path = DAWPS_PLUGIN_PATH . 'build/frontend.build.js';
+            $style_path = DAWPS_PLUGIN_PATH . 'build/frontend.css';
 
             // Check if the file exists
             if (file_exists($script_path)) {
                 wp_enqueue_script(
                     $this->block_name . '-frontend',
-                    $plugin_dir_url . 'build/frontend.build.js',
+                    DAWPS_PLUGIN_URL . 'build/frontend.build.js',
                     array('jquery'),
                     DAWPS_PLUGIN_VERSION
                 );
@@ -192,7 +186,7 @@ class WP_Swiper_Block_Registration {
                 // If the file exists, enqueue the style
                 wp_enqueue_style(
                     $this->block_name . '-frontend',
-                    $plugin_dir_url . 'build/frontend.css',
+                    DAWPS_PLUGIN_URL . 'build/frontend.css',
                     array(),
                     DAWPS_PLUGIN_VERSION
                 );

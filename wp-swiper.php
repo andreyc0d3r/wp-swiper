@@ -33,6 +33,8 @@ if ( ! defined( 'WPINC' ) ) {
 
 define( 'DAWPS_PLUGIN_VERSION', '1.3.2' );
 define( 'DAWPS_BUNDLE_VERSION', '11.1.14' );
+define( 'DAWPS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'DAWPS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
 function activate_wpswiper() {
     require_once plugin_dir_path( __FILE__ ) . 'includes/core/class-wp-swiper-activator.php';

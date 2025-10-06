@@ -85,7 +85,7 @@ class WP_Swiper_Admin {
     function enqueue_admin_styles() {
         wp_enqueue_style(
 			$this->plugin_name . '-block-editor-style',
-			plugin_dir_url( dirname( dirname( __DIR__ ) ) ) . "css/admin_block.css",
+			DAWPS_PLUGIN_URL . "css/admin_block.css",
 			array(),
 			'1.0.0'
 		);
@@ -99,21 +99,18 @@ class WP_Swiper_Admin {
 		}
 
         // Check if we have the new build assets
-        $plugin_dir_path = dirname( dirname( __DIR__ ) ) . '/';
-        $plugin_dir_url = plugin_dir_url( dirname( dirname( __DIR__ ) ) );
-        $asset_file_path = $plugin_dir_path . 'build/index.build.asset.php';
-		// Applications/MAMP/htdocs/wp-content/plugins/wp-swiper/build/index.build.asset.php
+        $asset_file_path = DAWPS_PLUGIN_PATH . 'build/index.build.asset.php';
 
         if (file_exists($asset_file_path)) {
             $asset_file = include($asset_file_path);
             $dependencies = isset($asset_file['dependencies']) ? $asset_file['dependencies'] : array('wp-blocks', 'wp-element');
             $version = isset($asset_file['version']) ? $asset_file['version'] : DAWPS_PLUGIN_VERSION;
-            $script_url = $plugin_dir_url . 'build/index.build.js';
+            $script_url = DAWPS_PLUGIN_URL . 'build/index.build.js';
         } else {
             // Minimal fallback - let WordPress handle most dependencies automatically
             $dependencies = array('wp-blocks', 'wp-element');
             $version = DAWPS_PLUGIN_VERSION;
-            $script_url = $plugin_dir_url . 'gutenberg/js/admin_block.js';
+            $script_url = DAWPS_PLUGIN_URL . 'gutenberg/js/admin_block.js';
         }
 
 		wp_register_script(
