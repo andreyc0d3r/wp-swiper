@@ -26,6 +26,11 @@ if (! class_exists('WP_Swiper_Settings')) {
 		// Function to initialize the settings
 		public function settings_init()
 		{
+			// Register the settings
+			register_setting(
+				'wp_swiper_settings',         // Option group (matches settings_fields() parameter)
+				'wp_swiper_options'           // Option name (matches get_option() calls)
+			);
 
 			// Add a section for the settings
 			add_settings_section(

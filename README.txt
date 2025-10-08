@@ -119,6 +119,12 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 == Changelog ==
 
+= 1.3.4 =
+* Fix The error "The wp_swiper_settings options page is not in the allowed options list"
+
+= 1.3.3 =
+* Refactor asset paths to use DAWPS_PLUGIN_URL and DAWPS_PLUGIN_PATH constants for consistency
+
 = 1.3.1 =
 * Added an ability to reset Overlay Color by pressing a button
 
