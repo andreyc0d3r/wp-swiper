@@ -50,6 +50,7 @@ function save(props) {
 		nextIcon,
 		slidesOffsetBefore,
 		slidesOffsetAfter,
+		overflowVisible,
 	} = props.attributes;
 
 	className = classnames(className, 'wp-swiper');
@@ -191,6 +192,10 @@ function save(props) {
 		);
 	});
 	
+	const swiperContainerClassName = classnames('swiper-container', 'swiper', {
+		'swiper-overflow-visible': overflowVisible,
+	});
+
 	return (
 		<div {...blockProps}>
 			{getOverlayImg(overlayImg, style_overlay_image)}
@@ -199,7 +204,7 @@ function save(props) {
 				style={style_overlay_wrapper}
 			>
 				<div
-					className="swiper-container swiper"
+					className={swiperContainerClassName}
 					{...(debug ? { 'data-debug': true } : {})} // Only include data-debug if debug is true
 					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}

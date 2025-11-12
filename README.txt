@@ -118,6 +118,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.3.5 =
+* Fix Overlay color not persisting
+* Add toggle to allow overflow to be visible
 
 = 1.3.4 =
 * Fix The error "The wp_swiper_settings options page is not in the allowed options list"

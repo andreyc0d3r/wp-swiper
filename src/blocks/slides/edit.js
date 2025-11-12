@@ -81,6 +81,7 @@ function BlockEdit(props) {
 		nextIcon,
 		slidesOffsetBefore,
 		slidesOffsetAfter,
+		overflowVisible,
 	} = attributes;
 
 	const child_blocks = getBlocks(clientId);
@@ -496,6 +497,16 @@ function BlockEdit(props) {
 						max={100}
 						step={1}
 						required
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Overflow Visible"
+						help="Apply overflow visible to the swiper container"
+						checked={overflowVisible}
+						onChange={() => {
+							setAttributes({ overflowVisible: !overflowVisible });
+						}}
 					/>
 				</PanelRow>
 			</PanelBody>

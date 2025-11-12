@@ -170,6 +170,10 @@
     "direction": {
       "type": "string",
       "default": "horizontal"
+    },
+    "overflowVisible": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
