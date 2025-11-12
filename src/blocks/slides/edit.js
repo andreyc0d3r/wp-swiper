@@ -382,7 +382,7 @@ function BlockEdit(props) {
 					<Seperator />
 					<BaseControl label={__('Overlay Color', '@@text_domain')}>
 						<ColorPicker
-							color={overlayColor.rgb}
+							color={overlayColor.hex || overlayColor}
 							onChangeComplete={(color) => {
 								setAttributes({ overlayColor: color });
 
