@@ -1,93 +1,23 @@
-const externals = {
-	wp: 'wp',
-	react: 'React',
-	'react-dom': 'ReactDOM',
-	'@wordpress/blocks': ['wp', 'blocks'],
-	'@wordpress/i18n': ['wp', 'i18n'],
-	'@wordpress/element': ['wp', 'element'],
-	'@wordpress/data': ['wp', 'data'],
-	'@wordpress/components': ['wp', 'components'],
-	'@wordpress/block-editor': ['wp', 'blockEditor'],
-	'@wordpress/blocks': ['wp', 'blocks'],
-	'@wordpress/compose': ['wp', 'compose'],
-	'@wordpress/keycodes': ['wp', 'keycodes'],
-};
+/**
+ * External Dependencies
+ */
+const path = require('path');
 
-const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+/**
+ * WordPress Dependencies
+ */
+const defaultConfig = require('@wordpress/scripts/config/webpack.config.js');
+
+// console.dir({ defaultConfig: defaultConfig }, { depth: null });
 
 module.exports = {
+	...defaultConfig,
 	entry: {
-		admin_block: './src/gutenberg/js/admin_block.dev.js',
-		frontend_block: './src/gutenberg/js/frontend_block.dev.js',
-		frontend_block_legacy: './src/gutenberg/js/frontend_block_legacy.dev.js',
+		index: path.resolve(process.cwd(), 'src', 'index.js'),
+		frontend: path.resolve(process.cwd(), 'src', 'frontend.js'), // Path to your frontend.js file
 	},
 	output: {
-		path: __dirname,
-		filename: './src/gutenberg/js/[name].js',
-	},
-	optimization: {
-		minimizer: [
-			new TerserPlugin({
-				terserOptions: {
-					output: {
-						comments: false, // This removes all comments, including the license comments
-					},
-				},
-				extractComments: false,
-			}),
-		],
-	},
-	plugins: [
-		new MiniCSSExtractPlugin({
-			filename: './src/css/[name].css',
-			chunkFilename: './src/css/[id].css',
-		})
-	],
-	externals,
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						presets: [
-							'@babel/preset-env',
-							[
-								'@babel/preset-react',
-								{
-									pragma: 'wp.element.createElement',
-									pragmaFrag: 'wp.element.Fragment',
-								},
-							],
-						],
-						plugins: [['@babel/plugin-proposal-class-properties']],
-					},
-				},
-			},
-			{
-				test: /\.s[ac]ss$/i,
-				use: [
-					{
-						// Creates `style` nodes from JS strings
-						loader: MiniCSSExtractPlugin.loader,
-					},
-					// Translates CSS into CommonJS
-					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							postcssOptions: {
-								plugins: [require('autoprefixer')],
-							},
-						},
-					},
-					// Compiles Sass to CSS
-					'sass-loader',
-				],
-			},
-		],
+		...defaultConfig.output,
+		filename: '[name].build.js', // This will output index.build.js and frontend.build.js
 	},
 };
