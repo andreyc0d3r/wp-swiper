@@ -119,7 +119,7 @@ function save(props) {
 		data_atts.autoplay = true;
 
 		// Delay logic
-		if (delay) {
+		if (delay !== null && delay !== undefined) {
 			data_atts.autoplay = {
 				delay: Number(delay),
 			};
