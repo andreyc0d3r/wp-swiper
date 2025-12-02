@@ -137,6 +137,7 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 = 1.3.7 =
 * Extended support for Free Mode
 * added loopAdditionalSlides
+* remove jquery dependency
 
 = 1.3.6 =
 * Allow zero to be set for delay
