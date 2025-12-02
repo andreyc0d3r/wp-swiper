@@ -9,7 +9,8 @@ import classnames from 'classnames/dedupe';
 import { useBlockProps, InnerBlocks, useInnerBlocksProps } from '@wordpress/block-editor';
 
 /**
- * Block Save Class.
+ * Block Save Class - Version 1 (with old sticky attribute)
+ * This is for backward compatibility with blocks created before Free Mode parameters were added
  */
 function save(props) {
 	let { className } = props.attributes;
@@ -29,8 +30,6 @@ function save(props) {
 		delay,
 		speed,
 		loop,
-		loopAddBlankSlides,
-		loopAdditionalSlides,
 		effect,
 		navigation,
 		pagination,
@@ -44,13 +43,7 @@ function save(props) {
 		thumbsSlidesPerView,
 		autoHeight,
 		freeMode,
-		freeModeMinimumVelocity,
-		freeModeMomentum,
-		freeModeMomentumBounce,
-		freeModeMomentumBounceRatio,
-		freeModeMomentumRatio,
-		freeModeMomentumVelocityRatio,
-		freeModeSticky,
+		sticky,
 		debug,
 		direction,
 		tabsData,
@@ -107,12 +100,6 @@ function save(props) {
 		data_atts.mousewheel = {
 			releaseOnEdges: releaseOnEdges === 'true',
 		};
-	}
-
-	// Loop logic
-	if (loop) {
-		data_atts.loopAddBlankSlides = loopAddBlankSlides;
-		data_atts.loopAdditionalSlides = loopAdditionalSlides;
 	}
 
 	// Effect logic
@@ -181,18 +168,16 @@ function save(props) {
 	}
 	// -- END -- Autoplay logic
 
-	// Freemode
+	// Freemode (old version with sticky attribute)
 	if (freeMode) {
 		data_atts.freeMode = {
 			enabled: true,
-			minimumVelocity: freeModeMinimumVelocity,
-			momentum: freeModeMomentum,
-			momentumBounce: freeModeMomentumBounce,
-			momentumBounceRatio: freeModeMomentumBounceRatio,
-			momentumRatio: freeModeMomentumRatio,
-			momentumVelocityRatio: freeModeMomentumVelocityRatio,
-			sticky: freeModeSticky,
 		};
+
+		// If both freeMode and sticky are true, enable sticky mode
+		if (sticky) {
+			data_atts.freeMode.sticky = true;
+		}
 	}
 
 	// Pagination
@@ -231,7 +216,7 @@ function save(props) {
 			)
 		);
 	});
-	
+
 	const swiperContainerClassName = classnames('swiper-container', 'swiper', {
 		'swiper-overflow-visible': overflowVisible,
 	});
@@ -356,3 +341,4 @@ function save(props) {
 }
 
 export default save;
+

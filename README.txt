@@ -75,7 +75,23 @@ add_filter('wpswiper_frontend_js_register_args', function($args) {
 
 This filter provides flexibility in how the `frontend-js` script is loaded, allowing for optimizations tailored to your specific site needs.
 
---- 
+---
+
+## API Parameters
+
+### Loop Parameters
+
+#### `loopAddBlankSlides`
+- **Type:** boolean
+- **Default:** true
+- **Description:** Automatically adds blank slides if you use Grid or slidesPerGroup and the total amount of slides is not even to slidesPerGroup or to grid.rows
+
+#### `loopAdditionalSlides`
+- **Type:** number
+- **Default:** 0
+- **Description:** Allows to increase amount of looped slides
+
+---
 
 !!! IMPORTANT !!!
 
@@ -118,6 +134,10 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.3.7 =
+* Extended support for Free Mode
+* added loopAdditionalSlides
+
 = 1.3.6 =
 * Allow zero to be set for delay
 

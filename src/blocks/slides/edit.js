@@ -52,9 +52,14 @@ function BlockEdit(props) {
 		autoplay,
 		disableOnInteraction,
 		pauseOnMouseEnter,
+		reverseDirection,
+		stopOnLastSlide,
+		waitForTransition,
 		delay,
 		speed,
 		loop,
+		loopAddBlankSlides,
+		loopAdditionalSlides,
 		effect,
 		slidesPerView,
 		slidesPerGroup,
@@ -70,7 +75,13 @@ function BlockEdit(props) {
 		clickable_pagination,
 		breakpoints,
 		freeMode,
-		sticky,
+		freeModeMinimumVelocity,
+		freeModeMomentum,
+		freeModeMomentumBounce,
+		freeModeMomentumBounceRatio,
+		freeModeMomentumRatio,
+		freeModeMomentumVelocityRatio,
+		freeModeSticky,
 		thumbs,
 		thumbsSlidesPerView,
 		thumbsSpaceBetween,
@@ -454,6 +465,31 @@ function BlockEdit(props) {
 						}}
 					/>
 				</PanelRow>
+				{loop && (
+					<>
+						<PanelRow>
+							<ToggleControl
+								label="Loop Add Blank Slides"
+								help="Automatically adds blank slides if you use Grid or slidesPerGroup and the total amount of slides is not even to slidesPerGroup or to grid.rows"
+								checked={loopAddBlankSlides}
+								onChange={() => {
+									setAttributes({ loopAddBlankSlides: !loopAddBlankSlides });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<TextControl
+								label="Loop Additional Slides"
+								help="Allows to increase amount of looped slides"
+								value={loopAdditionalSlides}
+								type="number"
+								onChange={(option) => {
+									setAttributes({ loopAdditionalSlides: parseInt(option) });
+								}}
+							/>
+						</PanelRow>
+					</>
+				)}
 				<PanelRow>
 					<TextControl
 						label="Speed"
@@ -779,6 +815,36 @@ function BlockEdit(props) {
 						}}
 					/>
 				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Reverse Direction"
+						checked={reverseDirection}
+						help="Enables autoplay in reverse direction"
+						onChange={() => {
+							setAttributes({ reverseDirection: !reverseDirection });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Stop On Last Slide"
+						checked={stopOnLastSlide}
+						help="Enable this parameter and autoplay will be stopped when it reaches last slide (has no effect in loop mode)"
+						onChange={() => {
+							setAttributes({ stopOnLastSlide: !stopOnLastSlide });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label="Wait For Transition"
+						checked={waitForTransition}
+						help="When enabled autoplay will wait for wrapper transition to continue. Can be disabled in case of using Virtual Translate when your slider may not have transition"
+						onChange={() => {
+							setAttributes({ waitForTransition: !waitForTransition });
+						}}
+					/>
+				</PanelRow>
 			</PanelBody>
 			<PanelBody
 				title={__('Advanced Features')}
@@ -803,31 +869,6 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Free Mode"
-						help="Enables free mode functionality"
-						checked={freeMode}
-						onChange={() => {
-							if (freeMode) {
-								setAttributes({ sticky: false });
-							}
-							setAttributes({ freeMode: !freeMode });
-						}}
-					/>
-				</PanelRow>
-				<PanelRow>
-					<ToggleControl
-						label="Sticky"
-						help="Set to enabled to enable snap to slides positions in free mode"
-						disabled={!freeMode}
-						checked={sticky}
-						onChange={() => {
-							setAttributes({ sticky: !sticky });
-						}}
-					/>
-				</PanelRow>
-				<Seperator />
-				<PanelRow>
-					<ToggleControl
 						label="Mouse Wheel"
 						help="Enables navigation through slides using mouse wheel."
 						checked={mousewheel}
@@ -846,6 +887,111 @@ function BlockEdit(props) {
 						}}
 					/>
 				</PanelRow>
+			</PanelBody>
+			<PanelBody
+				title={__('Free Mode')}
+				icon="controls-play"
+				initialOpen={false}
+			>
+				<PanelRow>
+					<ToggleControl
+						label="Enable Free Mode"
+						help="Whether the free mode is enabled. Slide will continue moving for a while after you release it."
+						checked={freeMode}
+						onChange={() => {
+							if (freeMode) {
+								setAttributes({ freeModeSticky: false });
+							}
+							setAttributes({ freeMode: !freeMode });
+						}}
+					/>
+				</PanelRow>
+				{freeMode && (
+					<>
+						<PanelRow>
+							<RangeControl
+								label="Minimum Velocity"
+								help="Minimum touchmove-velocity required to trigger free mode momentum"
+								value={freeModeMinimumVelocity}
+								onChange={(value) => {
+									setAttributes({ freeModeMinimumVelocity: value });
+								}}
+								min={0}
+								max={1}
+								step={0.01}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Momentum"
+								help="If enabled, then slide will keep moving for a while after you release it"
+								checked={freeModeMomentum}
+								onChange={() => {
+									setAttributes({ freeModeMomentum: !freeModeMomentum });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Momentum Bounce"
+								help="Set to false if you want to disable momentum bounce in free mode"
+								checked={freeModeMomentumBounce}
+								onChange={() => {
+									setAttributes({ freeModeMomentumBounce: !freeModeMomentumBounce });
+								}}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<RangeControl
+								label="Momentum Bounce Ratio"
+								help="Higher value produces larger momentum bounce effect"
+								value={freeModeMomentumBounceRatio}
+								onChange={(value) => {
+									setAttributes({ freeModeMomentumBounceRatio: value });
+								}}
+								min={0}
+								max={10}
+								step={0.1}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<RangeControl
+								label="Momentum Ratio"
+								help="Higher value produces larger momentum distance after you release slider"
+								value={freeModeMomentumRatio}
+								onChange={(value) => {
+									setAttributes({ freeModeMomentumRatio: value });
+								}}
+								min={0}
+								max={10}
+								step={0.1}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<RangeControl
+								label="Momentum Velocity Ratio"
+								help="Higher value produces larger momentum velocity after you release slider"
+								value={freeModeMomentumVelocityRatio}
+								onChange={(value) => {
+									setAttributes({ freeModeMomentumVelocityRatio: value });
+								}}
+								min={0}
+								max={10}
+								step={0.1}
+							/>
+						</PanelRow>
+						<PanelRow>
+							<ToggleControl
+								label="Sticky"
+								help="Set to enabled to enable snap to slides positions in free mode"
+								checked={freeModeSticky}
+								onChange={() => {
+									setAttributes({ freeModeSticky: !freeModeSticky });
+								}}
+							/>
+						</PanelRow>
+					</>
+				)}
 			</PanelBody>
 			<PanelBody
 				title={__('Responsive Breakpoints')}

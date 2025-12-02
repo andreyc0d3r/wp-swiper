@@ -51,6 +51,34 @@ settings.attributes = {
 		type: 'boolean',
 		default: false,
 	},
+	freeModeMinimumVelocity: {
+		type: 'number',
+		default: 0.02,
+	},
+	freeModeMomentum: {
+		type: 'boolean',
+		default: true,
+	},
+	freeModeMomentumBounce: {
+		type: 'boolean',
+		default: true,
+	},
+	freeModeMomentumBounceRatio: {
+		type: 'number',
+		default: 1,
+	},
+	freeModeMomentumRatio: {
+		type: 'number',
+		default: 1,
+	},
+	freeModeMomentumVelocityRatio: {
+		type: 'number',
+		default: 1,
+	},
+	freeModeSticky: {
+		type: 'boolean',
+		default: false,
+	},
 	mousewheel: {
 		type: 'boolean',
 		default: false,
