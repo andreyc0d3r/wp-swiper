@@ -177,7 +177,7 @@ class WP_Swiper_Block_Registration {
                 wp_enqueue_script(
                     $this->block_name . '-frontend',
                     DAWPS_PLUGIN_URL . 'build/frontend.build.js',
-                    array('jquery'),
+                    array(),
                     DAWPS_PLUGIN_VERSION
                 );
             }
