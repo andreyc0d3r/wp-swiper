@@ -134,6 +134,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.3.10 =
+* Performance boost: Removed the high-frequency setTranslate event (keep only the essential ones). Related to autoSlideWidth
+
 = 1.3.9 =
 * Added support for autoSlideWidth 
 * Read more: [WP-Swiper 1.3.9 released — new feature Auto Slide Width for perfectly sized slides](https://digitalapps.com/wp-swiper-1-3-9-released-new-feature-auto-slide-width-for-perfectly-sized-slides/)
