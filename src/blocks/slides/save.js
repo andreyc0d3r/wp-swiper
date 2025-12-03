@@ -22,6 +22,7 @@ function save(props) {
 		slidesPerGroupAuto,
 		slidesPerGroupSkip,
 		spaceBetween,
+		autoSlideWidth,
 		txtColor,
 		autoplay,
 		disableOnInteraction,
@@ -104,6 +105,11 @@ function save(props) {
 		spaceBetween,
 		releaseOnEdges,
 	};
+
+	// Auto Slide Width logic - only include if true
+	if (autoSlideWidth) {
+		data_atts.autoSlideWidth = true;
+	}
 
 	// Mousewheel and release on edges logic
 	if (mousewheel && releaseOnEdges) {

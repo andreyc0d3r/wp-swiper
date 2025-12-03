@@ -66,6 +66,7 @@ function BlockEdit(props) {
 		slidesPerGroupAuto,
 		slidesPerGroupSkip,
 		spaceBetween,
+		autoSlideWidth,
 		navigation,
 		pagination,
 		containerWidth,
@@ -600,6 +601,16 @@ function BlockEdit(props) {
 					value={spaceBetween}
 					onChange={(option) => {
 						setAttributes({ spaceBetween: parseInt(option) });
+					}}
+				/>
+			</PanelRow>
+			<PanelRow>
+				<ToggleControl
+					label="Auto Slide Width"
+					help="Makes each slide size itself based on its content instead of being evenly distributed. Useful for logos, badges, small cards, or any element that should not be stretched."
+					checked={autoSlideWidth}
+					onChange={() => {
+						setAttributes({ autoSlideWidth: !autoSlideWidth });
 					}}
 				/>
 			</PanelRow>

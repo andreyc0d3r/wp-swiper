@@ -137,6 +137,10 @@
       "type": "number",
       "default": 0
     },
+    "autoSlideWidth": {
+      "type": "boolean",
+      "default": false
+    },
     "slidesOffsetBefore": {
       "type": "number",
       "default": 0

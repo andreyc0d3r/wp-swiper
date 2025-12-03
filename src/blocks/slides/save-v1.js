@@ -27,6 +27,9 @@ function save(props) {
 		autoplay,
 		disableOnInteraction,
 		pauseOnMouseEnter,
+		reverseDirection,
+		stopOnLastSlide,
+		waitForTransition,
 		delay,
 		speed,
 		loop,
@@ -341,4 +344,3 @@ function save(props) {
 }
 
 export default save;
-

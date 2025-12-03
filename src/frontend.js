@@ -124,6 +124,45 @@ var wp_swiper = new (function () {
 				}
 			}
 
+			// Auto Slide Width logic - attach lifecycle events to override Swiper's width calculations
+			if (options.autoSlideWidth) {
+				// Width fix function that sets each slide to auto width
+				const fixWidths = (swiper) => {
+					swiper.slides.forEach((slide) => {
+						slide.style.width = 'auto';
+					});
+				};
+
+				// Helper to wrap event handlers while preserving existing handlers
+				const wrapHandler = (existingHandler) => {
+					return function (swiper) {
+						if (existingHandler) {
+							existingHandler.call(this, swiper);
+						}
+						fixWidths(swiper);
+					};
+				};
+
+				// Merge with existing 'on' handlers if any (e.g., vertical direction)
+				const existingOn = options.on || {};
+				options.on = {
+					...existingOn,
+					init: wrapHandler(existingOn.init),
+					update: wrapHandler(existingOn.update),
+					setTranslate: wrapHandler(existingOn.setTranslate),
+					slideChange: wrapHandler(existingOn.slideChange),
+					slideChangeTransitionStart: wrapHandler(existingOn.slideChangeTransitionStart),
+					slideChangeTransitionEnd: wrapHandler(existingOn.slideChangeTransitionEnd),
+					transitionStart: wrapHandler(existingOn.transitionStart),
+					transitionEnd: wrapHandler(existingOn.transitionEnd),
+					resize: wrapHandler(existingOn.resize),
+					beforeResize: wrapHandler(existingOn.beforeResize),
+				};
+
+				// Remove autoSlideWidth from options as it's not a native Swiper property
+				delete options.autoSlideWidth;
+			}
+
 			window.wpSwiper[i] = new Swiper(swiper_container, options);
 		}
 	};

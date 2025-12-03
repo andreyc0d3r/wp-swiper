@@ -122,11 +122,20 @@ The following needs investigation to determine completeness:
 
 ## Known Issues
 
-### To Be Documented
-- No known issues documented yet
-- Need to test and identify any bugs
-- Check browser console for errors
-- Review user feedback if available
+### Recently Resolved ✅
+- **ReferenceError: reverseDirection is not defined** (Fixed Dec 3, 2025)
+  - Cause: Missing variable destructuring in slides save.js
+  - Impact: Block editor errors when using autoplay options
+  - Resolution: Added `reverseDirection`, `stopOnLastSlide`, `waitForTransition` to destructuring
+  
+- **Block Validation Error for Slide Overlay** (Fixed Dec 3, 2025)
+  - Cause: Style attribute always rendered even when empty
+  - Impact: Block validation mismatch between save and stored content
+  - Resolution: Conditional style rendering only when overlayColor exists
+
+### Current Issues
+- No known issues at this time
+- Continue monitoring editor and frontend functionality
 
 ## Evolution of Project Decisions
 
@@ -295,7 +304,13 @@ The following needs investigation to determine completeness:
 
 ## Change Log
 
-### Version 1.3.0 (Current)
+### Version 1.3.7 (Current)
+- **Bug Fixes (Dec 3, 2025):**
+  - Fixed ReferenceError for `reverseDirection`, `stopOnLastSlide`, `waitForTransition` in slides block
+  - Fixed block validation error for slide overlay color conditional rendering
+  - Improved attribute handling in save functions
+  
+### Version 1.3.0
 - Modern block registration system
 - Improved asset loading
 - Enhanced error handling
