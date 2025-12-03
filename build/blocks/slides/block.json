@@ -69,6 +69,18 @@
       "type": "boolean",
       "default": false
     },
+    "reverseDirection": {
+      "type": "boolean",
+      "default": false
+    },
+    "stopOnLastSlide": {
+      "type": "boolean",
+      "default": false
+    },
+    "waitForTransition": {
+      "type": "boolean",
+      "default": true
+    },
     "navigation": {
       "type": "boolean",
       "default": true

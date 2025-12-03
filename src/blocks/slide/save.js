@@ -44,7 +44,7 @@ export default function save(props) {
 		? {
 				backgroundColor: `rgba(${overlayColor.rgb.r}, ${overlayColor.rgb.g}, ${overlayColor.rgb.b}, ${overlayColor.rgb.a})`,
 		  }
-		: {};
+		: null;
 
 	const blockProps = useBlockProps.save();
 
@@ -58,7 +58,7 @@ export default function save(props) {
 		>
 			<div
 				className="wp-swiper__overlay-color"
-				style={style_overlay_color}
+				{...(style_overlay_color && { style: style_overlay_color })}
 			></div>
 			<div
 				className="wp-swiper__slide-content"

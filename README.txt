@@ -134,6 +134,13 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.3.9 =
+* Added support for autoSlideWidth 
+* Read more: [WP-Swiper 1.3.9 released — new feature Auto Slide Width for perfectly sized slides](https://digitalapps.com/wp-swiper-1-3-9-released-new-feature-auto-slide-width-for-perfectly-sized-slides/)
+
+= 1.3.8 =
+* Autoplay bug fix
+
 = 1.3.7 =
 * Extended support for Free Mode
 * added loopAdditionalSlides
