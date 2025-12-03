@@ -3,7 +3,7 @@ Contributors: digitalapps
 Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 3.0.1
-Tested up to: 6.5
+Tested up to: 6.9
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
