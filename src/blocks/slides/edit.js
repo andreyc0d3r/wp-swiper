@@ -34,6 +34,351 @@ const INNER_BLOCKS_TEMPLATE = [
 ];
 
 /**
+ * Helper function to build the Swiper config object from attributes
+ * This mirrors the logic in save.js to generate the same data-swiper JSON
+ */
+function buildSwiperConfig(attributes) {
+	const {
+		slidesPerView,
+		slidesPerGroup,
+		slidesPerGroupAuto,
+		slidesPerGroupSkip,
+		spaceBetween,
+		autoSlideWidth,
+		autoplay,
+		disableOnInteraction,
+		pauseOnMouseEnter,
+		reverseDirection,
+		stopOnLastSlide,
+		waitForTransition,
+		delay,
+		speed,
+		loop,
+		loopAddBlankSlides,
+		loopAdditionalSlides,
+		effect,
+		navigation,
+		mousewheel,
+		releaseOnEdges,
+		pagination_type,
+		clickable_pagination,
+		breakpoints,
+		freeMode,
+		freeModeMinimumVelocity,
+		freeModeMomentum,
+		freeModeMomentumBounce,
+		freeModeMomentumBounceRatio,
+		freeModeMomentumRatio,
+		freeModeMomentumVelocityRatio,
+		freeModeSticky,
+		autoHeight,
+		direction,
+		slidesOffsetBefore,
+		slidesOffsetAfter,
+	} = attributes;
+
+	let data_atts = {
+		slidesPerView,
+		slidesPerGroup,
+		slidesPerGroupAuto,
+		slidesPerGroupSkip,
+		navigation,
+		pagination: {},
+		delay: delay,
+		speed: speed,
+		loop: loop,
+		direction,
+		slidesOffsetBefore,
+		slidesOffsetAfter,
+		autoHeight,
+		spaceBetween,
+		releaseOnEdges,
+	};
+
+	// Auto Slide Width logic
+	if (autoSlideWidth) {
+		data_atts.autoSlideWidth = true;
+	}
+
+	// Mousewheel and release on edges logic
+	if (mousewheel && releaseOnEdges) {
+		data_atts.mousewheel = {
+			releaseOnEdges: releaseOnEdges === 'true',
+		};
+	}
+
+	// Loop logic
+	if (loop) {
+		data_atts.loopAddBlankSlides = loopAddBlankSlides;
+		data_atts.loopAdditionalSlides = loopAdditionalSlides;
+	}
+
+	// Effect logic
+	if (effect) {
+		data_atts.effect = effect;
+		if (effect === 'fade') {
+			data_atts.fadeEffect = {
+				crossFade: true,
+			};
+		}
+	}
+
+	// Autoplay logic
+	if (autoplay) {
+		data_atts.autoplay = true;
+		if (delay !== null && delay !== undefined) {
+			data_atts.autoplay = {
+				delay: Number(delay),
+			};
+		}
+		if (disableOnInteraction) {
+			if (!data_atts.autoplay || data_atts.autoplay === true) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.disableOnInteraction = true;
+		}
+		if (pauseOnMouseEnter) {
+			if (!data_atts.autoplay || data_atts.autoplay === true) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.pauseOnMouseEnter = true;
+		}
+		if (reverseDirection) {
+			if (!data_atts.autoplay || data_atts.autoplay === true) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.reverseDirection = true;
+		}
+		if (stopOnLastSlide) {
+			if (!data_atts.autoplay || data_atts.autoplay === true) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.stopOnLastSlide = true;
+		}
+		if (waitForTransition !== undefined && waitForTransition !== null) {
+			if (!data_atts.autoplay || data_atts.autoplay === true) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.waitForTransition = waitForTransition;
+		}
+	}
+
+	// Freemode
+	if (freeMode) {
+		data_atts.freeMode = {
+			enabled: true,
+			minimumVelocity: freeModeMinimumVelocity,
+			momentum: freeModeMomentum,
+			momentumBounce: freeModeMomentumBounce,
+			momentumBounceRatio: freeModeMomentumBounceRatio,
+			momentumRatio: freeModeMomentumRatio,
+			momentumVelocityRatio: freeModeMomentumVelocityRatio,
+			sticky: freeModeSticky,
+		};
+	}
+
+	// Pagination
+	data_atts.pagination.type = pagination_type !== 'bullets' ? pagination_type : 'bullets';
+	if (clickable_pagination) {
+		data_atts.pagination.clickable = clickable_pagination ? true : '';
+	}
+
+	if (typeof breakpoints !== 'undefined' && breakpoints !== '') {
+		data_atts.breakpoints = breakpoints;
+	}
+
+	return data_atts;
+}
+
+/**
+ * Swiper Config Editor Component
+ * Displays editable JSON config for the slider
+ */
+function SwiperConfigEditor({ attributes, setAttributes }) {
+	const [jsonValue, setJsonValue] = useState('');
+	const [isValid, setIsValid] = useState(true);
+	const [hasChanges, setHasChanges] = useState(false);
+
+	// Build the current config from attributes
+	const currentConfig = buildSwiperConfig(attributes);
+	const currentConfigJson = JSON.stringify(currentConfig, null, 2);
+
+	// Update local state when attributes change (but only if user hasn't made changes)
+	useEffect(() => {
+		if (!hasChanges) {
+			setJsonValue(currentConfigJson);
+		}
+	}, [currentConfigJson, hasChanges]);
+
+	// Initialize on mount
+	useEffect(() => {
+		setJsonValue(currentConfigJson);
+	}, []);
+
+	const handleJsonChange = (value) => {
+		setJsonValue(value);
+		setHasChanges(true);
+
+		// Validate JSON
+		try {
+			JSON.parse(value);
+			setIsValid(true);
+		} catch (e) {
+			setIsValid(false);
+		}
+	};
+
+	const handleSave = () => {
+		if (!isValid) return;
+
+		try {
+			const parsed = JSON.parse(jsonValue);
+
+			// Map JSON config back to block attributes
+			const newAttributes = {};
+
+			if (parsed.slidesPerView !== undefined) newAttributes.slidesPerView = parsed.slidesPerView;
+			if (parsed.slidesPerGroup !== undefined) newAttributes.slidesPerGroup = parsed.slidesPerGroup;
+			if (parsed.slidesPerGroupAuto !== undefined) newAttributes.slidesPerGroupAuto = parsed.slidesPerGroupAuto;
+			if (parsed.slidesPerGroupSkip !== undefined) newAttributes.slidesPerGroupSkip = parsed.slidesPerGroupSkip;
+			if (parsed.spaceBetween !== undefined) newAttributes.spaceBetween = parsed.spaceBetween;
+			if (parsed.autoSlideWidth !== undefined) newAttributes.autoSlideWidth = parsed.autoSlideWidth;
+			if (parsed.navigation !== undefined) newAttributes.navigation = parsed.navigation;
+			if (parsed.delay !== undefined) newAttributes.delay = parsed.delay;
+			if (parsed.speed !== undefined) newAttributes.speed = parsed.speed;
+			if (parsed.loop !== undefined) newAttributes.loop = parsed.loop;
+			if (parsed.direction !== undefined) newAttributes.direction = parsed.direction;
+			if (parsed.slidesOffsetBefore !== undefined) newAttributes.slidesOffsetBefore = parsed.slidesOffsetBefore;
+			if (parsed.slidesOffsetAfter !== undefined) newAttributes.slidesOffsetAfter = parsed.slidesOffsetAfter;
+			if (parsed.autoHeight !== undefined) newAttributes.autoHeight = parsed.autoHeight;
+			if (parsed.releaseOnEdges !== undefined) newAttributes.releaseOnEdges = parsed.releaseOnEdges;
+			if (parsed.effect !== undefined) newAttributes.effect = parsed.effect;
+			if (parsed.loopAddBlankSlides !== undefined) newAttributes.loopAddBlankSlides = parsed.loopAddBlankSlides;
+			if (parsed.loopAdditionalSlides !== undefined) newAttributes.loopAdditionalSlides = parsed.loopAdditionalSlides;
+
+			// Handle autoplay object
+			if (parsed.autoplay !== undefined) {
+				if (parsed.autoplay === true || typeof parsed.autoplay === 'object') {
+					newAttributes.autoplay = true;
+					if (typeof parsed.autoplay === 'object') {
+						if (parsed.autoplay.delay !== undefined) newAttributes.delay = parsed.autoplay.delay;
+						if (parsed.autoplay.disableOnInteraction !== undefined) newAttributes.disableOnInteraction = parsed.autoplay.disableOnInteraction;
+						if (parsed.autoplay.pauseOnMouseEnter !== undefined) newAttributes.pauseOnMouseEnter = parsed.autoplay.pauseOnMouseEnter;
+						if (parsed.autoplay.reverseDirection !== undefined) newAttributes.reverseDirection = parsed.autoplay.reverseDirection;
+						if (parsed.autoplay.stopOnLastSlide !== undefined) newAttributes.stopOnLastSlide = parsed.autoplay.stopOnLastSlide;
+						if (parsed.autoplay.waitForTransition !== undefined) newAttributes.waitForTransition = parsed.autoplay.waitForTransition;
+					}
+				} else {
+					newAttributes.autoplay = false;
+				}
+			}
+
+			// Handle freeMode object
+			if (parsed.freeMode !== undefined) {
+				if (typeof parsed.freeMode === 'object' && parsed.freeMode.enabled) {
+					newAttributes.freeMode = true;
+					if (parsed.freeMode.minimumVelocity !== undefined) newAttributes.freeModeMinimumVelocity = parsed.freeMode.minimumVelocity;
+					if (parsed.freeMode.momentum !== undefined) newAttributes.freeModeMomentum = parsed.freeMode.momentum;
+					if (parsed.freeMode.momentumBounce !== undefined) newAttributes.freeModeMomentumBounce = parsed.freeMode.momentumBounce;
+					if (parsed.freeMode.momentumBounceRatio !== undefined) newAttributes.freeModeMomentumBounceRatio = parsed.freeMode.momentumBounceRatio;
+					if (parsed.freeMode.momentumRatio !== undefined) newAttributes.freeModeMomentumRatio = parsed.freeMode.momentumRatio;
+					if (parsed.freeMode.momentumVelocityRatio !== undefined) newAttributes.freeModeMomentumVelocityRatio = parsed.freeMode.momentumVelocityRatio;
+					if (parsed.freeMode.sticky !== undefined) newAttributes.freeModeSticky = parsed.freeMode.sticky;
+				} else {
+					newAttributes.freeMode = false;
+				}
+			}
+
+			// Handle pagination object
+			if (parsed.pagination !== undefined) {
+				if (parsed.pagination.type !== undefined) newAttributes.pagination_type = parsed.pagination.type;
+				if (parsed.pagination.clickable !== undefined) newAttributes.clickable_pagination = parsed.pagination.clickable;
+			}
+
+			// Handle breakpoints
+			if (parsed.breakpoints !== undefined) newAttributes.breakpoints = parsed.breakpoints;
+
+			// Handle mousewheel
+			if (parsed.mousewheel !== undefined) {
+				newAttributes.mousewheel = true;
+				if (typeof parsed.mousewheel === 'object' && parsed.mousewheel.releaseOnEdges !== undefined) {
+					newAttributes.releaseOnEdges = parsed.mousewheel.releaseOnEdges ? 'true' : 'false';
+				}
+			}
+
+			setAttributes(newAttributes);
+			setHasChanges(false);
+		} catch (e) {
+			console.error('Failed to parse JSON config:', e);
+		}
+	};
+
+	const handleReset = () => {
+		setJsonValue(currentConfigJson);
+		setHasChanges(false);
+		setIsValid(true);
+	};
+
+	const helperTextStyle = {
+		marginTop: '8px',
+		fontSize: '12px',
+		fontStyle: 'normal',
+		color: 'rgb(117, 117, 117)',
+		marginBottom: '12px',
+	};
+
+	return (
+		<>
+			<BaseControl
+				label={__('Swiper Configuration (JSON)')}
+				help={!isValid ? __('Invalid JSON format. Please fix the syntax errors.') : ''}
+			>
+				<textarea
+					value={jsonValue}
+					onChange={(e) => handleJsonChange(e.target.value)}
+					rows={15}
+					style={{
+						width: '100%',
+						fontFamily: 'monospace',
+						fontSize: '11px',
+						padding: '8px',
+						border: `1px solid ${isValid ? '#8c8f94' : '#cc1818'}`,
+						borderRadius: '4px',
+						backgroundColor: isValid ? '#fff' : '#fff5f5',
+						resize: 'vertical',
+					}}
+				/>
+			</BaseControl>
+
+			<PanelRow>
+				<Button
+					variant="primary"
+					onClick={handleSave}
+					disabled={!isValid || !hasChanges}
+					style={{ marginRight: '8px' }}
+				>
+					{__('Apply Changes')}
+				</Button>
+				<Button
+					variant="secondary"
+					onClick={handleReset}
+					disabled={!hasChanges}
+				>
+					{__('Reset')}
+				</Button>
+			</PanelRow>
+
+			<p style={helperTextStyle}>
+				{__('This JSON object represents the Swiper initialization configuration. You can edit properties directly here and click "Apply Changes" to update the slider settings. This is useful for advanced customizations or copying configurations between sliders.')}
+			</p>
+			<p style={helperTextStyle}>
+				<strong>{__('Tip:')}</strong> {__('Changes made here will update the corresponding settings in the sidebar panels. Some nested properties (like autoplay options) will be extracted to their respective settings.')}
+			</p>
+		</>
+	);
+}
+
+/**
  * Block Edit Class.
  */
 function BlockEdit(props) {
@@ -1113,6 +1458,8 @@ function BlockEdit(props) {
 						the slugs in ascending order (e.g., slide-1, slide-2, etc.), ensuring that each tab properly corresponds to its respective slide.
 					</p>
 				</PanelRow>
+
+				<SwiperConfigEditor attributes={attributes} setAttributes={setAttributes} />
 			</PanelBody>
 			</InspectorControls>
 			<div
