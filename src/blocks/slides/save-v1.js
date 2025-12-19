@@ -81,7 +81,7 @@ function save(props) {
 	};
 
 	let data_atts = {
-		slidesPerView,
+		slidesPerView: slidesPerView === 'auto' ? 'auto' : parseInt(slidesPerView, 10),
 		slidesPerGroup,
 		slidesPerGroupAuto,
 		slidesPerGroupSkip,

@@ -35,6 +35,11 @@ var wp_swiper = new (function () {
 
 			options = swiper_config;
 
+			// Convert slidesPerView to integer if it's not 'auto'
+			if (options.slidesPerView && options.slidesPerView !== 'auto') {
+				options.slidesPerView = parseInt(options.slidesPerView, 10);
+			}
+
 			if (options.navigation) {
 				options.navigation = {
 					nextEl: `.wp-swiper--${i} .swiper-button-next`,
