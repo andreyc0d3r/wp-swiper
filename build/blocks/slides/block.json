@@ -1,4 +1,5 @@
 {
+  "apiVersion": 3,
   "name": "da/wp-swiper-slides",
   "category": "media",
   "supports": {
