@@ -1464,7 +1464,7 @@ function BlockEdit(props) {
 			</InspectorControls>
 			<div
 				{...blockProps}
-				className={className}
+				className={classnames(blockProps.className, className)}
 				data-tab-active={tabActive}
 			>
 				<div
@@ -1538,8 +1538,11 @@ function BlockEdit(props) {
 			</div>
 			<style>
 				{`
-						[data-block="${props.clientId}"] .wp-swiper__slides .wp-swiper__slide-content .block-editor-inner-blocks .block-editor-block-list__layout [data-tab="${tabActive ?? 'slide-1'}"] {
-							display: block;
+						[data-block="${props.clientId}"] [data-tab] {
+							display: none;
+						}
+						[data-block="${props.clientId}"] [data-tab="${tabActive ?? 'slide-1'}"] {
+							display: block !important;
 						}
 						`}
 			</style>

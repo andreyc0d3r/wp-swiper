@@ -16,7 +16,7 @@ import BlockAlignmentMatrixControl from '../../components/block-alignment-matrix
 
 import { PanelRow, PanelBody, BaseControl, Button, FocalPointPicker } from '@wordpress/components';
 
-import { InnerBlocks, BlockControls, InspectorControls, MediaUploadCheck, MediaUpload } from '@wordpress/block-editor';
+import { InnerBlocks, BlockControls, InspectorControls, MediaUploadCheck, MediaUpload, useBlockProps } from '@wordpress/block-editor';
 
 import { getPositionClassName } from '../../utils/shared';
 
@@ -61,11 +61,16 @@ function edit(props) {
 
 	let { className = '' } = props;
 
-	const { slideImg, thumbImg, overlayColor, contentVHalign } = attributes;
+	const { slideImg, thumbImg, overlayColor, contentVHalign, slug } = attributes;
 
 	className = classnames(className, 'wp-swiper__slide');
 	className = classnames(className, { 'has-image': isEmpty(slideImg) });
 	className = classnames(className, getPositionClassName(contentVHalign));
+
+	const blockProps = useBlockProps({
+		className: className,
+		'data-tab': slug,
+	});
 
 	/* Example function to render the CSS styles based on Focal Point Picker value */
 	const style = {
@@ -195,7 +200,7 @@ function edit(props) {
 				/>
 			</BlockControls>
 
-			<div className={className}>
+			<div {...blockProps}>
 				{slideImg && (
 					<div
 						className="wp-swiper__slide-overlay wp-swiper__slide-overlay--image"
