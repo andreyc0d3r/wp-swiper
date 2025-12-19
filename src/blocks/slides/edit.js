@@ -13,7 +13,7 @@ import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 
 import { createBlock } from '@wordpress/blocks';
-import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl, __experimentalAlignmentMatrixControl as AlignmentMatrixControl } from '@wordpress/components';
+import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl, __experimentalAlignmentMatrixControl as AlignmentMatrixControl, DropZone } from '@wordpress/components';
 
 import { useBlockProps, InspectorControls, InnerBlocks, MediaUploadCheck, MediaUpload, store as blockEditorStore } from '@wordpress/block-editor';
 
@@ -32,6 +32,24 @@ import { deepClone } from '../../utils/shared';
 const INNER_BLOCKS_TEMPLATE = [
 	['da/wp-swiper-slide', { slug: 'slide-1' }]
 ];
+
+/**
+ * Helper function to upload a file to the media library
+ * @param {File} file - The file to upload
+ * @returns {Promise} - Resolves with the media object
+ */
+async function uploadMediaFile(file) {
+	const formData = new FormData();
+	formData.append('file', file);
+
+	const response = await wp.apiFetch({
+		path: '/wp/v2/media',
+		method: 'POST',
+		body: formData,
+	});
+
+	return response;
+}
 
 /**
  * Helper function to build the Swiper config object from attributes
@@ -501,6 +519,68 @@ function BlockEdit(props) {
 	}, [child_blocks]);
 
 	const [alignment, setAlignment] = useState('bottom center');
+	const [isDraggingOver, setIsDraggingOver] = useState(false);
+	const [isUploading, setIsUploading] = useState(false);
+
+	/**
+	 * Handle files dropped onto the swiper block
+	 * Creates new slides for each image dropped
+	 */
+	const handleFilesDropped = async (files) => {
+		if (!files || files.length === 0) return;
+
+		// Filter only image files
+		const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+		if (imageFiles.length === 0) return;
+
+		setIsUploading(true);
+		setIsDraggingOver(false);
+
+		try {
+			// Upload all files and create slides
+			for (let i = 0; i < imageFiles.length; i++) {
+				const file = imageFiles[i];
+
+				// Upload the file to media library
+				const media = await uploadMediaFile(file);
+
+				// Get the image URL
+				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
+				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
+
+				// Create new slide with the image
+				const newDataLength = tabsData.length + 1;
+				const newBlock = createBlock('da/wp-swiper-slide', {
+					slug: `slide-${newDataLength}`,
+					slideImg: imgUrl,
+					slideImgId: media.id,
+					thumbImg: thumbUrl,
+				});
+
+				// Update tabsData
+				const newTabsData = [...tabsData, {
+					clientId: newBlock.clientId,
+					slug: `slide-${newDataLength}`,
+					slideImg: imgUrl,
+					thumbImg: thumbUrl,
+				}];
+
+				// Add the block to inner blocks
+				let innerBlocks = getBlocks(clientId);
+				innerBlocks = [...innerBlocks, newBlock];
+
+				replaceInnerBlocks(clientId, innerBlocks, false);
+				setAttributes({
+					tabsData: newTabsData,
+					tabActive: `slide-${newDataLength}`,
+				});
+			}
+		} catch (error) {
+			console.error('Error uploading images:', error);
+		} finally {
+			setIsUploading(false);
+		}
+	};
 
 	// Function to check if two arrays are equal without considering the order of elements
 	const areArraysEqualWithoutOrder = (arr1, arr2) => {
@@ -1533,6 +1613,33 @@ function BlockEdit(props) {
 						templateLock={false}
 						allowedBlocks={['da/wp-swiper-slide']}
 					/>
+				</div>
+
+				{/* Drop Zone for dragging images */}
+				<div
+					className={classnames('wp-swiper__drop-zone-wrapper', {
+						'is-dragging-over': isDraggingOver,
+						'is-uploading': isUploading,
+					})}
+				>
+					<DropZone
+						onFilesDrop={handleFilesDropped}
+						onDragEnter={() => setIsDraggingOver(true)}
+						onDragLeave={() => setIsDraggingOver(false)}
+					/>
+					<div className="wp-swiper__drop-zone-content">
+						{isUploading ? (
+							<>
+								<span className="dashicons dashicons-update wp-swiper__drop-zone-spinner"></span>
+								<p>{__('Uploading images...', '@@text_domain')}</p>
+							</>
+						) : (
+							<>
+								<span className="dashicons dashicons-images-alt2"></span>
+								<p>{__('Drop images here to create slides', '@@text_domain')}</p>
+							</>
+						)}
+					</div>
 				</div>
 				</div>
 			</div>

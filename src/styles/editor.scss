@@ -271,3 +271,72 @@ div[data-type="da/wp-swiper-slides"] {
 }
 
 /* </remove button> */
+
+/* Drop Zone Styles */
+.wp-swiper__drop-zone-wrapper {
+    position: relative;
+    margin-top: 16px;
+    padding: 24px;
+    border: 2px dashed #c3c4c7;
+    border-radius: 4px;
+    background-color: #f6f7f7;
+    transition: all 0.2s ease;
+
+    &.is-dragging-over {
+        border-color: #007cba;
+        background-color: #e7f5fe;
+
+        .wp-swiper__drop-zone-content {
+            color: #007cba;
+        }
+    }
+
+    &.is-uploading {
+        border-color: #757575;
+        background-color: #f0f0f0;
+        pointer-events: none;
+    }
+
+    .components-drop-zone {
+        border-radius: 4px;
+    }
+
+    .components-drop-zone__content {
+        display: none;
+    }
+}
+
+.wp-swiper__drop-zone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #757575;
+    pointer-events: none;
+
+    .dashicons {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        margin-bottom: 8px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+    }
+}
+
+.wp-swiper__drop-zone-spinner {
+    animation: wp-swiper-spin 1s linear infinite;
+}
+
+@keyframes wp-swiper-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
