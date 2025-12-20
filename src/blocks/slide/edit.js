@@ -7,109 +7,122 @@ import classnames from 'classnames/dedupe';
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-
-import { Fragment } from '@wordpress/element';
-
-import { withSelect } from '@wordpress/data';
-
-import BlockAlignmentMatrixControl from '../../components/block-alignment-matrix-control';
-
+import { useCallback, useMemo } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
 import { PanelRow, PanelBody, BaseControl, Button, FocalPointPicker } from '@wordpress/components';
+import { InnerBlocks, BlockControls, InspectorControls, MediaUploadCheck, MediaUpload, useBlockProps, store as blockEditorStore } from '@wordpress/block-editor';
 
-import { InnerBlocks, BlockControls, InspectorControls, MediaUploadCheck, MediaUpload, useBlockProps } from '@wordpress/block-editor';
-
+/**
+ * Internal dependencies
+ */
+import BlockAlignmentMatrixControl from '../../components/block-alignment-matrix-control';
 import { getPositionClassName } from '../../utils/shared';
 
 /**
- * Block Edit Class.
+ * Block Edit Component.
+ *
+ * @param {Object} props Block props.
+ * @return {JSX.Element} Block edit component.
  */
-function edit(props) {
-	const onSelectImage = (media) => {
-		let img_url = media.sizes.full.url;
-		props.setAttributes({ slideImg: img_url });
-	};
+export default function Edit({ attributes, setAttributes, clientId }) {
+	const { slideImg, thumbImg, overlayColor, contentVHalign, slug, focalPoint } = attributes;
 
-	const onSelectThumb = (media) => {
-		let img_url = media.sizes.full.url;
-		props.setAttributes({ thumbImg: img_url });
-	};
+	// Use modern useSelect hook instead of withSelect HOC
+	const hasChildBlocks = useSelect(
+		(select) => select(blockEditorStore).getBlockOrder(clientId).length > 0,
+		[clientId]
+	);
 
-	const isEmpty = (val) => {
-		return true;
-	};
+	// Memoized event handlers
+	const onSelectImage = useCallback(
+		(media) => {
+			const imgUrl = media?.sizes?.full?.url || media?.url;
+			if (imgUrl) {
+				setAttributes({ slideImg: imgUrl });
+			}
+		},
+		[setAttributes]
+	);
 
-	const getOverlayImage = (style) => {
-		if (props.attributes.slideImg) {
-			style.backgroundImage = `url(${props.attributes.slideImg})`;
-		}
-		return style;
-	};
+	const onSelectThumb = useCallback(
+		(media) => {
+			const imgUrl = media?.sizes?.full?.url || media?.url;
+			if (imgUrl) {
+				setAttributes({ thumbImg: imgUrl });
+			}
+		},
+		[setAttributes]
+	);
 
-	const getOverlayColor = (style) => {
-		if (props.attributes.overlayColor) {
-			let { overlayColor } = props.attributes;
-			style.backgroundColor = `rgba(${overlayColor.rgb.r}, ${overlayColor.rgb.g}, ${overlayColor.rgb.b}, ${overlayColor.rgb.a})`;
-		}
-		return style;
-	};
+	const setFocalPoint = useCallback(
+		(value) => {
+			setAttributes({ focalPoint: value });
+		},
+		[setAttributes]
+	);
 
-	const setFocalPoint = (value) => {
-		props.setAttributes({ focalPoint: value });
-	};
+	const clearSlideImage = useCallback(() => {
+		setAttributes({ slideImg: undefined });
+	}, [setAttributes]);
 
-	const { setAttributes, hasChildBlocks, attributes } = props;
+	const clearThumbImage = useCallback(() => {
+		setAttributes({ thumbImg: undefined });
+	}, [setAttributes]);
 
-	let { className = '' } = props;
-
-	const { slideImg, thumbImg, overlayColor, contentVHalign, slug } = attributes;
-
-	className = classnames(className, 'wp-swiper__slide');
-	className = classnames(className, { 'has-image': isEmpty(slideImg) });
-	className = classnames(className, getPositionClassName(contentVHalign));
+	// Compute className
+	const computedClassName = useMemo(() => {
+		let className = classnames('wp-swiper__slide', {
+			'has-image': Boolean(slideImg),
+		});
+		className = classnames(className, getPositionClassName(contentVHalign));
+		return className;
+	}, [slideImg, contentVHalign]);
 
 	const blockProps = useBlockProps({
-		className: className,
+		className: computedClassName,
 		'data-tab': slug,
 	});
 
-	/* Example function to render the CSS styles based on Focal Point Picker value */
-	const style = {
-		backgroundImage: `url(${slideImg})`,
-		backgroundPosition: `${props.attributes.focalPoint.x * 100}% ${props.attributes.focalPoint.y * 100}%`,
-	};
+	// Compute styles
+	const styleOverlayImage = useMemo(() => {
+		if (!slideImg) {
+			return {};
+		}
+		return {
+			backgroundImage: `url(${slideImg})`,
+			backgroundPosition: `${(focalPoint?.x ?? 0.5) * 100}% ${(focalPoint?.y ?? 0.5) * 100}%`,
+		};
+	}, [slideImg, focalPoint]);
 
-	let style_overlay_image = {};
-	let style_overlay_color = {};
-
-	style_overlay_image = getOverlayImage(style_overlay_image);
-	style_overlay_color = getOverlayColor(style_overlay_color);
-
-	style_overlay_image = {
-		...style_overlay_image,
-		...style,
-	};
+	const styleOverlayColor = useMemo(() => {
+		if (!overlayColor?.rgb) {
+			return {};
+		}
+		const { r, g, b, a } = overlayColor.rgb;
+		return {
+			backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`,
+		};
+	}, [overlayColor]);
 
 	return (
-		<Fragment>
+		<>
 			<InspectorControls>
-				<PanelBody title={__('Image Settings')}>
-					<BaseControl label={__('Slide Image', '@@text_domain')}>
+				<PanelBody title={__('Image Settings', 'wp-swiper')}>
+					<BaseControl label={__('Slide Image', 'wp-swiper')}>
 						<PanelRow>
 							<MediaUploadCheck>
 								<MediaUpload
 									value={slideImg}
 									onSelect={onSelectImage}
-									type="image"
-									render={(open) => {
-										return (
-											<Button
-												onClick={open.open}
-												className="button"
-											>
-												Select slide image
-											</Button>
-										);
-									}}
+									allowedTypes={['image']}
+									render={({ open }) => (
+										<Button
+											onClick={open}
+											variant="secondary"
+										>
+											{__('Select slide image', 'wp-swiper')}
+										</Button>
+									)}
 								/>
 							</MediaUploadCheck>
 						</PanelRow>
@@ -117,46 +130,41 @@ function edit(props) {
 							<PanelRow>
 								<FocalPointPicker
 									url={slideImg}
-									value={props.attributes.focalPoint}
+									value={focalPoint}
 									onDragStart={setFocalPoint}
 									onDrag={setFocalPoint}
 									onChange={setFocalPoint}
 								/>
 							</PanelRow>
 						)}
-						{/* <PanelRow>{get_image(slideImg)}</PanelRow> */}
 						{slideImg && (
 							<PanelRow>
 								<Button
-									isSecondary
+									variant="secondary"
 									size="small"
 									className="block-library-cover__reset-button"
-									onClick={() =>
-										setAttributes({
-											slideImg: undefined,
-										})
-									}
+									onClick={clearSlideImage}
 								>
-									{__('Clear Media')}
+									{__('Clear Media', 'wp-swiper')}
 								</Button>
 							</PanelRow>
 						)}
+					</BaseControl>
+					<BaseControl label={__('Thumbnail Image', 'wp-swiper')}>
 						<PanelRow>
 							<MediaUploadCheck>
 								<MediaUpload
 									value={thumbImg}
 									onSelect={onSelectThumb}
-									type="image"
-									render={(open) => {
-										return (
-											<Button
-												onClick={open.open}
-												className="button"
-											>
-												Select thumb image
-											</Button>
-										);
-									}}
+									allowedTypes={['image']}
+									render={({ open }) => (
+										<Button
+											onClick={open}
+											variant="secondary"
+										>
+											{__('Select thumb image', 'wp-swiper')}
+										</Button>
+									)}
 								/>
 							</MediaUploadCheck>
 						</PanelRow>
@@ -164,7 +172,7 @@ function edit(props) {
 							<PanelRow>
 								<FocalPointPicker
 									url={thumbImg}
-									value={props.attributes.focalPoint}
+									value={focalPoint}
 									onDragStart={setFocalPoint}
 									onDrag={setFocalPoint}
 									onChange={setFocalPoint}
@@ -174,16 +182,12 @@ function edit(props) {
 						{thumbImg && (
 							<PanelRow>
 								<Button
-									isSecondary
+									variant="secondary"
 									size="small"
 									className="block-library-cover__reset-button"
-									onClick={() =>
-										setAttributes({
-											thumbImg: undefined,
-										})
-									}
+									onClick={clearThumbImage}
 								>
-									{__('Clear Media')}
+									{__('Clear Media', 'wp-swiper')}
 								</Button>
 							</PanelRow>
 						)}
@@ -192,11 +196,9 @@ function edit(props) {
 			</InspectorControls>
 			<BlockControls group="block">
 				<BlockAlignmentMatrixControl
-					label={__('Change content position')}
+					label={__('Change content position', 'wp-swiper')}
 					value={contentVHalign}
-					onChange={(value) => {
-						setAttributes({ contentVHalign: value });
-					}}
+					onChange={(value) => setAttributes({ contentVHalign: value })}
 				/>
 			</BlockControls>
 
@@ -204,26 +206,19 @@ function edit(props) {
 				{slideImg && (
 					<div
 						className="wp-swiper__slide-overlay wp-swiper__slide-overlay--image"
-						style={style_overlay_image}
+						style={styleOverlayImage}
 					/>
 				)}
-				{overlayColor.rgb.a > 0 && (
+				{overlayColor?.rgb?.a > 0 && (
 					<div
 						className="wp-swiper__slide-overlay wp-swiper__slide-overlay--color"
-						style={style_overlay_color}
+						style={styleOverlayColor}
 					/>
 				)}
-				<InnerBlocks renderAppender={hasChildBlocks ? undefined : () => <InnerBlocks.ButtonBlockAppender />} />
+				<InnerBlocks
+					renderAppender={hasChildBlocks ? undefined : InnerBlocks.ButtonBlockAppender}
+				/>
 			</div>
-		</Fragment>
+		</>
 	);
 }
-
-export default withSelect((select, props) => {
-	const { clientId } = props;
-	const { getBlockOrder } = select('core/block-editor');
-
-	return {
-		hasChildBlocks: getBlockOrder(clientId).length > 0,
-	};
-})(edit);
