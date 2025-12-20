@@ -178,7 +178,11 @@
     },
     "autoHeight": {
       "type": "boolean",
-      "default": true
+      "default": false
+    },
+    "sliderHeight": {
+      "type": "string",
+      "default": "500px"
     },
     "freeMode": {
       "type": "boolean",

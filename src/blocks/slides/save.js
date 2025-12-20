@@ -47,6 +47,7 @@ function save(props) {
 		thumbsSpaceBetween,
 		thumbsSlidesPerView,
 		autoHeight,
+		sliderHeight,
 		freeMode,
 		freeModeMinimumVelocity,
 		freeModeMomentum,
@@ -245,6 +246,12 @@ function save(props) {
 		'swiper-overflow-visible': overflowVisible,
 	});
 
+	// Build container style with height if provided
+	const swiperContainerStyle = {};
+	if (sliderHeight && !autoHeight) {
+		swiperContainerStyle.height = sliderHeight;
+	}
+
 	return (
 		<div {...blockProps}>
 			{getOverlayImg(overlayImg, style_overlay_image)}
@@ -254,6 +261,7 @@ function save(props) {
 			>
 				<div
 					className={swiperContainerClassName}
+					style={Object.keys(swiperContainerStyle).length > 0 ? swiperContainerStyle : undefined}
 					{...(debug ? { 'data-debug': true } : {})} // Only include data-debug if debug is true
 					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}

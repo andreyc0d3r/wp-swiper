@@ -13,7 +13,7 @@ import { __ } from '@wordpress/i18n';
 import { Fragment } from '@wordpress/element';
 
 import { createBlock } from '@wordpress/blocks';
-import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl, __experimentalAlignmentMatrixControl as AlignmentMatrixControl, DropZone } from '@wordpress/components';
+import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl, __experimentalAlignmentMatrixControl as AlignmentMatrixControl, __experimentalUnitControl as UnitControl, DropZone } from '@wordpress/components';
 
 import { useBlockProps, InspectorControls, InnerBlocks, MediaUploadCheck, MediaUpload, store as blockEditorStore } from '@wordpress/block-editor';
 
@@ -450,6 +450,7 @@ function BlockEdit(props) {
 		thumbsSlidesPerView,
 		thumbsSpaceBetween,
 		autoHeight,
+		sliderHeight,
 		debug,
 		direction,
 		previousIcon,
@@ -873,6 +874,34 @@ function BlockEdit(props) {
 				icon="controls-play"
 				initialOpen={true}
 			>
+				{!autoHeight && (
+					<PanelRow>
+						<UnitControl
+							label="Slider Height"
+							help="Set a fixed height for the slider"
+							value={sliderHeight}
+							onChange={(value) => {
+								setAttributes({ sliderHeight: value });
+							}}
+							units={[
+								{ value: 'px', label: 'px', default: 500 },
+								{ value: 'vh', label: 'vh', default: 50 },
+								{ value: '%', label: '%', default: 100 },
+								{ value: 'em', label: 'em', default: 20 },
+							]}
+						/>
+					</PanelRow>
+				)}
+				<PanelRow>
+					<ToggleControl
+						label="Auto Height"
+						help="Slider wrapper will adapt its height to the height of the currently active slide"
+						checked={autoHeight}
+						onChange={() => {
+							setAttributes({ autoHeight: !autoHeight });
+						}}
+					/>
+				</PanelRow>
 				<PanelRow>
 					<ToggleControl
 						label="Auto Play"
@@ -1196,17 +1225,6 @@ function BlockEdit(props) {
 						</PanelRow>
 					</>
 				)}
-				<Seperator />
-				<PanelRow>
-					<ToggleControl
-						label="Auto Height"
-						help="Set to true and slider wrapper will adapt its height to the height of the currently active slide"
-						checked={autoHeight}
-						onChange={() => {
-							setAttributes({ autoHeight: !autoHeight });
-						}}
-					/>
-				</PanelRow>
 			</PanelBody>
 			<PanelBody
 				title={__('Direction Settings')}

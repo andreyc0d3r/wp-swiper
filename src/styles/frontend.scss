@@ -194,6 +194,24 @@
 		overflow: visible !important;
 	}
 
+	// Fixed height slider styles
+	.swiper-container[style*="height"],
+	.swiper[style*="height"] {
+		.swiper-wrapper {
+			height: 100%;
+		}
+
+		.swiper-slide {
+			height: 100%;
+		}
+
+		.wp-swiper__slide-content {
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
 	&__overlay-color {
 		position: absolute;
 		left: 0;
