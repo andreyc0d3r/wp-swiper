@@ -158,8 +158,10 @@
             border: 1px solid var(--wpswiper-border);
             border-radius: var(--wpswiper-radius);
             min-height: 400px;
-            align-items: center;
-            justify-content: center;
+
+			// removed centering, meeses with the paragrph block
+            // align-items: center;
+            // justify-content: center;
             transition: all var(--wpswiper-transition);
 
             &:hover {

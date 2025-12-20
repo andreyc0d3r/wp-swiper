@@ -1581,17 +1581,24 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 						onDragLeave={() => setIsDraggingOver(false)}
 					/>
 					<div className="wp-swiper__drop-zone-content">
-						{isUploading ? (
-							<>
-								<span className="dashicons dashicons-update wp-swiper__drop-zone-spinner"></span>
-								<p>{__('Uploading images...', 'wp-swiper')}</p>
-							</>
-						) : (
-							<>
-								<span className="dashicons dashicons-images-alt2"></span>
-								<p>{__('Drop images here to create slides', 'wp-swiper')}</p>
-							</>
-						)}
+				{isUploading ? (
+					<>
+						<svg className="wp-swiper__drop-zone-spinner" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" opacity="0.3"/>
+							<path d="M12 2v4c3.31 0 6 2.69 6 6h4c0-5.52-4.48-10-10-10z">
+								<animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+							</path>
+						</svg>
+						<p>{__('Uploading images...', 'wp-swiper')}</p>
+					</>
+				) : (
+					<>
+						<svg width="48" height="48" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+							<path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/>
+						</svg>
+						<p>{__('Drop images here to create slides', 'wp-swiper')}</p>
+					</>
+				)}
 					</div>
 				</div>
 				</div>
@@ -1602,7 +1609,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 							display: none;
 						}
 						[data-block="${clientId}"] [data-tab="${tabActive ?? 'slide-1'}"] {
-							display: block !important;
+							display: flex !important;
 						}
 						`}
 			</style>
