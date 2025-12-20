@@ -258,6 +258,22 @@
 			z-index: 5;
 		}
 	}
+
+	.swiper-button-prev,
+	.swiper-button-next {
+		color: var(--wp-swiper-navigation-color, #000);
+		svg {
+			fill: var(--wp-swiper-navigation-color, #000);
+		}
+	}
+
+	.swiper-pagination-bullet-active {
+		background-color: var(--wp-swiper-pagination-color, #000);
+	}
+
+	.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+		background-color: var(--wp-swiper-pagination-color, #000);
+	}
 }
 
 @media (max-width: 768px) {

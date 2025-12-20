@@ -18,6 +18,7 @@ import {
 	Tooltip,
 	Button,
 	ColorPicker,
+	ColorPalette,
 	RangeControl,
 	TextControl,
 	SelectControl,
@@ -504,6 +505,8 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		slidesOffsetBefore,
 		slidesOffsetAfter,
 		overflowVisible,
+		navigationColor,
+		paginationColor,
 	} = attributes;
 
 	const childBlocks = getBlocks(clientId);
@@ -773,17 +776,64 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 						</PanelRow>
 					)}
 				</PanelBody>
-				<PanelBody
-					title={__('Color Settings', 'wp-swiper')}
-					initialOpen={false}
-				>
-					<BaseControl label={__('Text Color', 'wp-swiper')}>
-						<ColorPicker
-							color={txtColor}
-							onChangeComplete={(color) => setAttributes({ txtColor: color.hex })}
-						/>
-					</BaseControl>
-				</PanelBody>
+			<PanelBody
+				title={__('Color Settings', 'wp-swiper')}
+				initialOpen={false}
+			>
+				<BaseControl label={__('Text Color', 'wp-swiper')}>
+					<ColorPalette
+						value={txtColor}
+						onChange={(color) => setAttributes({ txtColor: color })}
+					/>
+				</BaseControl>
+				{txtColor && (
+					<PanelRow>
+						<Button
+							variant="secondary"
+							size="small"
+							onClick={() => setAttributes({ txtColor: '' })}
+						>
+							{__('Clear Text Color', 'wp-swiper')}
+						</Button>
+					</PanelRow>
+				)}
+				<Seperator />
+				<BaseControl label={__('Navigation Color', 'wp-swiper')}>
+					<ColorPalette
+						value={navigationColor}
+						onChange={(color) => setAttributes({ navigationColor: color })}
+					/>
+				</BaseControl>
+				{navigationColor && (
+					<PanelRow>
+						<Button
+							variant="secondary"
+							size="small"
+							onClick={() => setAttributes({ navigationColor: '' })}
+						>
+							{__('Clear Navigation Color', 'wp-swiper')}
+						</Button>
+					</PanelRow>
+				)}
+				<Seperator />
+				<BaseControl label={__('Pagination Color', 'wp-swiper')}>
+					<ColorPalette
+						value={paginationColor}
+						onChange={(color) => setAttributes({ paginationColor: color })}
+					/>
+				</BaseControl>
+				{paginationColor && (
+					<PanelRow>
+						<Button
+							variant="secondary"
+							size="small"
+							onClick={() => setAttributes({ paginationColor: '' })}
+						>
+							{__('Clear Pagination Color', 'wp-swiper')}
+						</Button>
+					</PanelRow>
+				)}
+			</PanelBody>
 			<PanelBody
 				title={__('Basic Slider Settings', 'wp-swiper')}
 				icon="controls-play"

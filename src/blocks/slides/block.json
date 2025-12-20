@@ -224,6 +224,14 @@
 		"overflowVisible": {
 			"type": "boolean",
 			"default": false
+		},
+		"navigationColor": {
+			"type": "string",
+			"default": ""
+		},
+		"paginationColor": {
+			"type": "string",
+			"default": ""
 		}
 	}
 }

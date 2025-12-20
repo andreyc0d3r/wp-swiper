@@ -64,6 +64,8 @@ function save(props) {
 		slidesOffsetBefore,
 		slidesOffsetAfter,
 		overflowVisible,
+		navigationColor,
+		paginationColor,
 	} = props.attributes;
 
 	className = classnames(className, 'wp-swiper');
@@ -72,8 +74,19 @@ function save(props) {
 		className = classnames(className, `align${align}`);
 	}
 
+	const blockStyle = {};
+
+	if (navigationColor) {
+		blockStyle['--wp-swiper-navigation-color'] = navigationColor;
+	}
+
+	if (paginationColor) {
+		blockStyle['--wp-swiper-pagination-color'] = paginationColor;
+	}
+
 	const blockProps = useBlockProps.save({
 		className: className,
+		style: blockStyle,
 	});
 
 	const innerBlocksProps = useInnerBlocksProps;
