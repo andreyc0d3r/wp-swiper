@@ -1,22 +1,16 @@
 .wp-swiper {
 	position: relative;
-	
+
 	.wp_swiper__button-prev,
 	.wp_swiper__button-next {
-
 		img {
 			width: 45px;
 			height: 45px;
 		}
-			
+
 		&::after {
 			content: none;
 		}
-	}
-
-	> .wp-swiper__wrapper {
-		position: relative;
-		margin-bottom: 10px;
 	}
 
 	&__thumbs {
@@ -67,12 +61,11 @@
 
 		.wp_swiper__button-prev,
 		.wp_swiper__button-next {
-	
 			img {
 				width: 36px;
 				height: 36px;
 			}
-				
+
 			&::after {
 				content: none;
 			}
@@ -194,24 +187,6 @@
 		overflow: visible !important;
 	}
 
-	// Fixed height slider styles
-	.swiper-container[style*="height"],
-	.swiper[style*="height"] {
-		.swiper-wrapper {
-			height: 100%;
-		}
-
-		.swiper-slide {
-			height: 100%;
-		}
-
-		.wp-swiper__slide-content {
-			height: 100%;
-			display: flex;
-			flex-direction: column;
-		}
-	}
-
 	&__overlay-color {
 		position: absolute;
 		left: 0;
@@ -250,12 +225,20 @@
 		// background-size: cover;
 
 		.wp-swiper__slide-content {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			height: 100%;
+
 			position: relative;
 			box-sizing: border-box;
-			width: 100%;
 			margin-left: auto;
 			margin-right: auto;
 			z-index: 5;
+
+			> * {
+				flex: 1;
+			}
 		}
 	}
 

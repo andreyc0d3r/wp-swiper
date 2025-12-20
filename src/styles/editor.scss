@@ -3,8 +3,8 @@
 
 // CSS Variables for consistent theming
 :root {
-    --wpswiper-primary: #3858e9;
-    --wpswiper-primary-hover: #2145d4;
+    --wpswiper-primary: var(--wp-admin-theme-color);
+    --wpswiper-primary-hover: var(--wp-admin-theme-color-darker-10);
     --wpswiper-primary-light: #eef1fd;
     --wpswiper-border: #e0e0e0;
     --wpswiper-border-light: #f0f0f0;
