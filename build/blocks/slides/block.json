@@ -16,9 +16,6 @@
       "type": "string",
       "default": ""
     },
-    "txtColor": {
-      "type": "string"
-    },
     "overlayColor": {
       "type": "object",
       "default": {

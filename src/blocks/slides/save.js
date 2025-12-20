@@ -23,7 +23,6 @@ function save(props) {
 		slidesPerGroupSkip,
 		spaceBetween,
 		autoSlideWidth,
-		txtColor,
 		autoplay,
 		disableOnInteraction,
 		pauseOnMouseEnter,
@@ -95,8 +94,6 @@ function save(props) {
 	if (overlayImgOpacity) {
 		style_overlay_image.opacity = overlayImgOpacity;
 	}
-
-	const style_overlay_wrapper = txtColor ? { color: txtColor } : {};
 
 	let thumbsConfig = {
 		'data-thumbs': {},
@@ -270,7 +267,6 @@ function save(props) {
 			{getOverlayImg(overlayImg, style_overlay_image)}
 			<div
 				className="wp-swiper__wrapper"
-				style={style_overlay_wrapper}
 			>
 				<div
 					className={swiperContainerClassName}

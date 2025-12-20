@@ -9,14 +9,11 @@
 		"align": ["wide", "full"]
 	},
 	"attributes": {
-		"align": {
-			"type": "string",
-			"default": ""
-		},
-		"txtColor": {
-			"type": "string"
-		},
-		"overlayColor": {
+	"align": {
+		"type": "string",
+		"default": ""
+	},
+	"overlayColor": {
 			"type": "object",
 			"default": {
 				"rgb": {

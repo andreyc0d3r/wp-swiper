@@ -455,7 +455,6 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		tabActive,
 		buttonsAlign,
 		tabsData,
-		txtColor,
 		overlayColor,
 		overlayImg,
 		overlayImgOpacity,
@@ -658,8 +657,6 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 	// used for the map function to create numbered tabs
 	let counter = 1;
 
-	const style = txtColor ? { color: txtColor } : {};
-
 	const Seperator = () => {
 		return (
 			<PanelRow>
@@ -738,9 +735,9 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 					)}
 					<Seperator />
 					<BaseControl label={__('Overlay Color', 'wp-swiper')}>
-						<ColorPicker
-							color={overlayColor.hex || overlayColor}
-							onChangeComplete={(color) => {
+						<ColorPalette
+							value={typeof overlayColor === 'object' ? `rgba(${overlayColor.rgb.r}, ${overlayColor.rgb.g}, ${overlayColor.rgb.b}, ${overlayColor.rgb.a})` : overlayColor}
+							onChange={(color) => {
 								setAttributes({ overlayColor: color });
 
 								let iBlocks = block.innerBlocks;
@@ -775,29 +772,11 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 							</Button>
 						</PanelRow>
 					)}
-				</PanelBody>
-			<PanelBody
-				title={__('Color Settings', 'wp-swiper')}
-				initialOpen={false}
-			>
-				<BaseControl label={__('Text Color', 'wp-swiper')}>
-					<ColorPalette
-						value={txtColor}
-						onChange={(color) => setAttributes({ txtColor: color })}
-					/>
-				</BaseControl>
-				{txtColor && (
-					<PanelRow>
-						<Button
-							variant="secondary"
-							size="small"
-							onClick={() => setAttributes({ txtColor: '' })}
-						>
-							{__('Clear Text Color', 'wp-swiper')}
-						</Button>
-					</PanelRow>
-				)}
-				<Seperator />
+			</PanelBody>
+		<PanelBody
+			title={__('Color Settings', 'wp-swiper')}
+			initialOpen={false}
+		>
 				<BaseControl label={__('Navigation Color', 'wp-swiper')}>
 					<ColorPalette
 						value={navigationColor}
@@ -1525,10 +1504,9 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				className={classnames(blockProps.className, className)}
 				data-tab-active={tabActive}
 			>
-				<div
-					className="wb-tabs-buttons-wrapper"
-					style={style}
-				>
+			<div
+				className="wb-tabs-buttons-wrapper"
+			>
 					<div className={classnames('wb-tabs-buttons', `wb-tabs-buttons-align-${buttonsAlign}`)}>
 						{tabsData.map((tabData, i) => {
 							const { slug } = tabData;
