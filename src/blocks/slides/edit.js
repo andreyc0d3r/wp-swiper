@@ -558,6 +558,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 	/**
 	 * Handle files dropped onto the swiper block
 	 * Creates new slides for each image dropped
+	 * If the first slide is empty, it will be replaced with the first dropped image
 	 */
 	const handleFilesDropped = async (files) => {
 		if (!files || files.length === 0) return;
@@ -570,8 +571,55 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		setIsDraggingOver(false);
 
 		try {
-			// Upload all files and create slides
-			for (let i = 0; i < imageFiles.length; i++) {
+			// Check if the first slide is empty (no image set)
+			const firstSlideIsEmpty = tabsData.length === 1 &&
+				!tabsData[0].slideImg &&
+				block?.innerBlocks?.[0] &&
+				!block.innerBlocks[0].attributes.slideImg;
+
+			let startIndex = 0;
+			let newTabsData = [...tabsData];
+			let innerBlocks = getBlocks(clientId);
+
+			// If first slide is empty, replace it with the first image
+			if (firstSlideIsEmpty && imageFiles.length > 0) {
+				const file = imageFiles[0];
+
+				// Upload the first file to media library
+				const media = await uploadMediaFile(file);
+
+				// Get the image URL
+				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
+				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
+
+				// Update the first slide's attributes
+				const firstSlideClientId = block.innerBlocks[0].clientId;
+				updateBlockAttributes(firstSlideClientId, {
+					slideImg: imgUrl,
+					slideImgId: media.id,
+					thumbImg: thumbUrl,
+				});
+
+				// Update tabsData for the first slide
+				newTabsData[0] = {
+					...newTabsData[0],
+					clientId: firstSlideClientId,
+					slideImg: imgUrl,
+					thumbImg: thumbUrl,
+				};
+
+				// Start processing remaining images from index 1
+				startIndex = 1;
+
+				// Set the first slide as active
+				setAttributes({
+					tabsData: newTabsData,
+					tabActive: 'slide-1',
+				});
+			}
+
+			// Process remaining images (or all images if first slide wasn't empty)
+			for (let i = startIndex; i < imageFiles.length; i++) {
 				const file = imageFiles[i];
 
 				// Upload the file to media library
@@ -582,7 +630,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
 
 				// Create new slide with the image
-				const newDataLength = tabsData.length + 1;
+				const newDataLength = newTabsData.length + 1;
 				const newBlock = createBlock('da/wp-swiper-slide', {
 					slug: `slide-${newDataLength}`,
 					slideImg: imgUrl,
@@ -591,7 +639,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				});
 
 				// Update tabsData
-				const newTabsData = [...tabsData, {
+				newTabsData = [...newTabsData, {
 					clientId: newBlock.clientId,
 					slug: `slide-${newDataLength}`,
 					slideImg: imgUrl,
@@ -599,7 +647,6 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				}];
 
 				// Add the block to inner blocks
-				let innerBlocks = getBlocks(clientId);
 				innerBlocks = [...innerBlocks, newBlock];
 
 				replaceInnerBlocks(clientId, innerBlocks, false);

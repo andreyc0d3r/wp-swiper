@@ -235,9 +235,15 @@
 			margin-left: auto;
 			margin-right: auto;
 			z-index: 5;
+		}
 
-			> * {
-				flex: 1;
+		.wp-swiper__slide-content {
+			justify-content: center;
+		}
+
+		&.is-position-bottom-center {
+			.wp-swiper__slide-content {
+				justify-content: flex-end;
 			}
 		}
 	}
