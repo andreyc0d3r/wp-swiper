@@ -578,8 +578,8 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				!block.innerBlocks[0].attributes.slideImg;
 
 			let startIndex = 0;
-			let newTabsData = [...tabsData];
-			let innerBlocks = getBlocks(clientId);
+			let currentTabsData = [...tabsData];
+			let currentInnerBlocks = [...getBlocks(clientId)];
 
 			// If first slide is empty, replace it with the first image
 			if (firstSlideIsEmpty && imageFiles.length > 0) {
@@ -592,30 +592,35 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
 				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
 
-				// Update the first slide's attributes
-				const firstSlideClientId = block.innerBlocks[0].clientId;
-				updateBlockAttributes(firstSlideClientId, {
-					slideImg: imgUrl,
-					slideImgId: media.id,
-					thumbImg: thumbUrl,
-				});
+				// Get the existing first slide's inner blocks (content)
+				const existingFirstSlide = currentInnerBlocks[0];
+
+				// Create a new block with the image, preserving inner blocks (content)
+				const updatedFirstSlide = createBlock(
+					'da/wp-swiper-slide',
+					{
+						...existingFirstSlide.attributes,
+						slug: 'slide-1',
+						slideImg: imgUrl,
+						slideImgId: media.id,
+						thumbImg: thumbUrl,
+					},
+					existingFirstSlide.innerBlocks // Preserve any content blocks inside the slide
+				);
+
+				// Replace the first block in the array
+				currentInnerBlocks[0] = updatedFirstSlide;
 
 				// Update tabsData for the first slide
-				newTabsData[0] = {
-					...newTabsData[0],
-					clientId: firstSlideClientId,
+				currentTabsData[0] = {
+					clientId: updatedFirstSlide.clientId,
+					slug: 'slide-1',
 					slideImg: imgUrl,
 					thumbImg: thumbUrl,
 				};
 
 				// Start processing remaining images from index 1
 				startIndex = 1;
-
-				// Set the first slide as active
-				setAttributes({
-					tabsData: newTabsData,
-					tabActive: 'slide-1',
-				});
 			}
 
 			// Process remaining images (or all images if first slide wasn't empty)
@@ -630,7 +635,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
 
 				// Create new slide with the image
-				const newDataLength = newTabsData.length + 1;
+				const newDataLength = currentTabsData.length + 1;
 				const newBlock = createBlock('da/wp-swiper-slide', {
 					slug: `slide-${newDataLength}`,
 					slideImg: imgUrl,
@@ -639,7 +644,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				});
 
 				// Update tabsData
-				newTabsData = [...newTabsData, {
+				currentTabsData = [...currentTabsData, {
 					clientId: newBlock.clientId,
 					slug: `slide-${newDataLength}`,
 					slideImg: imgUrl,
@@ -647,12 +652,15 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				}];
 
 				// Add the block to inner blocks
-				innerBlocks = [...innerBlocks, newBlock];
+				currentInnerBlocks = [...currentInnerBlocks, newBlock];
+			}
 
-				replaceInnerBlocks(clientId, innerBlocks, false);
+			// Update all inner blocks and attributes at once
+			if (currentInnerBlocks.length > 0) {
+				replaceInnerBlocks(clientId, currentInnerBlocks, false);
 				setAttributes({
-					tabsData: newTabsData,
-					tabActive: `slide-${newDataLength}`,
+					tabsData: currentTabsData,
+					tabActive: startIndex === 1 ? 'slide-1' : `slide-${currentTabsData.length}`,
 				});
 			}
 		} catch (error) {
