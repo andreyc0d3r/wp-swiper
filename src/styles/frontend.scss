@@ -1,18 +1,6 @@
 .wp-swiper {
 	position: relative;
 
-	.wp_swiper__button-prev,
-	.wp_swiper__button-next {
-		img {
-			width: 45px;
-			height: 45px;
-		}
-
-		&::after {
-			content: none;
-		}
-	}
-
 	&__thumbs {
 		overflow: hidden;
 
@@ -211,19 +199,6 @@
 		z-index: 5;
 	}
 	&__slide {
-		// display: flex;
-		// flex-direction: column;
-
-		// position: absolute;
-		// left: 0;
-		// top: 0;
-		// right: 0;
-		// bottom: 0;
-
-		// background-position: center;
-		// background-repeat: no-repeat;
-		// background-size: cover;
-
 		.wp-swiper__slide-content {
 			display: flex;
 			flex-direction: column;
