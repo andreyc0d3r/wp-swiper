@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 3.0.1
 Tested up to: 6.9
-Stable tag: 1.0.0
+Stable tag: 1.13.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,20 @@ Download WP Swiper Gutenberg Block today and take your mobile displays to the ne
 Support my work and fuel my creativity by buying me a virtual coffee on [BuyMeACoffee](https://www.buymeacoffee.com/wpplugins)
 
 New Features and suggestions [Contact Me](https://digitalapps.com/contacts/)
+
+== BETA TESTING ==
+
+We're actively developing new features and improvements for WP Swiper! Beta versions are available for testing, and we'd love your feedback to help make the plugin even better.
+
+**How to participate:**
+1. Download and install the latest beta version
+2. Test the new features in your environment
+3. Report any issues or provide feedback on our GitHub repository
+
+**Report Issues & Feedback:**
+Found a bug or have suggestions? Please submit them here: [https://github.com/andreyc0d3r/wp-swiper/issues](https://github.com/andreyc0d3r/wp-swiper/issues)
+
+Your feedback is invaluable in helping us improve WP Swiper for everyone!
 
 == NEW RELEASE ==
 
@@ -134,6 +148,14 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.4.0-beta.1 =
+* NEW: Drag and drop photos to create slides automatically
+* NEW: Enhanced autoplay controls with additional options
+* NEW: Customizable navigation colors for arrows and buttons
+* NEW: Add overlays to slides with color and opacity controls
+* IMPROVEMENT: Better user experience for slide creation workflow
+* BETA: This is a beta release - please test and provide feedback
+
 = 1.3.10 =
 * Performance boost: Removed the high-frequency setTranslate event (keep only the essential ones). Related to autoSlideWidth
 

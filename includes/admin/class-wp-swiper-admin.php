@@ -123,6 +123,68 @@ class WP_Swiper_Admin {
         wp_enqueue_script( 'wpswiper-block-editor' );
 
     }
+
+    /**
+     * Display admin notice for beta version announcement
+     *
+     * @since    1.4.0
+     */
+    public function display_beta_announcement_notice() {
+        // Only show to users who can manage options
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // Check if notice has been dismissed
+        $dismissed = get_user_meta( get_current_user_id(), 'wpswiper_beta_140_dismissed', true );
+        if ( $dismissed ) {
+            return;
+        }
+
+        ?>
+        <div class="notice notice-info is-dismissible wpswiper-beta-notice" data-notice="wpswiper_beta_140">
+            <p>
+                <strong><?php esc_html_e( 'WP Swiper 1.4.0-beta.1 is now available for testing!', 'wpswiper' ); ?></strong>
+            </p>
+            <p>
+                <?php 
+                printf(
+                    /* translators: %s: URL to plugin page */
+                    esc_html__( 'Check out the new features including drag and drop photos. %s.', 'wpswiper' ),
+                    '<a href="https://downloads.wordpress.org/plugin/wp-swiper.1.4.0-beta.1.zip" target="_blank">' . esc_html__( 'Download now', 'wpswiper' ) . '</a>'
+                );
+                ?>
+            </p>
+        </div>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $(document).on('click', '.wpswiper-beta-notice .notice-dismiss', function() {
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        data: {
+                            action: 'wpswiper_dismiss_beta_notice',
+                            nonce: '<?php echo wp_create_nonce( 'wpswiper_dismiss_beta_notice' ); ?>'
+                        }
+                    });
+                });
+            });
+        </script>
+        <?php
+    }
+
+    /**
+     * Handle AJAX request to dismiss beta notice
+     *
+     * @since    1.4.0
+     */
+    public function dismiss_beta_notice() {
+        check_ajax_referer( 'wpswiper_dismiss_beta_notice', 'nonce' );
+        
+        update_user_meta( get_current_user_id(), 'wpswiper_beta_140_dismissed', true );
+        
+        wp_send_json_success();
+    }
     
 
 }
