@@ -136,7 +136,7 @@ class WP_Swiper_Admin {
         }
 
         // Check if notice has been dismissed
-        $dismissed = get_user_meta( get_current_user_id(), 'wpswiper_beta_140_dismissed', true );
+        $dismissed = get_user_meta( get_current_user_id(), 'wpswiper_beta_140_dismissed_v2', true );
         if ( $dismissed ) {
             return;
         }
@@ -150,8 +150,18 @@ class WP_Swiper_Admin {
                 <?php 
                 printf(
                     /* translators: %s: URL to plugin page */
-                    esc_html__( 'Check out the new features including drag and drop photos. %s.', 'wpswiper' ),
-                    '<a href="https://downloads.wordpress.org/plugin/wp-swiper.1.4.0-beta.1.zip" target="_blank">' . esc_html__( 'Download now', 'wpswiper' ) . '</a>'
+                    esc_html__( 'Check out the new features including drag and drop photos, enhanced autoplay controls, customizable navigation colors, and more. More details on the %s.', 'wpswiper' ),
+                    '<a href="https://wordpress.org/plugins/wp-swiper/" target="_blank">' . esc_html__( 'plugin page', 'wpswiper' ) . '</a>'
+                );
+                ?>
+            </p>
+            <p>
+                <?php 
+                printf(
+                    /* translators: 1: Download link, 2: GitHub issues link */
+                    esc_html__( '%1$s | %2$s', 'wpswiper' ),
+                    '<a href="https://github.com/andreyc0d3r/wp-swiper/releases" target="_blank"><strong>' . esc_html__( 'Download Beta', 'wpswiper' ) . '</strong></a>',
+                    '<a href="https://github.com/andreyc0d3r/wp-swiper/issues" target="_blank">' . esc_html__( 'Report Issues & Feedback', 'wpswiper' ) . '</a>'
                 );
                 ?>
             </p>
@@ -180,9 +190,9 @@ class WP_Swiper_Admin {
      */
     public function dismiss_beta_notice() {
         check_ajax_referer( 'wpswiper_dismiss_beta_notice', 'nonce' );
-        
-        update_user_meta( get_current_user_id(), 'wpswiper_beta_140_dismissed', true );
-        
+
+        update_user_meta( get_current_user_id(), 'wpswiper_beta_140_dismissed_v2', true );
+
         wp_send_json_success();
     }
     
