@@ -160,7 +160,7 @@ class WP_Swiper_Admin {
                 printf(
                     /* translators: 1: Download link, 2: GitHub issues link */
                     esc_html__( '%1$s | %2$s', 'wpswiper' ),
-                    '<a href="https://github.com/andreyc0d3r/wp-swiper/releases" target="_blank"><strong>' . esc_html__( 'Download Beta', 'wpswiper' ) . '</strong></a>',
+                    '<a href="https://downloads.wordpress.org/plugin/wp-swiper.1.4.0-beta.1.zip" target="_blank"><strong>' . esc_html__( 'Download Beta', 'wpswiper' ) . '</strong></a>',
                     '<a href="https://github.com/andreyc0d3r/wp-swiper/issues" target="_blank">' . esc_html__( 'Report Issues & Feedback', 'wpswiper' ) . '</a>'
                 );
                 ?>
