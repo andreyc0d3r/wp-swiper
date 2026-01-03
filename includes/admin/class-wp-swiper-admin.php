@@ -150,7 +150,7 @@ class WP_Swiper_Admin {
                 <?php 
                 printf(
                     /* translators: %s: URL to plugin page */
-                    esc_html__( 'Check out the new features including drag and drop photos, enhanced autoplay controls, customizable navigation colors, and more. More details on the %s.', 'wpswiper' ),
+                    esc_html__( 'New version is coming soon! Check out the new features including drag and drop photos, customizable svg colors, and more. More details on the %s.', 'wpswiper' ),
                     '<a href="https://wordpress.org/plugins/wp-swiper/" target="_blank">' . esc_html__( 'plugin page', 'wpswiper' ) . '</a>'
                 );
                 ?>
