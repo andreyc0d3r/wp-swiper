@@ -148,7 +148,7 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
-= 1.4.0-beta.1 =
+= 1.4.0 =
 * **Swiper Bundle Update**: Upgraded Swiper to version **v12.0.2** for improved performance and features
 * **UI Modernization**: Complete overhaul of block editor interface with modern design patterns
   - CSS custom properties for consistent theming
