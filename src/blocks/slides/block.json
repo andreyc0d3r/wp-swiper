@@ -9,14 +9,11 @@
 		"align": ["wide", "full"]
 	},
 	"attributes": {
-		"align": {
-			"type": "string",
-			"default": ""
-		},
-		"txtColor": {
-			"type": "string"
-		},
-		"overlayColor": {
+	"align": {
+		"type": "string",
+		"default": ""
+	},
+	"overlayColor": {
 			"type": "object",
 			"default": {
 				"rgb": {
@@ -177,6 +174,10 @@
 			"type": "boolean",
 			"default": true
 		},
+		"sliderHeight": {
+			"type": "string",
+			"default": "500px"
+		},
 		"freeMode": {
 			"type": "boolean",
 			"default": false
@@ -220,6 +221,14 @@
 		"overflowVisible": {
 			"type": "boolean",
 			"default": false
+		},
+		"navigationColor": {
+			"type": "string",
+			"default": ""
+		},
+		"paginationColor": {
+			"type": "string",
+			"default": ""
 		}
 	}
 }

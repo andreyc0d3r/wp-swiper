@@ -82,13 +82,14 @@ class WP_Swiper_Admin {
         $this->options = get_option( $this->plugin_name . '-options' );
     } // set_options()
 
-    function enqueue_admin_styles() {
+    public function enqueue_block_editor_styles() {
         wp_enqueue_style(
 			$this->plugin_name . '-block-editor-style',
 			DAWPS_PLUGIN_URL . "css/admin_block.css",
 			array(),
 			'1.0.0'
 		);
+        wp_enqueue_style( 'dashicons' );
     }
 
     public function register_gutenberg_block() {

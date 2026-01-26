@@ -44,9 +44,7 @@ class WP_Swiper
 		$plugin_admin = new WP_Swiper_Admin($this->get_plugin_name(), $this->get_version());
 
 		$this->loader->add_action('enqueue_block_editor_assets', $plugin_admin, 'register_gutenberg_block');
-		$this->loader->add_action('enqueue_block_editor_assets', $plugin_admin, 'enqueue_admin_styles');
-		$this->loader->add_action('admin_notices', $plugin_admin, 'display_beta_announcement_notice');
-		$this->loader->add_action('wp_ajax_wpswiper_dismiss_beta_notice', $plugin_admin, 'dismiss_beta_notice');
+		$this->loader->add_action('enqueue_block_editor_assets', $plugin_admin, 'enqueue_block_editor_styles');
 	}
 
 	private function define_public_hooks()

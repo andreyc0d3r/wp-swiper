@@ -6,32 +6,65 @@ import classnames from 'classnames/dedupe';
 /**
  * WordPress dependencies
  */
-import React, { useEffect, useState } from 'react';
-
+import { useEffect, useState, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-
-import { Fragment } from '@wordpress/element';
-
 import { createBlock } from '@wordpress/blocks';
-import { PanelBody, PanelRow, BaseControl, ToggleControl, Tooltip, Button, ColorPicker, RangeControl, TextControl, SelectControl, TextareaControl, __experimentalAlignmentMatrixControl as AlignmentMatrixControl } from '@wordpress/components';
-
-import { useBlockProps, InspectorControls, InnerBlocks, MediaUploadCheck, MediaUpload, store as blockEditorStore } from '@wordpress/block-editor';
-
-import { compose } from '@wordpress/compose';
-import { withSelect, withDispatch } from '@wordpress/data';
+import { useSelect, useDispatch } from '@wordpress/data';
+import {
+	PanelBody,
+	PanelRow,
+	BaseControl,
+	ToggleControl,
+	Tooltip,
+	Button,
+	ColorPicker,
+	ColorPalette,
+	RangeControl,
+	TextControl,
+	SelectControl,
+	TextareaControl,
+	__experimentalAlignmentMatrixControl as AlignmentMatrixControl,
+	__experimentalUnitControl as UnitControl,
+	DropZone,
+} from '@wordpress/components';
+import {
+	useBlockProps,
+	InspectorControls,
+	InnerBlocks,
+	MediaUploadCheck,
+	MediaUpload,
+	store as blockEditorStore,
+} from '@wordpress/block-editor';
 
 /**
  * Internal dependencies
  */
 import RemoveButton from '../../components/remove-button';
-import getUniqueSlug from '../../utils/get-unique-slug';
-import get_image from '../../utils/get-image';
+import getImage from '../../utils/get-image';
 import { deepClone } from '../../utils/shared';
 
 // Template for default inner blocks (one slide by default)
 const INNER_BLOCKS_TEMPLATE = [
 	['da/wp-swiper-slide', { slug: 'slide-1' }]
 ];
+
+/**
+ * Helper function to upload a file to the media library
+ * @param {File} file - The file to upload
+ * @returns {Promise} - Resolves with the media object
+ */
+async function uploadMediaFile(file) {
+	const formData = new FormData();
+	formData.append('file', file);
+
+	const response = await wp.apiFetch({
+		path: '/wp/v2/media',
+		method: 'POST',
+		body: formData,
+	});
+
+	return response;
+}
 
 /**
  * Helper function to build the Swiper config object from attributes
@@ -77,16 +110,16 @@ function buildSwiperConfig(attributes) {
 		slidesOffsetAfter,
 	} = attributes;
 
-	let data_atts = {
+	const dataAtts = {
 		slidesPerView: slidesPerView === 'auto' ? 'auto' : parseInt(slidesPerView, 10),
 		slidesPerGroup,
 		slidesPerGroupAuto,
 		slidesPerGroupSkip,
 		navigation,
 		pagination: {},
-		delay: delay,
-		speed: speed,
-		loop: loop,
+		delay,
+		speed,
+		loop,
 		direction,
 		slidesOffsetBefore,
 		slidesOffsetAfter,
@@ -97,27 +130,27 @@ function buildSwiperConfig(attributes) {
 
 	// Auto Slide Width logic
 	if (autoSlideWidth) {
-		data_atts.autoSlideWidth = true;
+		dataAtts.autoSlideWidth = true;
 	}
 
 	// Mousewheel and release on edges logic
 	if (mousewheel && releaseOnEdges) {
-		data_atts.mousewheel = {
+		dataAtts.mousewheel = {
 			releaseOnEdges: releaseOnEdges === 'true',
 		};
 	}
 
 	// Loop logic
 	if (loop) {
-		data_atts.loopAddBlankSlides = loopAddBlankSlides;
-		data_atts.loopAdditionalSlides = loopAdditionalSlides;
+		dataAtts.loopAddBlankSlides = loopAddBlankSlides;
+		dataAtts.loopAdditionalSlides = loopAdditionalSlides;
 	}
 
 	// Effect logic
 	if (effect) {
-		data_atts.effect = effect;
+		dataAtts.effect = effect;
 		if (effect === 'fade') {
-			data_atts.fadeEffect = {
+			dataAtts.fadeEffect = {
 				crossFade: true,
 			};
 		}
@@ -125,47 +158,47 @@ function buildSwiperConfig(attributes) {
 
 	// Autoplay logic
 	if (autoplay) {
-		data_atts.autoplay = true;
+		dataAtts.autoplay = true;
 		if (delay !== null && delay !== undefined) {
-			data_atts.autoplay = {
+			dataAtts.autoplay = {
 				delay: Number(delay),
 			};
 		}
 		if (disableOnInteraction) {
-			if (!data_atts.autoplay || data_atts.autoplay === true) {
-				data_atts.autoplay = {};
+			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
+				dataAtts.autoplay = {};
 			}
-			data_atts.autoplay.disableOnInteraction = true;
+			dataAtts.autoplay.disableOnInteraction = true;
 		}
 		if (pauseOnMouseEnter) {
-			if (!data_atts.autoplay || data_atts.autoplay === true) {
-				data_atts.autoplay = {};
+			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
+				dataAtts.autoplay = {};
 			}
-			data_atts.autoplay.pauseOnMouseEnter = true;
+			dataAtts.autoplay.pauseOnMouseEnter = true;
 		}
 		if (reverseDirection) {
-			if (!data_atts.autoplay || data_atts.autoplay === true) {
-				data_atts.autoplay = {};
+			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
+				dataAtts.autoplay = {};
 			}
-			data_atts.autoplay.reverseDirection = true;
+			dataAtts.autoplay.reverseDirection = true;
 		}
 		if (stopOnLastSlide) {
-			if (!data_atts.autoplay || data_atts.autoplay === true) {
-				data_atts.autoplay = {};
+			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
+				dataAtts.autoplay = {};
 			}
-			data_atts.autoplay.stopOnLastSlide = true;
+			dataAtts.autoplay.stopOnLastSlide = true;
 		}
 		if (waitForTransition !== undefined && waitForTransition !== null) {
-			if (!data_atts.autoplay || data_atts.autoplay === true) {
-				data_atts.autoplay = {};
+			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
+				dataAtts.autoplay = {};
 			}
-			data_atts.autoplay.waitForTransition = waitForTransition;
+			dataAtts.autoplay.waitForTransition = waitForTransition;
 		}
 	}
 
 	// Freemode
 	if (freeMode) {
-		data_atts.freeMode = {
+		dataAtts.freeMode = {
 			enabled: true,
 			minimumVelocity: freeModeMinimumVelocity,
 			momentum: freeModeMomentum,
@@ -178,16 +211,16 @@ function buildSwiperConfig(attributes) {
 	}
 
 	// Pagination
-	data_atts.pagination.type = pagination_type !== 'bullets' ? pagination_type : 'bullets';
+	dataAtts.pagination.type = pagination_type !== 'bullets' ? pagination_type : 'bullets';
 	if (clickable_pagination) {
-		data_atts.pagination.clickable = clickable_pagination ? true : '';
+		dataAtts.pagination.clickable = clickable_pagination ? true : '';
 	}
 
 	if (typeof breakpoints !== 'undefined' && breakpoints !== '') {
-		data_atts.breakpoints = breakpoints;
+		dataAtts.breakpoints = breakpoints;
 	}
 
-	return data_atts;
+	return dataAtts;
 }
 
 /**
@@ -330,8 +363,8 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 	return (
 		<>
 			<BaseControl
-				label={__('Swiper Configuration (JSON)')}
-				help={!isValid ? __('Invalid JSON format. Please fix the syntax errors.') : ''}
+				label={__('Swiper Configuration (JSON)', 'wp-swiper')}
+				help={!isValid ? __('Invalid JSON format. Please fix the syntax errors.', 'wp-swiper') : ''}
 			>
 				<textarea
 					value={jsonValue}
@@ -357,40 +390,71 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 					disabled={!isValid || !hasChanges}
 					style={{ marginRight: '8px' }}
 				>
-					{__('Apply Changes')}
+					{__('Apply Changes', 'wp-swiper')}
 				</Button>
 				<Button
 					variant="secondary"
 					onClick={handleReset}
 					disabled={!hasChanges}
 				>
-					{__('Reset')}
+					{__('Reset', 'wp-swiper')}
 				</Button>
 			</PanelRow>
 
 			<p style={helperTextStyle}>
-				{__('This JSON object represents the Swiper initialization configuration. You can edit properties directly here and click "Apply Changes" to update the slider settings. This is useful for advanced customizations or copying configurations between sliders.')}
+				{__('This JSON object represents the Swiper initialization configuration. You can edit properties directly here and click "Apply Changes" to update the slider settings. This is useful for advanced customizations or copying configurations between sliders.', 'wp-swiper')}
 			</p>
 			<p style={helperTextStyle}>
-				<strong>{__('Tip:')}</strong> {__('Changes made here will update the corresponding settings in the sidebar panels. Some nested properties (like autoplay options) will be extracted to their respective settings.')}
+				<strong>{__('Tip:', 'wp-swiper')}</strong> {__('Changes made here will update the corresponding settings in the sidebar panels. Some nested properties (like autoplay options) will be extracted to their respective settings.', 'wp-swiper')}
 			</p>
 		</>
 	);
 }
 
 /**
- * Block Edit Class.
+ * Block Edit Component.
+ *
+ * @param {Object} props Block props.
+ * @return {JSX.Element} Block edit component.
  */
-function BlockEdit(props) {
-	const { clientId, attributes, setAttributes, isSelectedBlockInRoot, getBlocks, replaceInnerBlocks, updateBlockAttributes, block, updateSlugsForInnerBlocks } = props;
-	let { className } = props;
+export default function Edit({ clientId, attributes, setAttributes, className }) {
 	const blockProps = useBlockProps();
+
+	// Use modern hooks instead of withSelect/withDispatch HOCs
+	const { block, isSelectedBlockInRoot } = useSelect(
+		(select) => {
+			const { getBlock, isBlockSelected, hasSelectedInnerBlock } = select(blockEditorStore);
+			return {
+				block: getBlock(clientId),
+				isSelectedBlockInRoot: isBlockSelected(clientId) || hasSelectedInnerBlock(clientId, true),
+			};
+		},
+		[clientId]
+	);
+
+	const {
+		updateBlockAttributes,
+		removeBlock,
+		replaceInnerBlocks,
+	} = useDispatch(blockEditorStore);
+
+	const { getBlocks } = useSelect((select) => ({
+		getBlocks: select(blockEditorStore).getBlocks,
+	}), []);
+
+	// Helper function to update slug attribute for inner blocks
+	const updateSlugsForInnerBlocks = useCallback((innerBlocks) => {
+		let counter = 1;
+		innerBlocks.forEach((innerBlock) => {
+			updateBlockAttributes(innerBlock.clientId, { slug: `slide-${counter}` });
+			counter++;
+		});
+	}, [updateBlockAttributes]);
 
 	const {
 		tabActive,
 		buttonsAlign,
 		tabsData,
-		txtColor,
 		overlayColor,
 		overlayImg,
 		overlayImgOpacity,
@@ -432,6 +496,7 @@ function BlockEdit(props) {
 		thumbsSlidesPerView,
 		thumbsSpaceBetween,
 		autoHeight,
+		sliderHeight,
 		debug,
 		direction,
 		previousIcon,
@@ -439,51 +504,37 @@ function BlockEdit(props) {
 		slidesOffsetBefore,
 		slidesOffsetAfter,
 		overflowVisible,
+		navigationColor,
+		paginationColor,
 	} = attributes;
 
-	const child_blocks = getBlocks(clientId);
+	const childBlocks = getBlocks(clientId);
+
+	// Function to check if two arrays are equal without considering the order of elements
+	const areArraysEqualWithoutOrder = useCallback((arr1, arr2) => {
+		if (!arr1 || !arr2 || arr1.length !== arr2.length) {
+			return false;
+		}
+		return arr1.every((value, index) => value === arr2[index]);
+	}, []);
 
 	useEffect(() => {
+		if (!block?.innerBlocks) return;
+
 		// Extract the client IDs of the inner blocks
 		const prevClientIdOrder = block.innerBlocks.map((ib) => ib.attributes.slug);
-		const propClientIdOrder = props.attributes.tabsData.map((tabData) => tabData.slug);
-		
+		const propClientIdOrder = tabsData.map((tabData) => tabData.slug);
+
 		const prevThumbImg = block.innerBlocks.map((ib) => ib.attributes.thumbImg);
-		const propThumbImg= props.attributes.tabsData.map((tabData) => tabData.thumbImg);
-
-		// console.log({
-		// 	child_blocks,
-		// 	innerBlocks: block.innerBlocks,
-		// 	prevClientIdOrder,
-		// 	propClientIdOrder,
-		// 	areArraysEqualWithoutOrder: areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder),
-		// });
-
-		// Disabled: for now, this was preventing the thumbs to update
-		// Check if the order of client IDs has changed
+		const propThumbImg = tabsData.map((tabData) => tabData.thumbImg);
 
 		let counter = 0;
 
-		// if we disable this line of code, then adding new slide doesnt work
-		// intorducing if else , fixed the problem, above line can be removed
-		// && is important to make sure both conditions are evaluated before proceeding
-		if (!areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder && !areArraysEqualWithoutOrder(prevThumbImg, propThumbImg))) {
-			const newTabsData = block.innerBlocks.map((tabData, index) => {
+		// If we disable this line of code, then adding new slide doesn't work
+		// Introducing if else fixed the problem
+		if (!areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder) || !areArraysEqualWithoutOrder(prevThumbImg, propThumbImg)) {
+			const newTabsData = block.innerBlocks.map((tabData) => {
 				counter++;
-
-				// removed: logically we do this step later in setAttributes
-				// updateBlockAttributes(tabData.clientId, {
-				// 	slug: `slide-${counter}`,
-				// });
-
-				// console.log({
-				// 	"trigger": "child_blocks",
-				// 	clientId: tabData.clientId,
-				// 	slideImg: tabData.attributes.slideImg,
-				// 	thumbImg: tabData.attributes.thumbImg,
-				// 	slug: `slide-${counter}`,
-				// });
-
 				return {
 					clientId: tabData.clientId,
 					slideImg: tabData.attributes.slideImg,
@@ -498,109 +549,144 @@ function BlockEdit(props) {
 				tabsData: newTabsData,
 			});
 		}
-	}, [child_blocks]);
+	}, [childBlocks, block, tabsData, areArraysEqualWithoutOrder, updateSlugsForInnerBlocks, setAttributes]);
 
 	const [alignment, setAlignment] = useState('bottom center');
+	const [isDraggingOver, setIsDraggingOver] = useState(false);
+	const [isUploading, setIsUploading] = useState(false);
 
-	// Function to check if two arrays are equal without considering the order of elements
-	const areArraysEqualWithoutOrder = (arr1, arr2) => {
-		// Check if the lengths of the arrays are different, if so, they can't be equal
-		if (arr1.length !== arr2.length) {
-			// Arrays have different lengths, so they are not equal
-			return false;
+	/**
+	 * Handle files dropped onto the swiper block
+	 * Creates new slides for each image dropped
+	 * If the first slide is empty, it will be replaced with the first dropped image
+	 */
+	const handleFilesDropped = async (files) => {
+		if (!files || files.length === 0) return;
+
+		// Filter only image files
+		const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+		if (imageFiles.length === 0) return;
+
+		setIsUploading(true);
+		setIsDraggingOver(false);
+
+		try {
+			// Check if the first slide is empty (no image set)
+			const firstSlideIsEmpty = tabsData.length === 1 &&
+				!tabsData[0].slideImg &&
+				block?.innerBlocks?.[0] &&
+				!block.innerBlocks[0].attributes.slideImg;
+
+			let startIndex = 0;
+			let currentTabsData = [...tabsData];
+			let currentInnerBlocks = [...getBlocks(clientId)];
+
+			// If first slide is empty, replace it with the first image
+			if (firstSlideIsEmpty && imageFiles.length > 0) {
+				const file = imageFiles[0];
+
+				// Upload the first file to media library
+				const media = await uploadMediaFile(file);
+
+				// Get the image URL
+				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
+				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
+
+				// Get the existing first slide's inner blocks (content)
+				const existingFirstSlide = currentInnerBlocks[0];
+
+				// Create a new block with the image, preserving inner blocks (content)
+				const updatedFirstSlide = createBlock(
+					'da/wp-swiper-slide',
+					{
+						...existingFirstSlide.attributes,
+						slug: 'slide-1',
+						slideImg: imgUrl,
+						slideImgId: media.id,
+						thumbImg: thumbUrl,
+					},
+					existingFirstSlide.innerBlocks // Preserve any content blocks inside the slide
+				);
+
+				// Replace the first block in the array
+				currentInnerBlocks[0] = updatedFirstSlide;
+
+				// Update tabsData for the first slide
+				currentTabsData[0] = {
+					clientId: updatedFirstSlide.clientId,
+					slug: 'slide-1',
+					slideImg: imgUrl,
+					thumbImg: thumbUrl,
+				};
+
+				// Start processing remaining images from index 1
+				startIndex = 1;
+			}
+
+			// Process remaining images (or all images if first slide wasn't empty)
+			for (let i = startIndex; i < imageFiles.length; i++) {
+				const file = imageFiles[i];
+
+				// Upload the file to media library
+				const media = await uploadMediaFile(file);
+
+				// Get the image URL
+				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
+				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
+
+				// Create new slide with the image
+				const newDataLength = currentTabsData.length + 1;
+				const newBlock = createBlock('da/wp-swiper-slide', {
+					slug: `slide-${newDataLength}`,
+					slideImg: imgUrl,
+					slideImgId: media.id,
+					thumbImg: thumbUrl,
+				});
+
+				// Update tabsData
+				currentTabsData = [...currentTabsData, {
+					clientId: newBlock.clientId,
+					slug: `slide-${newDataLength}`,
+					slideImg: imgUrl,
+					thumbImg: thumbUrl,
+				}];
+
+				// Add the block to inner blocks
+				currentInnerBlocks = [...currentInnerBlocks, newBlock];
+			}
+
+			// Update all inner blocks and attributes at once
+			if (currentInnerBlocks.length > 0) {
+				replaceInnerBlocks(clientId, currentInnerBlocks, false);
+				setAttributes({
+					tabsData: currentTabsData,
+					tabActive: startIndex === 1 ? 'slide-1' : `slide-${currentTabsData.length}`,
+				});
+			}
+		} catch (error) {
+			console.error('Error uploading images:', error);
+		} finally {
+			setIsUploading(false);
 		}
-
-		// Use the every() method to check if every element at the same index is equal
-		return arr1.every((value, index) => {
-			// console.log(`Comparing: "${value}" === "${arr2[index]}"`);
-			return value === arr2[index];
-		});
 	};
 
 	/**
-	 * Returns the layouts configuration for a given number of tabs.
-	 *
-	 * @param {number} attributes tabs attributes.
-	 *
-	 * @return {Object[]} Tabs layout configuration.
+	 * Remove a tab/slide
 	 */
-	const getTabsTemplate = () => {
-		const { tabsData } = attributes;
+	const removeTab = useCallback((i) => {
+		if (!block?.innerBlocks) return;
 
-		return tabsData.map((tabData) => ['da/wp-swiper-slide', tabData]);
-	};
-
-	const getTabs = () => {
-		return block.innerBlocks;
-	};
-
-	const changeLabel = (dataType, value, i) => {
-		const { setAttributes, attributes, updateBlockAttributes } = props;
-
-		const { tabsData } = attributes;
-
-		const tabs = getTabs();
-
-		if (tabs[i]) {
-			const newSlug = dataType == 'title' ? getUniqueSlug(`tab ${value}`, tabs[i].clientId) : tabsData[i].slug;
-
-			const newTabsData = tabsData.map((oldTabData, newIndex) => {
-				if (i === newIndex) {
-					return {
-						...oldTabData,
-						...{
-							title: dataType == 'title' ? value : tabsData[i].title,
-							subtitle: dataType == 'subtitle' ? value : tabsData[i].subtitle,
-							image: dataType == 'image' ? value : tabsData[i].image,
-							overlayImg: dataType == 'overlayImg' ? value : tabsData[i].overlayImg,
-							overlayColor: dataType == 'overlayColor' ? value : tabsData[i].overlayColor,
-							slug: newSlug,
-						},
-					};
-				}
-
-				return oldTabData;
-			});
-
-			setAttributes({
-				currentSlide: i,
-				tabActive: newSlug,
-				tabsData: newTabsData,
-			});
-
-			updateBlockAttributes(tabs[i].clientId, {
-				slug: newSlug,
-			});
-		}
-	};
-
-	const removeTab = (i) => {
-		const { setAttributes, attributes, block, getBlocks, replaceInnerBlocks, removeBlock } = props;
-		const { tabsData = [] } = attributes;
-
-		if (1 >= block.innerBlocks.length) {
+		if (block.innerBlocks.length <= 1) {
 			removeBlock(block.clientId);
 		} else if (block.innerBlocks[i]) {
 			if (tabsData[i]) {
 				const newTabsData = deepClone(tabsData);
-
 				newTabsData.splice(i, 1);
-
-				// const slug = i;
-				// tabsData[i] = {
-				// 	...tabsData[i],
-				// 	slug: `slide-${slug}`,
-				// };
-				// console.log('2', tabsData);
-
-				// update slug attribute
-				// for inner blocks (slide)
 
 				removeBlock(block.innerBlocks[i].clientId);
 
 				for (let j = i; j < newTabsData.length; j++) {
 					const newSlug = `slide-${j + 1}`;
-
 					newTabsData[j].slug = newSlug;
 					updateBlockAttributes(newTabsData[j].clientId, {
 						slug: newSlug,
@@ -612,38 +698,7 @@ function BlockEdit(props) {
 				});
 			}
 		}
-	};
-
-	useEffect(() => {
-		return;
-		const { block, setAttributes, replaceInnerBlocks } = props;
-
-		// Extract the client IDs of the inner blocks
-		const prevClientIdOrder = block.innerBlocks.map((ib) => ib.clientId);
-		const propClientIdOrder = props.attributes.tabsData.map((tabData) => tabData.clientId);
-
-		// Check if the order of client IDs has changed
-		if (!areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder)) {
-			// Update tabsData with the new order
-			const newTabsData = block.innerBlocks.map((tabData) => ({
-				clientId: tabData.clientId,
-				slug: tabData.attributes.slug,
-			}));
-
-			setAttributes({
-				tabsData: newTabsData,
-			});
-
-			// Replace innerBlocks with the updated order
-			const innerBlocksInCurrentOrder = props.block.innerBlocks.map((ib) => {
-				// Retrieve the correct inner block by client ID
-				const correspondingBlock = block.innerBlocks.find((b) => b.clientId === ib.clientId);
-				return correspondingBlock;
-			});
-
-			replaceInnerBlocks(block.clientId, innerBlocksInCurrentOrder, false);
-		}
-	}, [tabsData]);
+	}, [block, tabsData, removeBlock, updateBlockAttributes, setAttributes]);
 
 	className = classnames(className, 'wp-swiper__slides');
 
@@ -656,8 +711,6 @@ function BlockEdit(props) {
 
 	// used for the map function to create numbered tabs
 	let counter = 1;
-
-	const style = txtColor ? { color: txtColor } : {};
 
 	const Seperator = () => {
 		return (
@@ -675,10 +728,10 @@ function BlockEdit(props) {
 	};
 
 	return (
-		<Fragment>
+		<>
 			<InspectorControls>
 				<PanelBody
-					title={__('Overlay Settings')}
+					title={__('Overlay Settings', 'wp-swiper')}
 					initialOpen={false}
 				>
 					<PanelRow>
@@ -686,28 +739,26 @@ function BlockEdit(props) {
 							<MediaUpload
 								value={overlayImg}
 								onSelect={(media) => {
-									let img_url = media.sizes.full.url;
-									setAttributes({ overlayImg: img_url });
+									const imgUrl = media.sizes?.full?.url || media.url;
+									setAttributes({ overlayImg: imgUrl });
 								}}
-								type="image"
-								render={(open) => {
-									return (
-										<Button
-											onClick={open.open}
-											className="button"
-										>
-											Select overlay image
-										</Button>
-									);
-								}}
+								allowedTypes={['image']}
+								render={({ open }) => (
+									<Button
+										onClick={open}
+										className="button"
+									>
+										{__('Select overlay image', 'wp-swiper')}
+									</Button>
+								)}
 							/>
 						</MediaUploadCheck>
 					</PanelRow>
-					{overlayImg && <PanelRow>{get_image(overlayImg)}</PanelRow>}
+					{overlayImg && <PanelRow>{getImage(overlayImg)}</PanelRow>}
 					{overlayImg && (
 						<PanelRow>
 							<Button
-								isSecondary
+								variant="secondary"
 								size="small"
 								className="block-library-cover__reset-button"
 								onClick={() =>
@@ -716,14 +767,14 @@ function BlockEdit(props) {
 									})
 								}
 							>
-								{__('Clear Media')}
+								{__('Clear Media', 'wp-swiper')}
 							</Button>
 						</PanelRow>
 					)}
 					{overlayImg && (
-						<BaseControl label={__('Image Overlay Opacity', '@@text_domain')}>
+						<BaseControl label={__('Image Overlay Opacity', 'wp-swiper')}>
 							<RangeControl
-								label={__('Opacity')}
+								label={__('Opacity', 'wp-swiper')}
 								value={overlayImgOpacity}
 								onChange={(value) =>
 									setAttributes({
@@ -738,10 +789,10 @@ function BlockEdit(props) {
 						</BaseControl>
 					)}
 					<Seperator />
-					<BaseControl label={__('Overlay Color', '@@text_domain')}>
-						<ColorPicker
-							color={overlayColor.hex || overlayColor}
-							onChangeComplete={(color) => {
+					<BaseControl label={__('Overlay Color', 'wp-swiper')}>
+						<ColorPalette
+							value={typeof overlayColor === 'object' ? `rgba(${overlayColor.rgb.r}, ${overlayColor.rgb.g}, ${overlayColor.rgb.b}, ${overlayColor.rgb.a})` : overlayColor}
+							onChange={(color) => {
 								setAttributes({ overlayColor: color });
 
 								let iBlocks = block.innerBlocks;
@@ -753,10 +804,10 @@ function BlockEdit(props) {
 							}}
 						/>
 					</BaseControl>
-					{overlayColor.rgb.a > 0 && (
+					{overlayColor?.rgb?.a > 0 && (
 						<PanelRow>
 							<Button
-								isSecondary
+								variant="secondary"
 								size="small"
 								className="block-library-cover__reset-button"
 								onClick={() => {
@@ -764,38 +815,95 @@ function BlockEdit(props) {
 									setAttributes({ overlayColor: defaultColor });
 
 									// Update all inner blocks
-									let iBlocks = block.innerBlocks;
-									iBlocks.map((iBlock) => {
+									const iBlocks = block?.innerBlocks || [];
+									iBlocks.forEach((iBlock) => {
 										updateBlockAttributes(iBlock.clientId, {
 											overlayColor: defaultColor,
 										});
 									});
 								}}
 							>
-								{__('Clear Color')}
+								{__('Clear Color', 'wp-swiper')}
 							</Button>
 						</PanelRow>
 					)}
-				</PanelBody>
-				<PanelBody
-					title={__('Color Settings')}
-					initialOpen={false}
-				>
-					<BaseControl label={__('Text Color', '@@text_domain')}>
-						<ColorPicker
-							color={txtColor}
-							onChangeComplete={(color) => setAttributes({ txtColor: color.hex })}
-						/>
-					</BaseControl>
-				</PanelBody>
+			</PanelBody>
+		<PanelBody
+			title={__('Color Settings', 'wp-swiper')}
+			initialOpen={false}
+		>
+				<BaseControl label={__('Navigation Color', 'wp-swiper')}>
+					<ColorPalette
+						value={navigationColor}
+						onChange={(color) => setAttributes({ navigationColor: color })}
+					/>
+				</BaseControl>
+				{navigationColor && (
+					<PanelRow>
+						<Button
+							variant="secondary"
+							size="small"
+							onClick={() => setAttributes({ navigationColor: '' })}
+						>
+							{__('Clear Navigation Color', 'wp-swiper')}
+						</Button>
+					</PanelRow>
+				)}
+				<Seperator />
+				<BaseControl label={__('Pagination Color', 'wp-swiper')}>
+					<ColorPalette
+						value={paginationColor}
+						onChange={(color) => setAttributes({ paginationColor: color })}
+					/>
+				</BaseControl>
+				{paginationColor && (
+					<PanelRow>
+						<Button
+							variant="secondary"
+							size="small"
+							onClick={() => setAttributes({ paginationColor: '' })}
+						>
+							{__('Clear Pagination Color', 'wp-swiper')}
+						</Button>
+					</PanelRow>
+				)}
+			</PanelBody>
 			<PanelBody
-				title={__('Basic Slider Settings')}
+				title={__('Basic Slider Settings', 'wp-swiper')}
 				icon="controls-play"
 				initialOpen={true}
 			>
+				{!autoHeight && (
+					<PanelRow>
+						<UnitControl
+							label={__('Slider Height', 'wp-swiper')}
+							help={__('Set a fixed height for the slider', 'wp-swiper')}
+							value={sliderHeight}
+							onChange={(value) => {
+								setAttributes({ sliderHeight: value });
+							}}
+							units={[
+								{ value: 'px', label: 'px', default: 500 },
+								{ value: 'vh', label: 'vh', default: 50 },
+								{ value: '%', label: '%', default: 100 },
+								{ value: 'em', label: 'em', default: 20 },
+							]}
+						/>
+					</PanelRow>
+				)}
 				<PanelRow>
 					<ToggleControl
-						label="Auto Play"
+						label={__('Auto Height', 'wp-swiper')}
+						help={__('Slider wrapper will adapt its height to the height of the currently active slide', 'wp-swiper')}
+						checked={autoHeight}
+						onChange={() => {
+							setAttributes({ autoHeight: !autoHeight });
+						}}
+					/>
+				</PanelRow>
+				<PanelRow>
+					<ToggleControl
+						label={__('Auto Play', 'wp-swiper')}
 						checked={autoplay}
 						onChange={() => {
 							setAttributes({ autoplay: !autoplay });
@@ -804,7 +912,7 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Loop"
+						label={__('Loop', 'wp-swiper')}
 						checked={loop}
 						onChange={() => {
 							setAttributes({ loop: !loop });
@@ -815,8 +923,8 @@ function BlockEdit(props) {
 					<>
 						<PanelRow>
 							<ToggleControl
-								label="Loop Add Blank Slides"
-								help="Automatically adds blank slides if you use Grid or slidesPerGroup and the total amount of slides is not even to slidesPerGroup or to grid.rows"
+								label={__('Loop Add Blank Slides', 'wp-swiper')}
+								help={__('Automatically adds blank slides if you use Grid or slidesPerGroup and the total amount of slides is not even to slidesPerGroup or to grid.rows', 'wp-swiper')}
 								checked={loopAddBlankSlides}
 								onChange={() => {
 									setAttributes({ loopAddBlankSlides: !loopAddBlankSlides });
@@ -825,8 +933,8 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<TextControl
-								label="Loop Additional Slides"
-								help="Allows to increase amount of looped slides"
+								label={__('Loop Additional Slides', 'wp-swiper')}
+								help={__('Allows to increase amount of looped slides', 'wp-swiper')}
 								value={loopAdditionalSlides}
 								type="number"
 								onChange={(option) => {
@@ -838,8 +946,8 @@ function BlockEdit(props) {
 				)}
 				<PanelRow>
 					<TextControl
-						label="Speed"
-						help="Duration of transition between slides (in ms)"
+						label={__('Speed', 'wp-swiper')}
+						help={__('Duration of transition between slides (in ms)', 'wp-swiper')}
 						value={speed}
 						type="number"
 						onChange={(option) => {
@@ -849,8 +957,8 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<TextControl
-						label="Delay"
-						help="Delay between transitions (in ms)"
+						label={__('Delay', 'wp-swiper')}
+						help={__('Delay between transitions (in ms)', 'wp-swiper')}
 						value={delay}
 						type="number"
 						onChange={(option) => {
@@ -860,16 +968,16 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<RangeControl
-						label={__('Container Max Width %')}
-						help={__('Frontend: Set the max width for the content with text.')}
+						label={__('Container Max Width %', 'wp-swiper')}
+						help={__('Frontend: Set the max width for the content with text.', 'wp-swiper')}
 						value={containerWidth}
 						onChange={(value) => {
 							setAttributes({
 								containerWidth: value,
 							});
 
-							let iBlocks = block.innerBlocks;
-							iBlocks.map((iBlock) => {
+							const iBlocks = block?.innerBlocks || [];
+							iBlocks.forEach((iBlock) => {
 								updateBlockAttributes(iBlock.clientId, {
 									containerWidth: value,
 								});
@@ -883,8 +991,8 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Overflow Visible"
-						help="Apply overflow visible to the swiper container"
+						label={__('Overflow Visible', 'wp-swiper')}
+						help={__('Apply overflow visible to the swiper container', 'wp-swiper')}
 						checked={overflowVisible}
 						onChange={() => {
 							setAttributes({ overflowVisible: !overflowVisible });
@@ -893,14 +1001,14 @@ function BlockEdit(props) {
 				</PanelRow>
 			</PanelBody>
 			<PanelBody
-				title={__('Slides Configuration')}
+				title={__('Slides Configuration', 'wp-swiper')}
 				icon="grid-view"
 				initialOpen={false}
 			>
 			<PanelRow>
 				<TextControl
-					label="Slides per view"
-					help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
+					label={__('Slides per view', 'wp-swiper')}
+					help={__('Number of slides per view (slides visible at the same time on slider\'s container). Can be a number or auto', 'wp-swiper')}
 					value={slidesPerView}
 					onChange={(option) => {
 						setAttributes({ slidesPerView: option });
@@ -909,8 +1017,8 @@ function BlockEdit(props) {
 			</PanelRow>
 			<PanelRow>
 				<TextControl
-					label="Slides Per Group"
-					help="Set numbers of slides to define and enable group sliding. Useful to use with slidesPerView > 1"
+					label={__('Slides Per Group', 'wp-swiper')}
+					help={__('Set numbers of slides to define and enable group sliding. Useful to use with slidesPerView > 1', 'wp-swiper')}
 					value={slidesPerGroup}
 					type="number"
 					onChange={(option) => {
@@ -920,8 +1028,8 @@ function BlockEdit(props) {
 			</PanelRow>
 			<PanelRow>
 				<ToggleControl
-					label="Slides Per Group Auto"
-					help="This param intended to be used only with slidesPerView: 'auto' and slidesPerGroup: 1. When enabled, it will skip all slides in view on .slideNext() & .slidePrev() methods calls, on Navigation buttons clicks and in autoplay."
+					label={__('Slides Per Group Auto', 'wp-swiper')}
+					help={__('This param intended to be used only with slidesPerView: \'auto\' and slidesPerGroup: 1. When enabled, it will skip all slides in view on .slideNext() & .slidePrev() methods calls, on Navigation buttons clicks and in autoplay.', 'wp-swiper')}
 					checked={slidesPerGroupAuto}
 					onChange={() => {
 						setAttributes({ slidesPerGroupAuto: !slidesPerGroupAuto });
@@ -930,8 +1038,8 @@ function BlockEdit(props) {
 			</PanelRow>
 			<PanelRow>
 				<TextControl
-					label="Slides Per Group Skip"
-					help="If slidesPerGroupSkip equals 0 (default), no slides are excluded from grouping. If slidesPerGroupSkip is equal or greater than 1, the first X slides are treated as single groups, whereas all following slides are grouped by the slidesPerGroup value."
+					label={__('Slides Per Group Skip', 'wp-swiper')}
+					help={__('If slidesPerGroupSkip equals 0 (default), no slides are excluded from grouping. If slidesPerGroupSkip is equal or greater than 1, the first X slides are treated as single groups, whereas all following slides are grouped by the slidesPerGroup value.', 'wp-swiper')}
 					value={slidesPerGroupSkip}
 					type="number"
 					onChange={(option) => {
@@ -941,8 +1049,8 @@ function BlockEdit(props) {
 			</PanelRow>
 			<PanelRow>
 				<TextControl
-					label="Space Between"
-					help="Distance between slides in px."
+					label={__('Space Between', 'wp-swiper')}
+					help={__('Distance between slides in px.', 'wp-swiper')}
 					value={spaceBetween}
 					onChange={(option) => {
 						setAttributes({ spaceBetween: parseInt(option) });
@@ -951,8 +1059,8 @@ function BlockEdit(props) {
 			</PanelRow>
 			<PanelRow>
 				<ToggleControl
-					label="Auto Slide Width"
-					help="Makes each slide size itself based on its content instead of being evenly distributed. Useful for logos, badges, small cards, or any element that should not be stretched."
+					label={__('Auto Slide Width', 'wp-swiper')}
+					help={__('Makes each slide size itself based on its content instead of being evenly distributed. Useful for logos, badges, small cards, or any element that should not be stretched.', 'wp-swiper')}
 					checked={autoSlideWidth}
 					onChange={() => {
 						setAttributes({ autoSlideWidth: !autoSlideWidth });
@@ -961,8 +1069,8 @@ function BlockEdit(props) {
 			</PanelRow>
 				<PanelRow>
 					<TextControl
-						label="Slides Offset Before"
-						help="Add (in px) additional slide offset in the beginning of the container (before all slides)"
+						label={__('Slides Offset Before', 'wp-swiper')}
+						help={__('Add (in px) additional slide offset in the beginning of the container (before all slides)', 'wp-swiper')}
 						value={slidesOffsetBefore}
 						onChange={(option) => {
 							setAttributes({ slidesOffsetBefore: parseInt(option) });
@@ -971,8 +1079,8 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<TextControl
-						label="Slides Offset After"
-						help="Add (in px) additional slide offset in the end of the container (after all slides)"
+						label={__('Slides Offset After', 'wp-swiper')}
+						help={__('Add (in px) additional slide offset in the end of the container (after all slides)', 'wp-swiper')}
 						value={slidesOffsetAfter}
 						onChange={(option) => {
 							setAttributes({ slidesOffsetAfter: parseInt(option) });
@@ -981,13 +1089,13 @@ function BlockEdit(props) {
 				</PanelRow>
 			</PanelBody>
 			<PanelBody
-				title={__('Navigation & Controls')}
+				title={__('Navigation & Controls', 'wp-swiper')}
 				icon="leftright"
 				initialOpen={false}
 			>
 				<PanelRow>
 					<ToggleControl
-						label="Show Navigation"
+						label={__('Show Navigation', 'wp-swiper')}
 						checked={navigation}
 						onChange={() => {
 							setAttributes({ navigation: !navigation });
@@ -997,35 +1105,33 @@ function BlockEdit(props) {
 				{navigation && (
 					<>
 						<PanelRow>
-							<p>You can customize icons by uploading your own. Default icons used otherwise.</p>
+							<p>{__('You can customize icons by uploading your own. Default icons used otherwise.', 'wp-swiper')}</p>
 						</PanelRow>
 						<PanelRow>
 							<MediaUploadCheck>
 								<MediaUpload
 									value={previousIcon}
 									onSelect={(media) => {
-										let img_url = media.sizes.full.url;
-										setAttributes({ previousIcon: img_url });
+										const imgUrl = media.sizes?.full?.url || media.url;
+										setAttributes({ previousIcon: imgUrl });
 									}}
-									type="image"
-									render={(open) => {
-										return (
-											<Button
-												onClick={open.open}
-												className="button"
-											>
-												Select previous slide icon
-											</Button>
-										);
-									}}
+									allowedTypes={['image']}
+									render={({ open }) => (
+										<Button
+											onClick={open}
+											className="button"
+										>
+											{__('Select previous slide icon', 'wp-swiper')}
+										</Button>
+									)}
 								/>
 							</MediaUploadCheck>
 						</PanelRow>
-						{previousIcon && <PanelRow>{get_image(previousIcon)}</PanelRow>}
+						{previousIcon && <PanelRow>{getImage(previousIcon)}</PanelRow>}
 						{previousIcon && (
 							<PanelRow>
 								<Button
-									isSecondary
+									variant="secondary"
 									size="small"
 									className="block-library-cover__reset-button"
 									onClick={() =>
@@ -1034,7 +1140,7 @@ function BlockEdit(props) {
 										})
 									}
 								>
-									{__('Clear Media')}
+									{__('Clear Media', 'wp-swiper')}
 								</Button>
 							</PanelRow>
 						)}
@@ -1043,28 +1149,26 @@ function BlockEdit(props) {
 								<MediaUpload
 									value={nextIcon}
 									onSelect={(media) => {
-										let img_url = media.sizes.full.url;
-										setAttributes({ nextIcon: img_url });
+										const imgUrl = media.sizes?.full?.url || media.url;
+										setAttributes({ nextIcon: imgUrl });
 									}}
-									type="image"
-									render={(open) => {
-										return (
-											<Button
-												onClick={open.open}
-												className="button"
-											>
-												Select next slide icon
-											</Button>
-										);
-									}}
+									allowedTypes={['image']}
+									render={({ open }) => (
+										<Button
+											onClick={open}
+											className="button"
+										>
+											{__('Select next slide icon', 'wp-swiper')}
+										</Button>
+									)}
 								/>
 							</MediaUploadCheck>
 						</PanelRow>
-						{nextIcon && <PanelRow>{get_image(nextIcon)}</PanelRow>}
+						{nextIcon && <PanelRow>{getImage(nextIcon)}</PanelRow>}
 						{nextIcon && (
 							<PanelRow>
 								<Button
-									isSecondary
+									variant="secondary"
 									size="small"
 									className="block-library-cover__reset-button"
 									onClick={() =>
@@ -1073,7 +1177,7 @@ function BlockEdit(props) {
 										})
 									}
 								>
-									{__('Clear Media')}
+									{__('Clear Media', 'wp-swiper')}
 								</Button>
 							</PanelRow>
 						)}
@@ -1082,7 +1186,7 @@ function BlockEdit(props) {
 				<Seperator />
 				<PanelRow>
 					<ToggleControl
-						label="Show Pagination"
+						label={__('Show Pagination', 'wp-swiper')}
 						checked={pagination}
 						onChange={() => {
 							setAttributes({ pagination: !pagination });
@@ -1093,12 +1197,12 @@ function BlockEdit(props) {
 					<>
 						<PanelRow>
 							<SelectControl
-								label="Type of pagination"
+								label={__('Type of pagination', 'wp-swiper')}
 								value={pagination_type}
 								options={[
-									{ label: 'Bullets', value: 'bullets' },
-									{ label: 'Fraction', value: 'fraction' },
-									{ label: 'Progress Bar', value: 'progressbar' },
+									{ label: __('Bullets', 'wp-swiper'), value: 'bullets' },
+									{ label: __('Fraction', 'wp-swiper'), value: 'fraction' },
+									{ label: __('Progress Bar', 'wp-swiper'), value: 'progressbar' },
 								]}
 								onChange={(option) => {
 									setAttributes({ pagination_type: option });
@@ -1107,7 +1211,7 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
-								label="Clickable Pagination"
+								label={__('Clickable Pagination', 'wp-swiper')}
 								checked={clickable_pagination}
 								onChange={() => {
 									setAttributes({ clickable_pagination: !clickable_pagination });
@@ -1116,30 +1220,19 @@ function BlockEdit(props) {
 						</PanelRow>
 					</>
 				)}
-				<Seperator />
-				<PanelRow>
-					<ToggleControl
-						label="Auto Height"
-						help="Set to true and slider wrapper will adapt its height to the height of the currently active slide"
-						checked={autoHeight}
-						onChange={() => {
-							setAttributes({ autoHeight: !autoHeight });
-						}}
-					/>
-				</PanelRow>
 			</PanelBody>
 			<PanelBody
-				title={__('Direction Settings')}
+				title={__('Direction Settings', 'wp-swiper')}
 				icon="sort"
 				initialOpen={false}
 			>
 				<SelectControl
-					label="Direction"
-					help="For vertical slider, Slides Per View should be set to 1"
+					label={__('Direction', 'wp-swiper')}
+					help={__('For vertical slider, Slides Per View should be set to 1', 'wp-swiper')}
 					value={direction}
 					options={[
-						{ label: 'Horizontal', value: 'horizontal' },
-						{ label: 'Vertical', value: 'vertical' },
+						{ label: __('Horizontal', 'wp-swiper'), value: 'horizontal' },
+						{ label: __('Vertical', 'wp-swiper'), value: 'vertical' },
 					]}
 					onChange={(option) => {
 						setAttributes({ direction: option });
@@ -1147,15 +1240,15 @@ function BlockEdit(props) {
 				/>
 			</PanelBody>
 			<PanelBody
-				title={__('Autoplay Behavior')}
+				title={__('Autoplay Behavior', 'wp-swiper')}
 				icon="controls-repeat"
 				initialOpen={false}
 			>
 				<PanelRow>
 					<ToggleControl
-						label="Disable On Interaction"
+						label={__('Disable On Interaction', 'wp-swiper')}
 						checked={disableOnInteraction}
-						help="Set to false and autoplay will not be disabled after user interactions (swipes), it will be restarted every time after interaction"
+						help={__('Set to false and autoplay will not be disabled after user interactions (swipes), it will be restarted every time after interaction', 'wp-swiper')}
 						onChange={() => {
 							setAttributes({ disableOnInteraction: !disableOnInteraction });
 						}}
@@ -1163,9 +1256,9 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Pause On Mouse Enter"
+						label={__('Pause On Mouse Enter', 'wp-swiper')}
 						checked={pauseOnMouseEnter}
-						help="When enabled autoplay will be paused on pointer (mouse) enter over Swiper container."
+						help={__('When enabled autoplay will be paused on pointer (mouse) enter over Swiper container.', 'wp-swiper')}
 						onChange={() => {
 							setAttributes({ pauseOnMouseEnter: !pauseOnMouseEnter });
 						}}
@@ -1173,9 +1266,9 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Reverse Direction"
+						label={__('Reverse Direction', 'wp-swiper')}
 						checked={reverseDirection}
-						help="Enables autoplay in reverse direction"
+						help={__('Enables autoplay in reverse direction', 'wp-swiper')}
 						onChange={() => {
 							setAttributes({ reverseDirection: !reverseDirection });
 						}}
@@ -1183,9 +1276,9 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Stop On Last Slide"
+						label={__('Stop On Last Slide', 'wp-swiper')}
 						checked={stopOnLastSlide}
-						help="Enable this parameter and autoplay will be stopped when it reaches last slide (has no effect in loop mode)"
+						help={__('Enable this parameter and autoplay will be stopped when it reaches last slide (has no effect in loop mode)', 'wp-swiper')}
 						onChange={() => {
 							setAttributes({ stopOnLastSlide: !stopOnLastSlide });
 						}}
@@ -1193,9 +1286,9 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Wait For Transition"
+						label={__('Wait For Transition', 'wp-swiper')}
 						checked={waitForTransition}
-						help="When enabled autoplay will wait for wrapper transition to continue. Can be disabled in case of using Virtual Translate when your slider may not have transition"
+						help={__('When enabled autoplay will wait for wrapper transition to continue. Can be disabled in case of using Virtual Translate when your slider may not have transition', 'wp-swiper')}
 						onChange={() => {
 							setAttributes({ waitForTransition: !waitForTransition });
 						}}
@@ -1203,20 +1296,20 @@ function BlockEdit(props) {
 				</PanelRow>
 			</PanelBody>
 			<PanelBody
-				title={__('Advanced Features')}
+				title={__('Advanced Features', 'wp-swiper')}
 				icon="admin-generic"
 				initialOpen={false}
 			>
 				<PanelRow>
 					<SelectControl
-						label="Effect (Under Construction)"
+						label={__('Effect (Under Construction)', 'wp-swiper')}
 						value={effect}
 						options={[
-							{ label: 'Slide', value: 'slide' },
-							{ label: 'Fade', value: 'fade' },
-							{ label: 'Cube', value: 'cube' },
-							{ label: 'Coverflow', value: 'coverflow' },
-							{ label: 'Flip', value: 'flip' },
+							{ label: __('Slide', 'wp-swiper'), value: 'slide' },
+							{ label: __('Fade', 'wp-swiper'), value: 'fade' },
+							{ label: __('Cube', 'wp-swiper'), value: 'cube' },
+							{ label: __('Coverflow', 'wp-swiper'), value: 'coverflow' },
+							{ label: __('Flip', 'wp-swiper'), value: 'flip' },
 						]}
 						onChange={(option) => {
 							setAttributes({ effect: option });
@@ -1225,8 +1318,8 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Mouse Wheel"
-						help="Enables navigation through slides using mouse wheel."
+						label={__('Mouse Wheel', 'wp-swiper')}
+						help={__('Enables navigation through slides using mouse wheel.', 'wp-swiper')}
 						checked={mousewheel}
 						onChange={() => {
 							setAttributes({ mousewheel: !mousewheel });
@@ -1235,8 +1328,8 @@ function BlockEdit(props) {
 				</PanelRow>
 				<PanelRow>
 					<ToggleControl
-						label="Release On Edges"
-						help="Set to true and swiper will release mousewheel event and allow page scrolling when swiper is on edge positions (in the beginning or in the end) NOTE: Mouse Wheel must be set to true for this to work."
+						label={__('Release On Edges', 'wp-swiper')}
+						help={__('Set to true and swiper will release mousewheel event and allow page scrolling when swiper is on edge positions (in the beginning or in the end) NOTE: Mouse Wheel must be set to true for this to work.', 'wp-swiper')}
 						checked={releaseOnEdges}
 						onChange={() => {
 							setAttributes({ releaseOnEdges: !releaseOnEdges });
@@ -1245,14 +1338,14 @@ function BlockEdit(props) {
 				</PanelRow>
 			</PanelBody>
 			<PanelBody
-				title={__('Free Mode')}
+				title={__('Free Mode', 'wp-swiper')}
 				icon="controls-play"
 				initialOpen={false}
 			>
 				<PanelRow>
 					<ToggleControl
-						label="Enable Free Mode"
-						help="Whether the free mode is enabled. Slide will continue moving for a while after you release it."
+						label={__('Enable Free Mode', 'wp-swiper')}
+						help={__('Whether the free mode is enabled. Slide will continue moving for a while after you release it.', 'wp-swiper')}
 						checked={freeMode}
 						onChange={() => {
 							if (freeMode) {
@@ -1266,8 +1359,8 @@ function BlockEdit(props) {
 					<>
 						<PanelRow>
 							<RangeControl
-								label="Minimum Velocity"
-								help="Minimum touchmove-velocity required to trigger free mode momentum"
+								label={__('Minimum Velocity', 'wp-swiper')}
+								help={__('Minimum touchmove-velocity required to trigger free mode momentum', 'wp-swiper')}
 								value={freeModeMinimumVelocity}
 								onChange={(value) => {
 									setAttributes({ freeModeMinimumVelocity: value });
@@ -1279,8 +1372,8 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
-								label="Momentum"
-								help="If enabled, then slide will keep moving for a while after you release it"
+								label={__('Momentum', 'wp-swiper')}
+								help={__('If enabled, then slide will keep moving for a while after you release it', 'wp-swiper')}
 								checked={freeModeMomentum}
 								onChange={() => {
 									setAttributes({ freeModeMomentum: !freeModeMomentum });
@@ -1289,8 +1382,8 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
-								label="Momentum Bounce"
-								help="Set to false if you want to disable momentum bounce in free mode"
+								label={__('Momentum Bounce', 'wp-swiper')}
+								help={__('Set to false if you want to disable momentum bounce in free mode', 'wp-swiper')}
 								checked={freeModeMomentumBounce}
 								onChange={() => {
 									setAttributes({ freeModeMomentumBounce: !freeModeMomentumBounce });
@@ -1299,8 +1392,8 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<RangeControl
-								label="Momentum Bounce Ratio"
-								help="Higher value produces larger momentum bounce effect"
+								label={__('Momentum Bounce Ratio', 'wp-swiper')}
+								help={__('Higher value produces larger momentum bounce effect', 'wp-swiper')}
 								value={freeModeMomentumBounceRatio}
 								onChange={(value) => {
 									setAttributes({ freeModeMomentumBounceRatio: value });
@@ -1312,8 +1405,8 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<RangeControl
-								label="Momentum Ratio"
-								help="Higher value produces larger momentum distance after you release slider"
+								label={__('Momentum Ratio', 'wp-swiper')}
+								help={__('Higher value produces larger momentum distance after you release slider', 'wp-swiper')}
 								value={freeModeMomentumRatio}
 								onChange={(value) => {
 									setAttributes({ freeModeMomentumRatio: value });
@@ -1325,8 +1418,8 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<RangeControl
-								label="Momentum Velocity Ratio"
-								help="Higher value produces larger momentum velocity after you release slider"
+								label={__('Momentum Velocity Ratio', 'wp-swiper')}
+								help={__('Higher value produces larger momentum velocity after you release slider', 'wp-swiper')}
 								value={freeModeMomentumVelocityRatio}
 								onChange={(value) => {
 									setAttributes({ freeModeMomentumVelocityRatio: value });
@@ -1338,8 +1431,8 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<ToggleControl
-								label="Sticky"
-								help="Set to enabled to enable snap to slides positions in free mode"
+								label={__('Sticky', 'wp-swiper')}
+								help={__('Set to enabled to enable snap to slides positions in free mode', 'wp-swiper')}
 								checked={freeModeSticky}
 								onChange={() => {
 									setAttributes({ freeModeSticky: !freeModeSticky });
@@ -1350,14 +1443,14 @@ function BlockEdit(props) {
 				)}
 			</PanelBody>
 			<PanelBody
-				title={__('Responsive Breakpoints')}
+				title={__('Responsive Breakpoints', 'wp-swiper')}
 				icon="smartphone"
 				initialOpen={false}
 			>
 				<PanelRow>
 					<TextareaControl
-						label="Responsive breakpoints (JSON Object)"
-						help="Allows to set different parameter for different responsive breakpoints (screen sizes). Not all parameters can be changed in breakpoints, only those which are not required different layout and logic, like slidesPerView, slidesPerGroup, spaceBetween, grid.rows. Such parameters like loop and effect won't work"
+						label={__('Responsive breakpoints (JSON Object)', 'wp-swiper')}
+						help={__('Allows to set different parameter for different responsive breakpoints (screen sizes). Not all parameters can be changed in breakpoints, only those which are not required different layout and logic, like slidesPerView, slidesPerGroup, spaceBetween, grid.rows. Such parameters like loop and effect won\'t work', 'wp-swiper')}
 						value={breakpoints}
 						onChange={(option) => {
 							setAttributes({ breakpoints: option });
@@ -1365,18 +1458,18 @@ function BlockEdit(props) {
 					/>
 				</PanelRow>
 				<PanelRow>
-					<p>Example: {'{\"720\":{\"slidesPerView\":2}}'} - Notice the double quotes</p>
+					<p>{__('Example:', 'wp-swiper')} {'{\"720\":{\"slidesPerView\":2}}'} - {__('Notice the double quotes', 'wp-swiper')}</p>
 				</PanelRow>
 			</PanelBody>
 			<PanelBody
-				title={__('Thumbnails')}
+				title={__('Thumbnails', 'wp-swiper')}
 				icon="images-alt2"
 				initialOpen={false}
 			>
 				<PanelRow>
 					<ToggleControl
-						label="Thumbs"
-						help="Enables thumbs to be used as pagination."
+						label={__('Thumbs', 'wp-swiper')}
+						help={__('Enables thumbs to be used as pagination.', 'wp-swiper')}
 						checked={thumbs}
 						onChange={() => {
 							setAttributes({ thumbs: !thumbs });
@@ -1387,8 +1480,8 @@ function BlockEdit(props) {
 					<>
 						<PanelRow>
 							<TextControl
-								label="Space Between"
-								help="Distance between slides in px."
+								label={__('Space Between', 'wp-swiper')}
+								help={__('Distance between slides in px.', 'wp-swiper')}
 								value={thumbsSpaceBetween}
 								onChange={(option) => {
 									setAttributes({ thumbsSpaceBetween: parseInt(option) });
@@ -1397,8 +1490,8 @@ function BlockEdit(props) {
 						</PanelRow>
 						<PanelRow>
 							<TextControl
-								label="Thumbs per view"
-								help="Number of slides per view (slides visible at the same time on slider's container). Can be a number or auto"
+								label={__('Thumbs per view', 'wp-swiper')}
+								help={__('Number of slides per view (slides visible at the same time on slider\'s container). Can be a number or auto', 'wp-swiper')}
 								value={thumbsSlidesPerView}
 								onChange={(option) => {
 									setAttributes({ thumbsSlidesPerView: parseInt(option) });
@@ -1416,13 +1509,13 @@ function BlockEdit(props) {
 				)}
 			</PanelBody>
 			<PanelBody
-				title={__('Developer Tools')}
+				title={__('Developer Tools', 'wp-swiper')}
 				icon="admin-tools"
 				initialOpen={false}
 			>
 				<ToggleControl
-					label="Debug"
-					help="Show (console.log) config JSON object for each slider"
+					label={__('Debug', 'wp-swiper')}
+					help={__('Show (console.log) config JSON object for each slider', 'wp-swiper')}
 					checked={debug}
 					onChange={() => {
 						setAttributes({ debug: !debug });
@@ -1432,16 +1525,16 @@ function BlockEdit(props) {
 					<Button
 						onClick={() => {
 							let counter = 1;
-							tabsData.forEach((tab, index) => {
+							tabsData.forEach((tab) => {
 								tab.slug = `slide-${counter}`;
 								counter++;
 							});
 							setAttributes({ tabsData });
-							updateSlugsForInnerBlocks(block.innerBlocks);
+							updateSlugsForInnerBlocks(block?.innerBlocks || []);
 						}}
 						className="button"
 					>
-						Fix Slide Slugs
+						{__('Fix Slide Slugs', 'wp-swiper')}
 					</Button>
 				</PanelRow>
 				<PanelRow>
@@ -1454,8 +1547,7 @@ function BlockEdit(props) {
 							marginBottom: 'revert',
 						}}
 					>
-						On rare occasions, if the slide slugs become out of sync with the slide data stored in the parent block, you might notice all slide contents appearing under a single tab. Clicking this button could help resolve the issue. This action iterates over each slide and resets
-						the slugs in ascending order (e.g., slide-1, slide-2, etc.), ensuring that each tab properly corresponds to its respective slide.
+						{__('On rare occasions, if the slide slugs become out of sync with the slide data stored in the parent block, you might notice all slide contents appearing under a single tab. Clicking this button could help resolve the issue. This action iterates over each slide and resets the slugs in ascending order (e.g., slide-1, slide-2, etc.), ensuring that each tab properly corresponds to its respective slide.', 'wp-swiper')}
 					</p>
 				</PanelRow>
 
@@ -1467,10 +1559,9 @@ function BlockEdit(props) {
 				className={classnames(blockProps.className, className)}
 				data-tab-active={tabActive}
 			>
-				<div
-					className="wb-tabs-buttons-wrapper"
-					style={style}
-				>
+			<div
+				className="wb-tabs-buttons-wrapper"
+			>
 					<div className={classnames('wb-tabs-buttons', `wb-tabs-buttons-align-${buttonsAlign}`)}>
 						{tabsData.map((tabData, i) => {
 							const { slug } = tabData;
@@ -1482,11 +1573,11 @@ function BlockEdit(props) {
 									key={`tab_button_${tabData.slug}`}
 									onClick={() => setAttributes({ tabActive: slug })}
 								>
-									<h4>Slide {counter++}</h4>
+									<h4>{__('Slide', 'wp-swiper')} {counter++}</h4>
 
 									<RemoveButton
 										show={isSelectedBlockInRoot}
-										tooltipText={__('Remove slide?', '@@text_domain')}
+										tooltipText={__('Remove slide?', 'wp-swiper')}
 										onRemove={() => {
 											removeTab(i);
 										}}
@@ -1495,26 +1586,23 @@ function BlockEdit(props) {
 							);
 						})}
 						{isSelectedBlockInRoot ? (
-							<Tooltip text={__('Add Slide', '@@text_domain')}>
+							<Tooltip text={__('Add Slide', 'wp-swiper')}>
 								<Button
-									icon={'insert'}
+									icon="insert"
 									onClick={() => {
-										let newTabsData = [];
 										const newDataLength = tabsData.length + 1;
-										const block = createBlock('da/wp-swiper-slide', {
+										const newBlock = createBlock('da/wp-swiper-slide', {
 											slug: `slide-${newDataLength}`,
 										});
 
-										newTabsData = [...tabsData];
-										newTabsData.push({
-											clientId: block.clientId,
+										const newTabsData = [...tabsData, {
+											clientId: newBlock.clientId,
 											slug: `slide-${newDataLength}`,
 											slideImg: '',
 											thumbImg: '',
-										});
+										}];
 
-										let innerBlocks = getBlocks(clientId);
-										innerBlocks = [...innerBlocks, block];
+										const innerBlocks = [...getBlocks(clientId), newBlock];
 
 										replaceInnerBlocks(clientId, innerBlocks, false);
 										setAttributes({
@@ -1534,56 +1622,52 @@ function BlockEdit(props) {
 						allowedBlocks={['da/wp-swiper-slide']}
 					/>
 				</div>
+
+				{/* Drop Zone for dragging images */}
+				<div
+					className={classnames('wp-swiper__drop-zone-wrapper', {
+						'is-dragging-over': isDraggingOver,
+						'is-uploading': isUploading,
+					})}
+				>
+					<DropZone
+						onFilesDrop={handleFilesDropped}
+						onDragEnter={() => setIsDraggingOver(true)}
+						onDragLeave={() => setIsDraggingOver(false)}
+					/>
+					<div className="wp-swiper__drop-zone-content">
+				{isUploading ? (
+					<>
+						<svg className="wp-swiper__drop-zone-spinner" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" opacity="0.3"/>
+							<path d="M12 2v4c3.31 0 6 2.69 6 6h4c0-5.52-4.48-10-10-10z">
+								<animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+							</path>
+						</svg>
+						<p>{__('Uploading images...', 'wp-swiper')}</p>
+					</>
+				) : (
+					<>
+						<svg width="48" height="48" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+							<path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/>
+						</svg>
+						<p>{__('Drop images here to create slides', 'wp-swiper')}</p>
+					</>
+				)}
+					</div>
+				</div>
 				</div>
 			</div>
 			<style>
 				{`
-						[data-block="${props.clientId}"] [data-tab] {
+						[data-block="${clientId}"] [data-tab] {
 							display: none;
 						}
-						[data-block="${props.clientId}"] [data-tab="${tabActive ?? 'slide-1'}"] {
-							display: block !important;
+						[data-block="${clientId}"] [data-tab="${tabActive ?? 'slide-1'}"] {
+							display: flex !important;
 						}
 						`}
 			</style>
-		</Fragment>
+		</>
 	);
 }
-
-export default compose([
-	withSelect((select, ownProps) => {
-		const { getBlock, isBlockSelected, hasSelectedInnerBlock } = select('core/block-editor');
-		const { clientId } = ownProps;
-		const block = getBlock(clientId);
-
-		return {
-			innerBlocks: block ? block.innerBlocks : [], // Get inner blocks if the block exists
-			blocks: select(blockEditorStore).getBlocks(),
-			block,
-			isSelectedBlockInRoot: isBlockSelected(clientId) || hasSelectedInnerBlock(clientId, true),
-		};
-	}),
-	withDispatch((dispatch, ownProps, registry) => {
-		const { updateBlockAttributes, removeBlock, replaceInnerBlocks, moveBlockToPosition, moveBlocksDown } = dispatch('core/block-editor');
-		const { getBlocks } = registry.select('core/block-editor');
-
-		// Function to update slug attribute for inner blocks
-		const updateSlugsForInnerBlocks = (innerBlocks) => {
-			let counter = 1;
-			innerBlocks.forEach((innerBlock, index) => {
-				updateBlockAttributes(innerBlock.clientId, { slug: `slide-${counter}` });
-				counter++;
-			});
-		};
-
-		return {
-			moveBlocksDown,
-			moveBlockToPosition,
-			replaceInnerBlocks,
-			getBlocks,
-			updateBlockAttributes,
-			removeBlock,
-			updateSlugsForInnerBlocks,
-		};
-	}),
-])(BlockEdit);

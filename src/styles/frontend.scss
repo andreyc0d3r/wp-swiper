@@ -1,23 +1,5 @@
 .wp-swiper {
 	position: relative;
-	
-	.wp_swiper__button-prev,
-	.wp_swiper__button-next {
-
-		img {
-			width: 45px;
-			height: 45px;
-		}
-			
-		&::after {
-			content: none;
-		}
-	}
-
-	> .wp-swiper__wrapper {
-		position: relative;
-		margin-bottom: 10px;
-	}
 
 	&__thumbs {
 		overflow: hidden;
@@ -67,12 +49,11 @@
 
 		.wp_swiper__button-prev,
 		.wp_swiper__button-next {
-	
 			img {
 				width: 36px;
 				height: 36px;
 			}
-				
+
 			&::after {
 				content: none;
 			}
@@ -218,27 +199,44 @@
 		z-index: 5;
 	}
 	&__slide {
-		// display: flex;
-		// flex-direction: column;
-
-		// position: absolute;
-		// left: 0;
-		// top: 0;
-		// right: 0;
-		// bottom: 0;
-
-		// background-position: center;
-		// background-repeat: no-repeat;
-		// background-size: cover;
-
 		.wp-swiper__slide-content {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			height: 100%;
+
 			position: relative;
 			box-sizing: border-box;
-			width: 100%;
 			margin-left: auto;
 			margin-right: auto;
 			z-index: 5;
 		}
+
+		.wp-swiper__slide-content {
+			justify-content: center;
+		}
+
+		&.is-position-bottom-center {
+			.wp-swiper__slide-content {
+				justify-content: flex-end;
+			}
+		}
+	}
+
+	.swiper-button-prev,
+	.swiper-button-next {
+		color: var(--wp-swiper-navigation-color, #000);
+		svg {
+			fill: var(--wp-swiper-navigation-color, #000);
+		}
+	}
+
+	.swiper-pagination-bullet-active {
+		background-color: var(--wp-swiper-pagination-color, #000);
+	}
+
+	.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+		background-color: var(--wp-swiper-pagination-color, #000);
 	}
 }
 

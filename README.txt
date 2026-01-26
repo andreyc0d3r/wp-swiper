@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 3.0.1
 Tested up to: 6.9
-Stable tag: 1.13.12
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -148,13 +148,22 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
-= 1.4.0-beta.1 =
-* NEW: Drag and drop photos to create slides automatically
-* NEW: Enhanced autoplay controls with additional options
-* NEW: Customizable navigation colors for arrows and buttons
-* NEW: Add overlays to slides with color and opacity controls
-* IMPROVEMENT: Better user experience for slide creation workflow
-* BETA: This is a beta release - please test and provide feedback
+= 1.4.0 =
+* **Swiper Bundle Update**: Upgraded Swiper to version **v12.0.2** for improved performance and features
+* **UI Modernization**: Complete overhaul of block editor interface with modern design patterns
+  - CSS custom properties for consistent theming
+  - Modern tab navigation with pill-style active states
+  - Card-like container with subtle shadows and rounded corners
+  - Smooth transitions and animations
+  - Improved visual hierarchy and spacing
+  - Create slides from drop zone images
+  - Better drop zone feedback with hover/drag animations
+  - Modern gradient-based remove buttons
+  - Prepared for future dark mode support
+* **Bug Fixes**:
+  - Fixed ReferenceError for reverseDirection, stopOnLastSlide, and waitForTransition variables in slides block
+  - Fixed block validation error caused by conditional overlay style rendering
+  - Improved attribute handling in save functions
 
 = 1.3.10 =
 * Performance boost: Removed the high-frequency setTranslate event (keep only the essential ones). Related to autoSlideWidth
