@@ -124,6 +124,78 @@ class WP_Swiper_Admin {
         wp_enqueue_script( 'wpswiper-block-editor' );
 
     }
+
+    /**
+     * Display admin notice for beta version announcement
+     *
+     * @since    1.4.0
+     */
+    public function display_beta_announcement_notice() {
+        // Only show to users who can manage options
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // Check if notice has been dismissed
+        $dismissed = get_user_meta( get_current_user_id(), 'wpswiper_beta_140_dismissed_v2', true );
+        if ( $dismissed ) {
+            return;
+        }
+
+        ?>
+        <div class="notice notice-info is-dismissible wpswiper-beta-notice" data-notice="wpswiper_beta_140">
+            <p>
+                <strong><?php esc_html_e( 'WP Swiper 1.4.0-beta.1 is now available for testing!', 'wpswiper' ); ?></strong>
+            </p>
+            <p>
+                <?php 
+                printf(
+                    /* translators: %s: URL to plugin page */
+                    esc_html__( 'New version is coming soon! Check out the new features including drag and drop photos, customizable svg colors, and more. More details on the %s.', 'wpswiper' ),
+                    '<a href="https://wordpress.org/plugins/wp-swiper/" target="_blank">' . esc_html__( 'plugin page', 'wpswiper' ) . '</a>'
+                );
+                ?>
+            </p>
+            <p>
+                <?php 
+                printf(
+                    /* translators: 1: Download link, 2: GitHub issues link */
+                    esc_html__( '%1$s | %2$s', 'wpswiper' ),
+                    '<a href="https://downloads.wordpress.org/plugin/wp-swiper.1.4.0-beta.1.zip" target="_blank"><strong>' . esc_html__( 'Download Beta', 'wpswiper' ) . '</strong></a>',
+                    '<a href="https://github.com/andreyc0d3r/wp-swiper/issues" target="_blank">' . esc_html__( 'Report Issues & Feedback', 'wpswiper' ) . '</a>'
+                );
+                ?>
+            </p>
+        </div>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $(document).on('click', '.wpswiper-beta-notice .notice-dismiss', function() {
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        data: {
+                            action: 'wpswiper_dismiss_beta_notice',
+                            nonce: '<?php echo wp_create_nonce( 'wpswiper_dismiss_beta_notice' ); ?>'
+                        }
+                    });
+                });
+            });
+        </script>
+        <?php
+    }
+
+    /**
+     * Handle AJAX request to dismiss beta notice
+     *
+     * @since    1.4.0
+     */
+    public function dismiss_beta_notice() {
+        check_ajax_referer( 'wpswiper_dismiss_beta_notice', 'nonce' );
+
+        update_user_meta( get_current_user_id(), 'wpswiper_beta_140_dismissed_v2', true );
+
+        wp_send_json_success();
+    }
     
 
 }
