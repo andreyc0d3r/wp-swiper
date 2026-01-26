@@ -129,7 +129,7 @@ function save(props) {
 	}
 	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
 		data_atts['data-breakpoints'] = JSON.stringify(breakpoints.replace(/^\s+|\s+|\n$/gm, ''));
-		data_atts['data-breakpoints'] = data_atts['breakpoints'].substring(1, data_atts['breakpoints'].length - 1);
+		data_atts['data-breakpoints'] = data_atts['data-breakpoints'].substring(1, data_atts['data-breakpoints'].length - 1);
 	}
 
 	if (thumbs) {
