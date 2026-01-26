@@ -9,7 +9,8 @@ import classnames from 'classnames/dedupe';
 import { useBlockProps, InnerBlocks, useInnerBlocksProps } from '@wordpress/block-editor';
 
 /**
- * Block Save Class.
+ * Block Save Class - Version 2 (without sliderHeight/navigationColor/paginationColor)
+ * This is for backward compatibility with blocks created before height and color customization was added
  */
 function save(props) {
 	let { className } = props.attributes;
@@ -46,7 +47,6 @@ function save(props) {
 		thumbsSpaceBetween,
 		thumbsSlidesPerView,
 		autoHeight,
-		sliderHeight,
 		freeMode,
 		freeModeMinimumVelocity,
 		freeModeMomentum,
@@ -63,8 +63,6 @@ function save(props) {
 		slidesOffsetBefore,
 		slidesOffsetAfter,
 		overflowVisible,
-		navigationColor,
-		paginationColor,
 	} = props.attributes;
 
 	className = classnames(className, 'wp-swiper');
@@ -73,22 +71,10 @@ function save(props) {
 		className = classnames(className, `align${align}`);
 	}
 
-	const blockStyle = {};
-
-	if (navigationColor) {
-		blockStyle['--wp-swiper-navigation-color'] = navigationColor;
-	}
-
-	if (paginationColor) {
-		blockStyle['--wp-swiper-pagination-color'] = paginationColor;
-	}
-
-	const blockProps = useBlockProps.save({
+	// Old version didn't use useBlockProps.save() - just plain className
+	const blockProps = {
 		className: className,
-		style: blockStyle,
-	});
-
-	const innerBlocksProps = useInnerBlocksProps;
+	};
 
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 	if (overlayImgOpacity) {
@@ -135,16 +121,14 @@ function save(props) {
 		data_atts.loopAdditionalSlides = loopAdditionalSlides;
 	}
 
-	// Effect logic
-	if (effect) {
-		data_atts.effect = effect;
+	// Effect logic - always include effect (old version always had it)
+	data_atts.effect = effect || 'slide';
 
-		// If the effect is 'fade', enable crossFade
-		if (effect === 'fade') {
-			data_atts.fadeEffect = {
-				crossFade: true,
-			};
-		}
+	// If the effect is 'fade', enable crossFade
+	if (effect === 'fade') {
+		data_atts.fadeEffect = {
+			crossFade: true,
+		};
 	}
 
 	// Autoplay
@@ -251,17 +235,10 @@ function save(props) {
 			)
 		);
 	});
-	
+
 	const swiperContainerClassName = classnames('swiper-container', 'swiper', {
 		'swiper-overflow-visible': overflowVisible,
 	});
-
-	// Build container style with height if provided
-	// Only add height style if autoHeight is false AND sliderHeight is set
-	const swiperContainerStyle = {};
-	if (sliderHeight && !autoHeight) {
-		swiperContainerStyle.height = sliderHeight;
-	}
 
 	return (
 		<div {...blockProps}>
@@ -271,13 +248,14 @@ function save(props) {
 			>
 				<div
 					className={swiperContainerClassName}
-					style={Object.keys(swiperContainerStyle).length > 0 ? swiperContainerStyle : undefined}
-					{...(debug ? { 'data-debug': true } : {})} // Only include data-debug if debug is true
+					{...(debug ? { 'data-debug': true } : {})}
 					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}
 				>
 					<div className="swiper-wrapper">
-						<InnerBlocks.Content />
+{'\n'}
+<InnerBlocks.Content />
+{'\n'}
 					</div>
 				</div>
 				{getNavigation(props)}
@@ -383,3 +361,4 @@ function save(props) {
 }
 
 export default save;
+

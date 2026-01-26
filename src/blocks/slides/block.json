@@ -172,7 +172,7 @@
 		},
 		"autoHeight": {
 			"type": "boolean",
-			"default": false
+			"default": true
 		},
 		"sliderHeight": {
 			"type": "string",
