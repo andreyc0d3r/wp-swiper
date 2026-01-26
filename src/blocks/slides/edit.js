@@ -11,6 +11,7 @@ import { __ } from '@wordpress/i18n';
 import { createBlock } from '@wordpress/blocks';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as noticesStore } from '@wordpress/notices';
+import { uploadMedia } from '@wordpress/media-utils';
 import {
 	PanelBody,
 	PanelRow,
@@ -51,20 +52,25 @@ const INNER_BLOCKS_TEMPLATE = [
 
 /**
  * Helper function to upload a file to the media library
+ * Uses @wordpress/media-utils uploadMedia for consistent behavior with Media Library
  * @param {File} file - The file to upload
  * @returns {Promise} - Resolves with the media object
  */
-async function uploadMediaFile(file) {
-	const formData = new FormData();
-	formData.append('file', file);
-
-	const response = await wp.apiFetch({
-		path: '/wp/v2/media',
-		method: 'POST',
-		body: formData,
+function uploadMediaFile(file) {
+	return new Promise((resolve, reject) => {
+		uploadMedia({
+			filesList: [file],
+			onFileChange: ([media]) => {
+				// Only resolve when the upload is complete (has an id)
+				if (media && media.id) {
+					resolve(media);
+				}
+			},
+			onError: (error) => {
+				reject(error);
+			},
+		});
 	});
-
-	return response;
 }
 
 /**
@@ -559,6 +565,18 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 	const [isUploading, setIsUploading] = useState(false);
 
 	/**
+	 * Helper to extract error message from various error formats
+	 */
+	const getErrorMessage = (error) => {
+		if (error?.message) {
+			return error.message;
+		} else if (error?.data?.message) {
+			return error.data.message;
+		}
+		return __('Upload failed', 'wp-swiper');
+	};
+
+	/**
 	 * Handle files dropped onto the swiper block
 	 * Creates new slides for each image dropped
 	 * If the first slide is empty, it will be replaced with the first dropped image
@@ -573,6 +591,9 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		setIsUploading(true);
 		setIsDraggingOver(false);
 
+		// Track errors for user notification
+		const uploadErrors = [];
+
 		try {
 			// Check if the first slide is empty (no image set)
 			const firstSlideIsEmpty = tabsData.length === 1 &&
@@ -583,104 +604,123 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 			let startIndex = 0;
 			let currentTabsData = [...tabsData];
 			let currentInnerBlocks = [...getBlocks(clientId)];
+			let hasSuccessfulUploads = false;
 
 			// If first slide is empty, replace it with the first image
 			if (firstSlideIsEmpty && imageFiles.length > 0) {
 				const file = imageFiles[0];
 
-				// Upload the first file to media library
-				const media = await uploadMediaFile(file);
+				try {
+					// Upload the first file to media library
+					const media = await uploadMediaFile(file);
 
-				// Get the image URL
-				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
-				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
+					// Get the image URL (wp.Uploader uses 'url' and 'sizes', REST API uses 'source_url' and 'media_details')
+					const imgUrl = media.url || media.source_url || media.sizes?.full?.url || media.media_details?.sizes?.full?.source_url || '';
+					const thumbUrl = media.sizes?.thumbnail?.url || media.sizes?.medium?.url ||
+						media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
 
-				// Get the existing first slide's inner blocks (content)
-				const existingFirstSlide = currentInnerBlocks[0];
+					// Get the existing first slide's inner blocks (content)
+					const existingFirstSlide = currentInnerBlocks[0];
 
-				// Create a new block with the image, preserving inner blocks (content)
-				const updatedFirstSlide = createBlock(
-					'da/wp-swiper-slide',
-					{
-						...existingFirstSlide.attributes,
+					// Create a new block with the image, preserving inner blocks (content)
+					const updatedFirstSlide = createBlock(
+						'da/wp-swiper-slide',
+						{
+							...existingFirstSlide.attributes,
+							slug: 'slide-1',
+							slideImg: imgUrl,
+							slideImgId: media.id,
+							thumbImg: thumbUrl,
+						},
+						existingFirstSlide.innerBlocks // Preserve any content blocks inside the slide
+					);
+
+					// Replace the first block in the array
+					currentInnerBlocks[0] = updatedFirstSlide;
+
+					// Update tabsData for the first slide
+					currentTabsData[0] = {
+						clientId: updatedFirstSlide.clientId,
 						slug: 'slide-1',
 						slideImg: imgUrl,
-						slideImgId: media.id,
 						thumbImg: thumbUrl,
-					},
-					existingFirstSlide.innerBlocks // Preserve any content blocks inside the slide
-				);
+					};
 
-				// Replace the first block in the array
-				currentInnerBlocks[0] = updatedFirstSlide;
-
-				// Update tabsData for the first slide
-				currentTabsData[0] = {
-					clientId: updatedFirstSlide.clientId,
-					slug: 'slide-1',
-					slideImg: imgUrl,
-					thumbImg: thumbUrl,
-				};
-
-				// Start processing remaining images from index 1
-				startIndex = 1;
+					hasSuccessfulUploads = true;
+					// Start processing remaining images from index 1
+					startIndex = 1;
+				} catch (error) {
+					// First file failed, collect error and continue with remaining files
+					uploadErrors.push(getErrorMessage(error));
+				}
 			}
 
 			// Process remaining images (or all images if first slide wasn't empty)
 			for (let i = startIndex; i < imageFiles.length; i++) {
 				const file = imageFiles[i];
 
-				// Upload the file to media library
-				const media = await uploadMediaFile(file);
+				try {
+					// Upload the file to media library
+					const media = await uploadMediaFile(file);
 
-				// Get the image URL
-				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
-				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
+					// Get the image URL (wp.Uploader uses 'url' and 'sizes', REST API uses 'source_url' and 'media_details')
+					const imgUrl = media.url || media.source_url || media.sizes?.full?.url || media.media_details?.sizes?.full?.source_url || '';
+					const thumbUrl = media.sizes?.thumbnail?.url || media.sizes?.medium?.url ||
+						media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
 
-				// Create new slide with the image
-				const newDataLength = currentTabsData.length + 1;
-				const newBlock = createBlock('da/wp-swiper-slide', {
-					slug: `slide-${newDataLength}`,
-					slideImg: imgUrl,
-					slideImgId: media.id,
-					thumbImg: thumbUrl,
-				});
+					// Create new slide with the image
+					const newDataLength = currentTabsData.length + 1;
+					const newBlock = createBlock('da/wp-swiper-slide', {
+						slug: `slide-${newDataLength}`,
+						slideImg: imgUrl,
+						slideImgId: media.id,
+						thumbImg: thumbUrl,
+					});
 
-				// Update tabsData
-				currentTabsData = [...currentTabsData, {
-					clientId: newBlock.clientId,
-					slug: `slide-${newDataLength}`,
-					slideImg: imgUrl,
-					thumbImg: thumbUrl,
-				}];
+					// Update tabsData
+					currentTabsData = [...currentTabsData, {
+						clientId: newBlock.clientId,
+						slug: `slide-${newDataLength}`,
+						slideImg: imgUrl,
+						thumbImg: thumbUrl,
+					}];
 
-				// Add the block to inner blocks
-				currentInnerBlocks = [...currentInnerBlocks, newBlock];
+					// Add the block to inner blocks
+					currentInnerBlocks = [...currentInnerBlocks, newBlock];
+					hasSuccessfulUploads = true;
+				} catch (error) {
+					// Collect error and continue with next file
+					uploadErrors.push(getErrorMessage(error));
+				}
 			}
 
-			// Update all inner blocks and attributes at once
-			if (currentInnerBlocks.length > 0) {
+			// Update all inner blocks and attributes at once if we had any successful uploads
+			if (hasSuccessfulUploads && currentInnerBlocks.length > 0) {
 				replaceInnerBlocks(clientId, currentInnerBlocks, false);
 				setAttributes({
 					tabsData: currentTabsData,
 					tabActive: startIndex === 1 ? 'slide-1' : `slide-${currentTabsData.length}`,
 				});
 			}
-		} catch (error) {
-			console.error('Error uploading images:', error);
 
-			// Extract user-friendly error message
-			let errorMessage = __('Failed to upload images. Please try again.', 'wp-swiper');
-
-			if (error?.message) {
-				errorMessage = error.message;
-			} else if (error?.data?.message) {
-				errorMessage = error.data.message;
+			// Show error notices for any failed uploads
+			if (uploadErrors.length > 0) {
+				// Remove duplicate error messages
+				const uniqueErrors = [...new Set(uploadErrors)];
+				uniqueErrors.forEach((errorMessage) => {
+					createErrorNotice(
+						errorMessage,
+						{
+							type: 'default',
+							isDismissible: true,
+						}
+					);
+				});
 			}
-
+		} catch (error) {
 			// Show error notice to the user at the top of the editor
 			createErrorNotice(
-				errorMessage,
+				getErrorMessage(error),
 				{
 					type: 'default',
 					isDismissible: true,

@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 3.0.1
 Tested up to: 6.9
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -148,6 +148,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.4.1 =
+* Switch to media library for image upload
+
 = 1.4.0 =
 * **Swiper Bundle Update**: Upgraded Swiper to version **v12.0.2** for improved performance and features
 * **UI Modernization**: Complete overhaul of block editor interface with modern design patterns
