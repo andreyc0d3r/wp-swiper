@@ -10,6 +10,7 @@ import { useEffect, useState, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { createBlock } from '@wordpress/blocks';
 import { useSelect, useDispatch } from '@wordpress/data';
+import { store as noticesStore } from '@wordpress/notices';
 import {
 	PanelBody,
 	PanelRow,
@@ -438,6 +439,8 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		replaceInnerBlocks,
 	} = useDispatch(blockEditorStore);
 
+	const { createErrorNotice } = useDispatch(noticesStore);
+
 	const { getBlocks } = useSelect((select) => ({
 		getBlocks: select(blockEditorStore).getBlocks,
 	}), []);
@@ -665,6 +668,24 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 			}
 		} catch (error) {
 			console.error('Error uploading images:', error);
+
+			// Extract user-friendly error message
+			let errorMessage = __('Failed to upload images. Please try again.', 'wp-swiper');
+
+			if (error?.message) {
+				errorMessage = error.message;
+			} else if (error?.data?.message) {
+				errorMessage = error.data.message;
+			}
+
+			// Show error notice to the user at the top of the editor
+			createErrorNotice(
+				errorMessage,
+				{
+					type: 'default',
+					isDismissible: true,
+				}
+			);
 		} finally {
 			setIsUploading(false);
 		}
