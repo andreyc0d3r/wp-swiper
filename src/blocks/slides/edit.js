@@ -732,6 +732,132 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 	};
 
 	/**
+	 * Handle media library selection for creating multiple slides
+	 * Allows selecting multiple images from media library
+	 */
+	const handleMediaLibrarySelect = useCallback((media) => {
+		// Handle both single media object and array of media objects
+		const mediaArray = Array.isArray(media) ? media : [media];
+
+		if (mediaArray.length === 0) return;
+
+		console.log('Selected media:', mediaArray);
+		setIsUploading(true);
+
+		try {
+			let currentTabsData = [...tabsData];
+			let currentInnerBlocks = [...getBlocks(clientId)];
+			let hasSuccessfulSelections = false;
+
+			// Check if the first slide is empty (no image set)
+			const firstSlideIsEmpty = tabsData.length === 1 &&
+				!tabsData[0].slideImg &&
+				block?.innerBlocks?.[0] &&
+				!block.innerBlocks[0].attributes.slideImg;
+
+			let startIndex = 0;
+
+			// If first slide is empty, use it for the first image
+			if (firstSlideIsEmpty && mediaArray.length > 0) {
+				const mediaItem = mediaArray[0];
+
+				// Get the image URL
+				const imgUrl = mediaItem.sizes?.full?.url || mediaItem.url;
+				const thumbUrl = mediaItem.sizes?.thumbnail?.url || mediaItem.sizes?.medium?.url || imgUrl;
+
+				// Get the existing first slide's inner blocks (content)
+				const existingFirstSlide = currentInnerBlocks[0];
+
+				// Create a new block with the image, preserving inner blocks (content)
+				const updatedFirstSlide = createBlock(
+					'da/wp-swiper-slide',
+					{
+						...existingFirstSlide.attributes,
+						slug: 'slide-1',
+						slideImg: imgUrl,
+						slideImgId: mediaItem.id,
+						thumbImg: thumbUrl,
+					},
+					existingFirstSlide.innerBlocks // Preserve any content blocks inside the slide
+				);
+
+				// Replace the first block in the array
+				currentInnerBlocks[0] = updatedFirstSlide;
+
+				// Update tabsData for the first slide
+				currentTabsData[0] = {
+					clientId: updatedFirstSlide.clientId,
+					slug: 'slide-1',
+					slideImg: imgUrl,
+					thumbImg: thumbUrl,
+				};
+
+				hasSuccessfulSelections = true;
+				// Start processing remaining images from index 1
+				startIndex = 1;
+			}
+
+			// Process remaining images (or all images if first slide wasn't empty)
+			// When first slide is NOT empty, we add ALL selected images as new slides
+			// When first slide IS empty, we skip the first image (already used above) and add the rest
+			for (let i = startIndex; i < mediaArray.length; i++) {
+				const mediaItem = mediaArray[i];
+
+				// Get the image URL
+				const imgUrl = mediaItem.sizes?.full?.url || mediaItem.url;
+				const thumbUrl = mediaItem.sizes?.thumbnail?.url || mediaItem.sizes?.medium?.url || imgUrl;
+
+				console.log(`Processing image ${i}:`, { id: mediaItem.id, imgUrl, thumbUrl });
+
+				// Create new slide with the image
+				const newDataLength = currentTabsData.length + 1;
+				const newBlock = createBlock('da/wp-swiper-slide', {
+					slug: `slide-${newDataLength}`,
+					slideImg: imgUrl,
+					slideImgId: mediaItem.id,
+					thumbImg: thumbUrl,
+				});
+
+				// Update tabsData
+				currentTabsData = [...currentTabsData, {
+					clientId: newBlock.clientId,
+					slug: `slide-${newDataLength}`,
+					slideImg: imgUrl,
+					thumbImg: thumbUrl,
+				}];
+
+				// Add the block to inner blocks
+				currentInnerBlocks = [...currentInnerBlocks, newBlock];
+				hasSuccessfulSelections = true;
+
+				console.log(`Added slide ${newDataLength} with image:`, imgUrl);
+			}
+
+			// Update all inner blocks and attributes at once if we had any successful selections
+			if (hasSuccessfulSelections && currentInnerBlocks.length > 0) {
+				console.log('Final tabsData:', currentTabsData);
+				console.log('Final innerBlocks count:', currentInnerBlocks.length);
+				replaceInnerBlocks(clientId, currentInnerBlocks, false);
+				setAttributes({
+					tabsData: currentTabsData,
+					tabActive: startIndex === 1 ? 'slide-1' : `slide-${currentTabsData.length}`,
+				});
+			}
+		} catch (error) {
+			console.error('Error selecting media from library:', error);
+			createErrorNotice(
+				__('Error selecting images from media library', 'wp-swiper'),
+				{
+					type: 'default',
+					isDismissible: true,
+				}
+			);
+		} finally {
+			setIsUploading(false);
+		}
+	}, [tabsData, block, clientId, getBlocks, replaceInnerBlocks, setAttributes, createErrorNotice]);
+
+	/**
 	 * Remove a tab/slide
 	 */
 	const removeTab = useCallback((i) => {
@@ -1713,6 +1839,26 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 							<path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/>
 						</svg>
 						<p>{__('Drop images here to create slides', 'wp-swiper')}</p>
+						<div className="wp-swiper__drop-zone-divider">
+							<span>{__('or', 'wp-swiper')}</span>
+						</div>
+						<MediaUploadCheck>
+							<MediaUpload
+								multiple
+								value={[]}
+								onSelect={handleMediaLibrarySelect}
+								allowedTypes={['image']}
+								render={({ open }) => (
+									<Button
+										onClick={open}
+										variant="primary"
+										className="wp-swiper__media-library-button"
+									>
+										{__('Select Images from Media Library', 'wp-swiper')}
+									</Button>
+								)}
+							/>
+						</MediaUploadCheck>
 					</>
 				)}
 					</div>

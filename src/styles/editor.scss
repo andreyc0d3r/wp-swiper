@@ -456,7 +456,7 @@ div[data-type="da/wp-swiper-slides"] {
     justify-content: center;
     text-align: center;
     color: var(--wpswiper-text-muted);
-    pointer-events: none;
+    pointer-events: auto;
 
     .dashicons {
         font-size: 40px;
@@ -470,6 +470,49 @@ div[data-type="da/wp-swiper-slides"] {
         margin: 0;
         font-size: 14px;
         font-weight: 500;
+    }
+
+    // Divider between drag-drop and media library
+    .wp-swiper__drop-zone-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin: 16px 0;
+        color: var(--wpswiper-text-muted);
+        font-size: 12px;
+        font-weight: 500;
+
+        &::before,
+        &::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--wpswiper-border);
+        }
+
+        span {
+            padding: 0 12px;
+        }
+    }
+
+    // Media Library Button
+    .wp-swiper__media-library-button {
+        pointer-events: auto;
+        margin-top: 8px;
+        padding: 10px 24px !important;
+        font-weight: 500;
+        border-radius: var(--wpswiper-radius) !important;
+        transition: all var(--wpswiper-transition);
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--wpswiper-shadow);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
     }
 }
 
