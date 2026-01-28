@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 3.0.1
 Tested up to: 6.9
-Stable tag: 1.4.3
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -148,6 +148,9 @@ Alternatively, you can install the plugin manually by downloading the plugin fro
 
 
 == Changelog ==
+= 1.4.4 =
+* Editor UI improvements
+
 = 1.4.3 =
 * **Added Media Library Selection**: Introduced "Select Images from Media Library" button as a secondary method to create slides
   - Allows users to select multiple images at once from the WordPress media library
