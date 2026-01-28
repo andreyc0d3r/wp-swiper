@@ -105,50 +105,10 @@
 			}
 		}
 
-		// Add Slide Button - styled like Gutenberg button
-		// Button is wrapped in Tooltip, so we need to target it through the wrapper
+		// Add Slide Button - uses default Gutenberg inserter styling
 		> .components-tooltip {
 			display: inline-flex;
 			margin-left: auto;
-
-			.components-button {
-				display: inline-flex !important;
-				align-items: center;
-				justify-content: center;
-				min-width: auto;
-				height: auto;
-				padding: 12px 16px;
-				background: transparent;
-				border: none;
-				border-bottom: 3px solid transparent;
-				border-radius: 0;
-				color: var(--wpswiper-text-muted);
-				transition: none;
-
-				&:hover {
-					background: transparent;
-					border-style: none;
-					color: var(--wpswiper-text);
-					transform: none;
-				}
-
-				svg {
-					color: currentColor;
-					width: 20px;
-					height: 20px;
-				}
-
-				// Dashicon styling
-				.dashicon,
-				.dashicons {
-					display: inline-block;
-					color: currentColor;
-					width: 20px;
-					height: 20px;
-					font-size: 20px;
-					line-height: 20px;
-				}
-			}
 		}
 	}
 

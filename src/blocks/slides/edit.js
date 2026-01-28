@@ -1769,6 +1769,8 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 						<Tooltip text={__('Add Slide', 'wp-swiper')}>
 							<Button
 								icon={plus}
+								className="block-editor-inserter__toggle is-next-40px-default-size"
+								aria-label={__('Add Slide', 'wp-swiper')}
 								onClick={() => {
 									const newDataLength = tabsData.length + 1;
 									const newBlock = createBlock('da/wp-swiper-slide', {
