@@ -741,7 +741,6 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 
 		if (mediaArray.length === 0) return;
 
-		console.log('Selected media:', mediaArray);
 		setIsUploading(true);
 
 		try {
@@ -807,8 +806,6 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				const imgUrl = mediaItem.sizes?.full?.url || mediaItem.url;
 				const thumbUrl = mediaItem.sizes?.thumbnail?.url || mediaItem.sizes?.medium?.url || imgUrl;
 
-				console.log(`Processing image ${i}:`, { id: mediaItem.id, imgUrl, thumbUrl });
-
 				// Create new slide with the image
 				const newDataLength = currentTabsData.length + 1;
 				const newBlock = createBlock('da/wp-swiper-slide', {
@@ -829,14 +826,10 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				// Add the block to inner blocks
 				currentInnerBlocks = [...currentInnerBlocks, newBlock];
 				hasSuccessfulSelections = true;
-
-				console.log(`Added slide ${newDataLength} with image:`, imgUrl);
 			}
 
 			// Update all inner blocks and attributes at once if we had any successful selections
 			if (hasSuccessfulSelections && currentInnerBlocks.length > 0) {
-				console.log('Final tabsData:', currentTabsData);
-				console.log('Final innerBlocks count:', currentInnerBlocks.length);
 				replaceInnerBlocks(clientId, currentInnerBlocks, false);
 				setAttributes({
 					tabsData: currentTabsData,
