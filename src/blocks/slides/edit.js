@@ -37,6 +37,7 @@ import {
 	MediaUpload,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
+import { plus } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -1765,35 +1766,31 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 								</div>
 							);
 						})}
-						{isSelectedBlockInRoot ? (
-							<Tooltip text={__('Add Slide', 'wp-swiper')}>
-								<Button
-									icon="insert"
-									onClick={() => {
-										const newDataLength = tabsData.length + 1;
-										const newBlock = createBlock('da/wp-swiper-slide', {
-											slug: `slide-${newDataLength}`,
-										});
+						<Tooltip text={__('Add Slide', 'wp-swiper')}>
+							<Button
+								icon={plus}
+								onClick={() => {
+									const newDataLength = tabsData.length + 1;
+									const newBlock = createBlock('da/wp-swiper-slide', {
+										slug: `slide-${newDataLength}`,
+									});
 
-										const newTabsData = [...tabsData, {
-											clientId: newBlock.clientId,
-											slug: `slide-${newDataLength}`,
-											slideImg: '',
-											thumbImg: '',
-										}];
+									const newTabsData = [...tabsData, {
+										clientId: newBlock.clientId,
+										slug: `slide-${newDataLength}`,
+										slideImg: '',
+										thumbImg: '',
+									}];
 
-										const innerBlocks = [...getBlocks(clientId), newBlock];
+									const innerBlocks = [...getBlocks(clientId), newBlock];
 
-										replaceInnerBlocks(clientId, innerBlocks, false);
-										setAttributes({
-											tabsData: newTabsData,
-										});
-									}}
-								/>
-							</Tooltip>
-						) : (
-							''
-						)}
+									replaceInnerBlocks(clientId, innerBlocks, false);
+									setAttributes({
+										tabsData: newTabsData,
+									});
+								}}
+							/>
+						</Tooltip>
 					</div>
 				<div className="wp-swiper__slide-content">
 					<InnerBlocks
