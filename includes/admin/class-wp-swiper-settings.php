@@ -110,4 +110,3 @@ if (! class_exists('WP_Swiper_Settings')) {
 	// Instantiate the class
 	new WP_Swiper_Settings();
 }
-?>

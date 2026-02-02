@@ -8,8 +8,6 @@ const path = require('path');
  */
 const defaultConfig = require('@wordpress/scripts/config/webpack.config.js');
 
-// console.dir({ defaultConfig: defaultConfig }, { depth: null });
-
 module.exports = {
 	...defaultConfig,
 	entry: {

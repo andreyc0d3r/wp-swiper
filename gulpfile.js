@@ -5,7 +5,9 @@ const del = require('del');
 
 const pluginName = 'wp-swiper';
 const zipDist = 'dist-zip';
-const svnPath = '/Users/andrey/Projects/wp-swiper-svn/trunk';
+
+// SVN path for WordPress.org publishing - update this to your local SVN checkout path
+const svnPath = process.env.WP_SWIPER_SVN_PATH || './wp-swiper-svn/trunk';
 
 // Files to include in the zip package and SVN
 const packageFiles = [

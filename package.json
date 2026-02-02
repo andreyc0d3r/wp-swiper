@@ -1,7 +1,7 @@
 {
 	"name": "wp-swiper",
-	"version": "1.0.0",
-	"description": "",
+	"version": "1.4.4",
+	"description": "Swiper JS as a Gutenberg Block - The most modern mobile touch slider with hardware accelerated transitions",
 	"main": "src/index.js",
 	"scripts": {
 		"start": "wp-scripts start",
@@ -10,8 +10,8 @@
 		"package": "npm run build && gulp zip",
 		"publish:svn": "npm run build && gulp svn"
 	},
-	"author": "",
-	"license": "ISC",
+	"author": "Digital Apps <support@digitalapps.com>",
+	"license": "GPL-2.0+",
 	"devDependencies": {
 		"@wordpress/icons": "^11.3.0",
 		"@wordpress/scripts": "^31.1.0",

@@ -42,14 +42,30 @@ class WP_Swiper_Public
 	private $version;
 
 	/**
-	 * The version of this plugin.
+	 * The file name.
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
+	 * @var      string    $file_name    The file name.
 	 */
 	private $file_name;
+
+	/**
+	 * Plugin settings.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      array    $settings    Plugin settings.
+	 */
 	private $settings;
+
+	/**
+	 * Block detector instance.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      WP_Swiper_Block_Detector    $block_detector    Block detector instance.
+	 */
 	protected $block_detector = null;
 
 	/**

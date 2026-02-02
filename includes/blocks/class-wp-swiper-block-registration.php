@@ -27,9 +27,6 @@ class WP_Swiper_Block_Registration {
      * @since    1.0.0
      */
     function __construct() {
-        //--------------------------
-        // LOAD JSON - START
-        //--------------------------
         // Read the JSON file
         $json_data = $this->read_json();
 
@@ -44,13 +41,8 @@ class WP_Swiper_Block_Registration {
 
         $modifiedString = str_replace('/', '-', $this->block_name);
         $this->block_name = $modifiedString;
-        //--------------------------
-        // LOAD JSON - END
-        //--------------------------
 
-        //--------------------------
-        // HOOKS - START
-        //--------------------------
+        // Register hooks
         add_action('init', [$this, 'register_block']);
         add_action('enqueue_block_editor_assets', [$this, 'editor_assets']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_assets']);

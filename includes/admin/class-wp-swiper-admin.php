@@ -31,13 +31,12 @@ class WP_Swiper_Admin {
     private $version;
 
     /**
-     * The version of this plugin.
+     * Plugin options.
      *
      * @since    1.0.0
      * @access   private
-     * @var      string    $version    The current version of this plugin.
+     * @var      array    $options    Plugin options.
      */
-    private $error_log;
     private $options;
 
     /**
@@ -57,30 +56,13 @@ class WP_Swiper_Admin {
     }
 
     /**
-     * Register the stylesheets for the admin area.
-     *
-     * @since   1.0.0
-     */
-    public function enqueue_styles() {
-
-    }
-
-    /**
-     * Register the JavaScript for the admin area.
-     *
-     * @since   1.0.0
-     */
-    public function enqueue_scripts( $hook_suffix ) {
-
-
-    }
-
-    /**
      * Sets the class variable $options
+     *
+     * @since   1.0.0
      */
     private function set_options() {
         $this->options = get_option( $this->plugin_name . '-options' );
-    } // set_options()
+    }
 
     public function enqueue_block_editor_styles() {
         wp_enqueue_style(
