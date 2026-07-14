@@ -56,7 +56,7 @@ var wp_swiper = new (function () {
 			if (options.breakpoints) {
 				if (typeof options.breakpoints === "string") {
 					options.breakpoints = JSON.parse(options.breakpoints.replace(/\\/g, ''));
-				}				
+				}
 			}
 
 			// Swiper Thumbs
@@ -76,7 +76,7 @@ var wp_swiper = new (function () {
 				let thumbSlidesArray = [];
 
 				Array.from(slides).forEach((slide, index) => {
-					const thumbNumber = index + 1; // Assuming thumb numbers start from 1
+					const thumbNumber = index + 1;
 					const matchingThumb = Array.from(existingThumbs).find((thumb) => parseInt(thumb.getAttribute('data-thumb')) === thumbNumber);
 
 					if (matchingThumb) {
@@ -121,11 +121,13 @@ var wp_swiper = new (function () {
 			}
 
 			if (swiper_container.hasAttribute('data-debug')) {
-				if (swiper_container.getAttribute('data-debug') == 'true') {
-					console.log({
-						swiper_container,
-						options: options,
-					});
+				if (swiper_container.getAttribute('data-debug') === 'true') {
+					window.dispatchEvent(new CustomEvent('wp-swiper:debug', {
+						detail: {
+							element: swiper_container,
+							options: options,
+						},
+					}));
 				}
 			}
 
@@ -170,12 +172,13 @@ var wp_swiper = new (function () {
 		}
 	};
 
-	window.addEventListener('DOMContentLoaded', (event) => {
+	window.addEventListener('DOMContentLoaded', () => {
 		try {
 			self.init();
-		} catch (e) {
-			console.warn('JS Error: ');
-			console.log(e);
+		} catch (error) {
+			window.dispatchEvent(new CustomEvent('wp-swiper:error', {
+				detail: { error },
+			}));
 		}
 	});
 })();

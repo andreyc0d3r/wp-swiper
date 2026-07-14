@@ -233,7 +233,7 @@ function save(props) {
 			>
 				<div
 					className={swiperContainerClassName}
-					{...(debug ? { 'data-debug': true } : {})} // Only include data-debug if debug is true
+					{...(debug ? { 'data-debug': true } : {})}
 					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}
 				>

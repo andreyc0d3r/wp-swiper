@@ -251,7 +251,7 @@ function save(props) {
 			)
 		);
 	});
-	
+
 	const swiperContainerClassName = classnames('swiper-container', 'swiper', {
 		'swiper-overflow-visible': overflowVisible,
 	});
@@ -272,7 +272,7 @@ function save(props) {
 				<div
 					className={swiperContainerClassName}
 					style={Object.keys(swiperContainerStyle).length > 0 ? swiperContainerStyle : undefined}
-					{...(debug ? { 'data-debug': true } : {})} // Only include data-debug if debug is true
+					{...(debug ? { 'data-debug': true } : {})}
 					data-swiper={JSON.stringify(data_atts)}
 					{...thumbsConfig}
 				>

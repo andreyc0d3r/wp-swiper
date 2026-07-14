@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a reproducible problem with WP Swiper
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem. Remove credentials, private URLs, personal data, and unrelated production logs before submitting.
+  - type: checkboxes
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and the WordPress.org support forum.
+          required: true
+        - label: I reproduced the issue with the latest WP Swiper release.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
+  - type: input
+    attributes:
+      label: WP Swiper version
+      placeholder: 1.4.5
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: WordPress and PHP versions
+      placeholder: WordPress 7.0.1, PHP 8.3
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Browser
+      placeholder: Chrome 140, Firefox 142, Safari 19
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest reliable sequence that demonstrates the problem.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add a minimal block export, screenshots, or sanitized logs if useful.

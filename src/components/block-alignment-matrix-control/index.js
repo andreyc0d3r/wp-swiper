@@ -6,7 +6,7 @@ import { DOWN } from '@wordpress/keycodes';
 import { ToolbarButton, Dropdown, __experimentalAlignmentMatrixControl as AlignmentMatrixControl } from '@wordpress/components';
 
 function BlockAlignmentMatrixControl(props) {
-	const { label = __('Change matrix alignment'), onChange = 'undefined', value = 'center', isDisabled } = props;
+	const { label = __('Change matrix alignment', 'wp-swiper'), onChange = 'undefined', value = 'center', isDisabled } = props;
 
 	const icon = <AlignmentMatrixControl.Icon value={value} />;
 	const className = 'block-editor-block-alignment-matrix-control';

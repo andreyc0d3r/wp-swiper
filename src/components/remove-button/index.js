@@ -20,7 +20,7 @@ export default class RemoveButton extends Component {
 	}
 
 	render() {
-		const { onRemove, show, style, tooltipText = __('Remove Slide?', '@@text_domain'), tooltipRemoveText = __('Remove', '@@text_domain'), tooltipCancelText = __('Cancel', '@@text_domain') } = this.props;
+		const { onRemove, show, style, tooltipText = __('Remove slide?', 'wp-swiper'), tooltipRemoveText = __('Remove', 'wp-swiper'), tooltipCancelText = __('Cancel', 'wp-swiper') } = this.props;
 
 		const { confirmed } = this.state;
 

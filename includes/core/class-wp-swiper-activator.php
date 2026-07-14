@@ -3,7 +3,7 @@
 /**
  * Fired during plugin activation
  *
- * @link       https://digitalapps.co
+ * @link       https://digitalapps.com
  * @since      1.0.0
  *
  * @package    WP_Swiper
@@ -18,7 +18,6 @@
  * @since      1.0.0
  * @package    WP_Swiper
  * @subpackage WP_Swiper/includes
- * @author     Digital Apps <support@digitalapps.com>
  */
 class WP_Swiper_Activator {
 

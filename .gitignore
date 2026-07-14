@@ -1,60 +1,46 @@
-# ignore all files starting with .
-.*
-
-# track this file .gitignore (i.e. do NOT ignore it)
-!.gitignore
-
-# track .babelrc & .browserlistrc files
-!*.babelrc
-!*.browserlistrc
-
-# track readme.md in the root (i.e. do NOT ignore it)
-!readme.md
-!README.md
-README.txt
-
-# ignore OS generated files
-ehthumbs.db
+# Operating system files
+.DS_Store
 Thumbs.db
+ehthumbs.db
 
-# ignore Editor files
+# Editor settings
+.idea/
+.vscode/
+*.komodoproject
 *.sublime-project
 *.sublime-workspace
-*.komodoproject
 
-# ignore log files and databases
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Dependencies and generated development output
+node_modules/
+coverage/
+dist-zip/
+wp-swiper-svn/
+svn/
+
+# Logs, databases, and archives
 *.log
 *.sql
 *.sqlite
-
-# ignore compiled files
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
-*.lnk
-
-# ignore packaged files
 *.7z
 *.dmg
 *.gz
 *.iso
-*.jar
 *.rar
 *.tar
 *.zip
 
-
-# ignore webpack/npm files in extensions
-**/node_modules
-composer.lock
-package-lock.json
-/build
-
-svn/
-dist-zip/
-memory-bank/
-docs/
-gulpfile.js
+# Compiled native files
+*.class
+*.com
+*.dll
+*.exe
+*.lnk
+*.o
+*.so

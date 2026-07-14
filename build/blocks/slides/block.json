@@ -1,7 +1,11 @@
 {
+  "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "da/wp-swiper-slides",
+  "title": "WP Swiper",
+  "description": "Create a responsive carousel with nested WordPress blocks.",
   "category": "media",
+  "textdomain": "wp-swiper",
   "supports": {
     "html": false,
     "className": false,

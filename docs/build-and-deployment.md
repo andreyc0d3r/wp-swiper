@@ -1,192 +1,80 @@
-# WP Swiper - Build and Deployment Guide
+# Build and release guide
 
-## Overview
+This guide covers development builds, distributable plugin archives, and releases for WP Swiper.
 
-This document explains the build and deployment workflows for the WP Swiper plugin.
+## Requirements
 
-## Prerequisites
+- Node.js 20.19.0 or newer
+- npm 10 or newer
+- PHP 7.4 or newer for local syntax checks
+- A WordPress 6.3 or newer test site
 
-- Node.js >= 18.0
-- npm (comes with Node.js)
-- PHP >= 7.0
-- Gulp CLI (installed globally or via npx)
+## Development
 
-## Project Structure
-
-The plugin is organized with a git-clone-ready structure:
-
-```
-wp-swiper/
-├── src/              # Source files (JS, SCSS)
-├── build/            # Built/compiled files (auto-generated)
-├── includes/         # PHP classes
-│   ├── core/        # Core plugin classes
-│   ├── blocks/      # Block registration & rendering
-│   ├── admin/       # Admin functionality
-│   └── public/      # Public-facing functionality
-├── assets/          # Static assets (Swiper library)
-├── docs/            # Documentation (this folder)
-├── memory-bank/     # Project documentation
-└── wp-swiper.php    # Main plugin file
-```
-
-## Development Workflow
-
-### 1. Install Dependencies
+Install the locked dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
-### 2. Development Mode (with file watcher)
+Start the asset watcher:
 
 ```bash
-npm run start
+npm start
 ```
 
-This runs webpack in watch mode - files will automatically rebuild when you make changes.
-
-### 3. Build for Production
+Create a production build:
 
 ```bash
 npm run build
 ```
 
-This compiles and minifies all JS and CSS files into the `/build` directory.
+Compiled assets are written to `build/`. These files are tracked because WordPress installs the plugin without running Node.js.
 
-## Distribution Workflows
+## Distribution archive
 
-### Create Distribution Zip
-
-For manual distribution or testing:
+Build and verify the installable archive:
 
 ```bash
 npm run package
 ```
 
-This will:
-1. Build the plugin (`npm run build`)
-2. Create a clean zip file at `dist-zip/wp-swiper.zip`
+The archive is written to `dist-zip/wp-swiper.zip`. The package verifier checks version consistency, required files, excluded development files, and common private-data patterns.
 
-The zip file excludes:
-- node_modules/
-- memory-bank/
-- docs/
-- src/ (source files - only built files are included)
-- Development config files (package.json, gulpfile.js, webpack.config.js, etc.)
+Before publishing an archive, install it on a clean WordPress site and verify:
 
-### Publish to WordPress.org (SVN)
+1. Plugin activation succeeds without warnings.
+2. Both WP Swiper blocks appear in the block editor.
+3. Slides can be added, reordered, edited, and removed.
+4. Media uploads and Media Library selection work.
+5. Saved sliders render correctly on the frontend.
+6. Navigation, pagination, autoplay, thumbnails, and responsive breakpoints work as configured.
+7. Deactivation and uninstall complete without errors.
 
-For publishing to the WordPress.org plugin directory:
+## GitHub release
+
+Releases are created from tags matching `v*` by the GitHub release workflow.
+
+1. Update the version in `package.json`, `wp-swiper.php`, and `README.txt`.
+2. Update the changelog in `README.txt`.
+3. Run `npm install --package-lock-only` if package metadata changed.
+4. Run `npm test` and `npm run package`.
+5. Test the generated archive on a clean WordPress site.
+6. Commit the release changes.
+7. Create and push a signed tag such as `v1.4.5`.
+
+The workflow builds a fresh archive and attaches it to the GitHub release.
+
+## WordPress.org release
+
+Set the path to a checked-out WordPress.org SVN trunk and run:
 
 ```bash
-npm run publish:svn
+WP_SWIPER_SVN_PATH=/path/to/wp-swiper-svn/trunk npm run publish:svn
 ```
 
-This will:
-1. Build the plugin (`npm run build`)
-2. Copy production-ready files to `../wp-swiper-svn/trunk/`
+Review the SVN diff before committing. WordPress.org assets such as banners and screenshots are managed in the SVN `assets` directory and are not copied by this command.
 
-**Note:** Make sure the SVN repository is checked out at `../wp-swiper-svn/` before running this command.
+## Release contents
 
-## Manual Gulp Tasks
-
-You can also run gulp tasks directly:
-
-```bash
-# Create distribution zip
-gulp zip
-
-# Copy to SVN trunk
-gulp svn
-
-# Show available tasks
-gulp
-```
-
-## What Gets Included in Distribution
-
-**Included:**
-- `/build/` - Compiled JS and CSS
-- `/includes/` - PHP classes
-- `/assets/` - Static assets
-- `/public/` - Public resources
-- `wp-swiper.php` - Main plugin file
-- `README.txt` - WordPress.org readme
-- `uninstall.php` - Uninstall script
-- Other necessary plugin files
-
-**Excluded:**
-- `/node_modules/` - NPM dependencies
-- `/memory-bank/` - Project documentation
-- `/docs/` - Development documentation
-- `/src/` - Source files (only built files are included)
-- `.git/` - Git repository
-- Development config files
-
-## File Ignore Patterns
-
-The gulpfile uses the following ignore patterns:
-
-```javascript
-const packageFiles = [
-    '**/*',
-    '!node_modules/**',
-    '!memory-bank/**',
-    '!docs/**',
-    '!.git/**',
-    '!.gitignore',
-    '!package.json',
-    '!package-lock.json',
-    '!gulpfile.js',
-    '!webpack.config.js',
-    '!.eslintrc.js',
-    '!.prettierrc.js',
-    '!**/*.scss',
-    '!**/*.lnk',
-    '!**/*.dev.js',
-    '!src/**',
-    'build/**/*',  // Include built files
-];
-```
-
-## Troubleshooting
-
-### Gulp tasks fail
-
-Make sure you have all dependencies installed:
-```bash
-npm install
-```
-
-### Build fails
-
-1. Check Node.js version: `node --version` (should be >= 18.0)
-2. Clear node_modules and reinstall:
-   ```bash
-   rm -rf node_modules package-lock.json
-   npm install
-   ```
-
-### Zip file contains wrong files
-
-Check the `packageFiles` array in `gulpfile.js` to verify the ignore patterns.
-
-## Version Management
-
-When releasing a new version:
-
-1. Update version in `wp-swiper.php` (plugin header)
-2. Update version in `README.txt` (Stable tag)
-3. Update changelog in `README.txt`
-4. Run `npm run build` to rebuild
-5. Run `npm run package` to create distribution zip
-6. Test the zip file installation
-7. Run `npm run publish:svn` to copy to SVN
-8. Commit and tag in SVN
-
-## Additional Resources
-
-- [Webpack Documentation](https://webpack.js.org/)
-- [WordPress Block Editor Handbook](https://developer.wordpress.org/block-editor/)
-- [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
+The installable archive includes runtime PHP, compiled assets, the bundled Swiper library, the WordPress.org readme, and license notices. Development sources, GitHub configuration, Node dependencies, and local files are excluded.

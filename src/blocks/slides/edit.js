@@ -10,8 +10,8 @@ import { useEffect, useState, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { createBlock } from '@wordpress/blocks';
 import { useSelect, useDispatch } from '@wordpress/data';
+import apiFetch from '@wordpress/api-fetch';
 import { store as noticesStore } from '@wordpress/notices';
-import { uploadMedia } from '@wordpress/media-utils';
 import {
 	PanelBody,
 	PanelRow,
@@ -37,7 +37,6 @@ import {
 	MediaUpload,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { plus } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -53,25 +52,30 @@ const INNER_BLOCKS_TEMPLATE = [
 
 /**
  * Helper function to upload a file to the media library
- * Uses @wordpress/media-utils uploadMedia for consistent behavior with Media Library
  * @param {File} file - The file to upload
- * @returns {Promise} - Resolves with the media object
+ * @return {Promise} Resolves with the media object.
  */
-function uploadMediaFile(file) {
-	return new Promise((resolve, reject) => {
-		uploadMedia({
-			filesList: [file],
-			onFileChange: ([media]) => {
-				// Only resolve when the upload is complete (has an id)
-				if (media && media.id) {
-					resolve(media);
-				}
-			},
-			onError: (error) => {
-				reject(error);
-			},
-		});
+async function uploadMediaFile(file) {
+	const formData = new FormData();
+	formData.append('file', file);
+
+	const response = await apiFetch({
+		path: '/wp/v2/media',
+		method: 'POST',
+		body: formData,
 	});
+
+	return response;
+}
+
+/**
+ * Return a useful message from a WordPress REST API error.
+ *
+ * @param {Error|Object} error Upload error.
+ * @return {string} User-facing error message.
+ */
+function getErrorMessage(error) {
+	return error?.message || error?.data?.message || __('Image upload failed.', 'wp-swiper');
 }
 
 /**
@@ -264,7 +268,7 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 		try {
 			JSON.parse(value);
 			setIsValid(true);
-		} catch (e) {
+		} catch {
 			setIsValid(false);
 		}
 	};
@@ -349,8 +353,8 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 
 			setAttributes(newAttributes);
 			setHasChanges(false);
-		} catch (e) {
-			console.error('Failed to parse JSON config:', e);
+		} catch {
+			setIsValid(false);
 		}
 	};
 
@@ -445,7 +449,6 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		removeBlock,
 		replaceInnerBlocks,
 	} = useDispatch(blockEditorStore);
-
 	const { createErrorNotice } = useDispatch(noticesStore);
 
 	const { getBlocks } = useSelect((select) => ({
@@ -520,8 +523,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 
 	const childBlocks = getBlocks(clientId);
 
-	// Function to check if two arrays are equal without considering the order of elements
-	const areArraysEqualWithoutOrder = useCallback((arr1, arr2) => {
+	const areArraysEqual = useCallback((arr1, arr2) => {
 		if (!arr1 || !arr2 || arr1.length !== arr2.length) {
 			return false;
 		}
@@ -540,9 +542,8 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 
 		let counter = 0;
 
-		// If we disable this line of code, then adding new slide doesn't work
-		// Introducing if else fixed the problem
-		if (!areArraysEqualWithoutOrder(prevClientIdOrder, propClientIdOrder) || !areArraysEqualWithoutOrder(prevThumbImg, propThumbImg)) {
+		// Synchronize tab metadata when the slide order or thumbnails change.
+		if (!areArraysEqual(prevClientIdOrder, propClientIdOrder) || !areArraysEqual(prevThumbImg, propThumbImg)) {
 			const newTabsData = block.innerBlocks.map((tabData) => {
 				counter++;
 				return {
@@ -559,23 +560,11 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				tabsData: newTabsData,
 			});
 		}
-	}, [childBlocks, block, tabsData, areArraysEqualWithoutOrder, updateSlugsForInnerBlocks, setAttributes]);
+	}, [childBlocks, block, tabsData, areArraysEqual, updateSlugsForInnerBlocks, setAttributes]);
 
 	const [alignment, setAlignment] = useState('bottom center');
 	const [isDraggingOver, setIsDraggingOver] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
-
-	/**
-	 * Helper to extract error message from various error formats
-	 */
-	const getErrorMessage = (error) => {
-		if (error?.message) {
-			return error.message;
-		} else if (error?.data?.message) {
-			return error.data.message;
-		}
-		return __('Upload failed', 'wp-swiper');
-	};
 
 	/**
 	 * Handle files dropped onto the swiper block
@@ -592,9 +581,6 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		setIsUploading(true);
 		setIsDraggingOver(false);
 
-		// Track errors for user notification
-		const uploadErrors = [];
-
 		try {
 			// Check if the first slide is empty (no image set)
 			const firstSlideIsEmpty = tabsData.length === 1 &&
@@ -605,165 +591,17 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 			let startIndex = 0;
 			let currentTabsData = [...tabsData];
 			let currentInnerBlocks = [...getBlocks(clientId)];
-			let hasSuccessfulUploads = false;
 
 			// If first slide is empty, replace it with the first image
 			if (firstSlideIsEmpty && imageFiles.length > 0) {
 				const file = imageFiles[0];
 
-				try {
-					// Upload the first file to media library
-					const media = await uploadMediaFile(file);
-
-					// Get the image URL (wp.Uploader uses 'url' and 'sizes', REST API uses 'source_url' and 'media_details')
-					const imgUrl = media.url || media.source_url || media.sizes?.full?.url || media.media_details?.sizes?.full?.source_url || '';
-					const thumbUrl = media.sizes?.thumbnail?.url || media.sizes?.medium?.url ||
-						media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
-
-					// Get the existing first slide's inner blocks (content)
-					const existingFirstSlide = currentInnerBlocks[0];
-
-					// Create a new block with the image, preserving inner blocks (content)
-					const updatedFirstSlide = createBlock(
-						'da/wp-swiper-slide',
-						{
-							...existingFirstSlide.attributes,
-							slug: 'slide-1',
-							slideImg: imgUrl,
-							slideImgId: media.id,
-							thumbImg: thumbUrl,
-						},
-						existingFirstSlide.innerBlocks // Preserve any content blocks inside the slide
-					);
-
-					// Replace the first block in the array
-					currentInnerBlocks[0] = updatedFirstSlide;
-
-					// Update tabsData for the first slide
-					currentTabsData[0] = {
-						clientId: updatedFirstSlide.clientId,
-						slug: 'slide-1',
-						slideImg: imgUrl,
-						thumbImg: thumbUrl,
-					};
-
-					hasSuccessfulUploads = true;
-					// Start processing remaining images from index 1
-					startIndex = 1;
-				} catch (error) {
-					// First file failed, collect error and continue with remaining files
-					uploadErrors.push(getErrorMessage(error));
-				}
-			}
-
-			// Process remaining images (or all images if first slide wasn't empty)
-			for (let i = startIndex; i < imageFiles.length; i++) {
-				const file = imageFiles[i];
-
-				try {
-					// Upload the file to media library
-					const media = await uploadMediaFile(file);
-
-					// Get the image URL (wp.Uploader uses 'url' and 'sizes', REST API uses 'source_url' and 'media_details')
-					const imgUrl = media.url || media.source_url || media.sizes?.full?.url || media.media_details?.sizes?.full?.source_url || '';
-					const thumbUrl = media.sizes?.thumbnail?.url || media.sizes?.medium?.url ||
-						media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
-
-					// Create new slide with the image
-					const newDataLength = currentTabsData.length + 1;
-					const newBlock = createBlock('da/wp-swiper-slide', {
-						slug: `slide-${newDataLength}`,
-						slideImg: imgUrl,
-						slideImgId: media.id,
-						thumbImg: thumbUrl,
-					});
-
-					// Update tabsData
-					currentTabsData = [...currentTabsData, {
-						clientId: newBlock.clientId,
-						slug: `slide-${newDataLength}`,
-						slideImg: imgUrl,
-						thumbImg: thumbUrl,
-					}];
-
-					// Add the block to inner blocks
-					currentInnerBlocks = [...currentInnerBlocks, newBlock];
-					hasSuccessfulUploads = true;
-				} catch (error) {
-					// Collect error and continue with next file
-					uploadErrors.push(getErrorMessage(error));
-				}
-			}
-
-			// Update all inner blocks and attributes at once if we had any successful uploads
-			if (hasSuccessfulUploads && currentInnerBlocks.length > 0) {
-				replaceInnerBlocks(clientId, currentInnerBlocks, false);
-				setAttributes({
-					tabsData: currentTabsData,
-					tabActive: startIndex === 1 ? 'slide-1' : `slide-${currentTabsData.length}`,
-				});
-			}
-
-			// Show error notices for any failed uploads
-			if (uploadErrors.length > 0) {
-				// Remove duplicate error messages
-				const uniqueErrors = [...new Set(uploadErrors)];
-				uniqueErrors.forEach((errorMessage) => {
-					createErrorNotice(
-						errorMessage,
-						{
-							type: 'default',
-							isDismissible: true,
-						}
-					);
-				});
-			}
-		} catch (error) {
-			// Show error notice to the user at the top of the editor
-			createErrorNotice(
-				getErrorMessage(error),
-				{
-					type: 'default',
-					isDismissible: true,
-				}
-			);
-		} finally {
-			setIsUploading(false);
-		}
-	};
-
-	/**
-	 * Handle media library selection for creating multiple slides
-	 * Allows selecting multiple images from media library
-	 */
-	const handleMediaLibrarySelect = useCallback((media) => {
-		// Handle both single media object and array of media objects
-		const mediaArray = Array.isArray(media) ? media : [media];
-
-		if (mediaArray.length === 0) return;
-
-		setIsUploading(true);
-
-		try {
-			let currentTabsData = [...tabsData];
-			let currentInnerBlocks = [...getBlocks(clientId)];
-			let hasSuccessfulSelections = false;
-
-			// Check if the first slide is empty (no image set)
-			const firstSlideIsEmpty = tabsData.length === 1 &&
-				!tabsData[0].slideImg &&
-				block?.innerBlocks?.[0] &&
-				!block.innerBlocks[0].attributes.slideImg;
-
-			let startIndex = 0;
-
-			// If first slide is empty, use it for the first image
-			if (firstSlideIsEmpty && mediaArray.length > 0) {
-				const mediaItem = mediaArray[0];
+				// Upload the first file to media library
+				const media = await uploadMediaFile(file);
 
 				// Get the image URL
-				const imgUrl = mediaItem.sizes?.full?.url || mediaItem.url;
-				const thumbUrl = mediaItem.sizes?.thumbnail?.url || mediaItem.sizes?.medium?.url || imgUrl;
+				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
+				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
 
 				// Get the existing first slide's inner blocks (content)
 				const existingFirstSlide = currentInnerBlocks[0];
@@ -775,7 +613,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 						...existingFirstSlide.attributes,
 						slug: 'slide-1',
 						slideImg: imgUrl,
-						slideImgId: mediaItem.id,
+						slideImgId: media.id,
 						thumbImg: thumbUrl,
 					},
 					existingFirstSlide.innerBlocks // Preserve any content blocks inside the slide
@@ -792,27 +630,27 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 					thumbImg: thumbUrl,
 				};
 
-				hasSuccessfulSelections = true;
 				// Start processing remaining images from index 1
 				startIndex = 1;
 			}
 
 			// Process remaining images (or all images if first slide wasn't empty)
-			// When first slide is NOT empty, we add ALL selected images as new slides
-			// When first slide IS empty, we skip the first image (already used above) and add the rest
-			for (let i = startIndex; i < mediaArray.length; i++) {
-				const mediaItem = mediaArray[i];
+			for (let i = startIndex; i < imageFiles.length; i++) {
+				const file = imageFiles[i];
+
+				// Upload the file to media library
+				const media = await uploadMediaFile(file);
 
 				// Get the image URL
-				const imgUrl = mediaItem.sizes?.full?.url || mediaItem.url;
-				const thumbUrl = mediaItem.sizes?.thumbnail?.url || mediaItem.sizes?.medium?.url || imgUrl;
+				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
+				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
 
 				// Create new slide with the image
 				const newDataLength = currentTabsData.length + 1;
 				const newBlock = createBlock('da/wp-swiper-slide', {
 					slug: `slide-${newDataLength}`,
 					slideImg: imgUrl,
-					slideImgId: mediaItem.id,
+					slideImgId: media.id,
 					thumbImg: thumbUrl,
 				});
 
@@ -826,11 +664,10 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 
 				// Add the block to inner blocks
 				currentInnerBlocks = [...currentInnerBlocks, newBlock];
-				hasSuccessfulSelections = true;
 			}
 
-			// Update all inner blocks and attributes at once if we had any successful selections
-			if (hasSuccessfulSelections && currentInnerBlocks.length > 0) {
+			// Update all inner blocks and attributes at once
+			if (currentInnerBlocks.length > 0) {
 				replaceInnerBlocks(clientId, currentInnerBlocks, false);
 				setAttributes({
 					tabsData: currentTabsData,
@@ -838,18 +675,14 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				});
 			}
 		} catch (error) {
-			console.error('Error selecting media from library:', error);
-			createErrorNotice(
-				__('Error selecting images from media library', 'wp-swiper'),
-				{
-					type: 'default',
-					isDismissible: true,
-				}
-			);
+			createErrorNotice(getErrorMessage(error), {
+				type: 'snackbar',
+				isDismissible: true,
+			});
 		} finally {
 			setIsUploading(false);
 		}
-	}, [tabsData, block, clientId, getBlocks, replaceInnerBlocks, setAttributes, createErrorNotice]);
+	};
 
 	/**
 	 * Remove a tab/slide
@@ -1115,7 +948,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 						<PanelRow>
 							<TextControl
 								label={__('Loop Additional Slides', 'wp-swiper')}
-								help={__('Allows to increase amount of looped slides', 'wp-swiper')}
+								help={__('Increase the number of looped slides.', 'wp-swiper')}
 								value={loopAdditionalSlides}
 								type="number"
 								onChange={(option) => {
@@ -1483,7 +1316,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 			>
 				<PanelRow>
 					<SelectControl
-						label={__('Effect (Under Construction)', 'wp-swiper')}
+						label={__('Transition effect', 'wp-swiper')}
 						value={effect}
 						options={[
 							{ label: __('Slide', 'wp-swiper'), value: 'slide' },
@@ -1510,7 +1343,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				<PanelRow>
 					<ToggleControl
 						label={__('Release On Edges', 'wp-swiper')}
-						help={__('Set to true and swiper will release mousewheel event and allow page scrolling when swiper is on edge positions (in the beginning or in the end) NOTE: Mouse Wheel must be set to true for this to work.', 'wp-swiper')}
+						help={__('Allow page scrolling when the slider reaches its first or last slide. Mouse wheel navigation must also be enabled.', 'wp-swiper')}
 						checked={releaseOnEdges}
 						onChange={() => {
 							setAttributes({ releaseOnEdges: !releaseOnEdges });
@@ -1631,7 +1464,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				<PanelRow>
 					<TextareaControl
 						label={__('Responsive breakpoints (JSON Object)', 'wp-swiper')}
-						help={__('Allows to set different parameter for different responsive breakpoints (screen sizes). Not all parameters can be changed in breakpoints, only those which are not required different layout and logic, like slidesPerView, slidesPerGroup, spaceBetween, grid.rows. Such parameters like loop and effect won\'t work', 'wp-swiper')}
+						help={__('Set layout options such as slidesPerView, slidesPerGroup, spaceBetween, and grid.rows for different viewport widths. Options such as loop and effect cannot be changed at breakpoints.', 'wp-swiper')}
 						value={breakpoints}
 						onChange={(option) => {
 							setAttributes({ breakpoints: option });
@@ -1696,7 +1529,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 			>
 				<ToggleControl
 					label={__('Debug', 'wp-swiper')}
-					help={__('Show (console.log) config JSON object for each slider', 'wp-swiper')}
+					help={__('Dispatch a wp-swiper:debug browser event containing the slider configuration.', 'wp-swiper')}
 					checked={debug}
 					onChange={() => {
 						setAttributes({ debug: !debug });
@@ -1728,7 +1561,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 							marginBottom: 'revert',
 						}}
 					>
-						{__('On rare occasions, if the slide slugs become out of sync with the slide data stored in the parent block, you might notice all slide contents appearing under a single tab. Clicking this button could help resolve the issue. This action iterates over each slide and resets the slugs in ascending order (e.g., slide-1, slide-2, etc.), ensuring that each tab properly corresponds to its respective slide.', 'wp-swiper')}
+						{__('If slide tabs and content become out of sync, use this tool to rebuild the slide identifiers in their current order.', 'wp-swiper')}
 					</p>
 				</PanelRow>
 
@@ -1766,33 +1599,35 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 								</div>
 							);
 						})}
-						<Tooltip text={__('Add Slide', 'wp-swiper')}>
-							<Button
-								icon={plus}
-								className="block-editor-inserter__toggle is-next-40px-default-size"
-								aria-label={__('Add Slide', 'wp-swiper')}
-								onClick={() => {
-									const newDataLength = tabsData.length + 1;
-									const newBlock = createBlock('da/wp-swiper-slide', {
-										slug: `slide-${newDataLength}`,
-									});
+						{isSelectedBlockInRoot ? (
+							<Tooltip text={__('Add Slide', 'wp-swiper')}>
+								<Button
+									icon="insert"
+									onClick={() => {
+										const newDataLength = tabsData.length + 1;
+										const newBlock = createBlock('da/wp-swiper-slide', {
+											slug: `slide-${newDataLength}`,
+										});
 
-									const newTabsData = [...tabsData, {
-										clientId: newBlock.clientId,
-										slug: `slide-${newDataLength}`,
-										slideImg: '',
-										thumbImg: '',
-									}];
+										const newTabsData = [...tabsData, {
+											clientId: newBlock.clientId,
+											slug: `slide-${newDataLength}`,
+											slideImg: '',
+											thumbImg: '',
+										}];
 
-									const innerBlocks = [...getBlocks(clientId), newBlock];
+										const innerBlocks = [...getBlocks(clientId), newBlock];
 
-									replaceInnerBlocks(clientId, innerBlocks, false);
-									setAttributes({
-										tabsData: newTabsData,
-									});
-								}}
-							/>
-						</Tooltip>
+										replaceInnerBlocks(clientId, innerBlocks, false);
+										setAttributes({
+											tabsData: newTabsData,
+										});
+									}}
+								/>
+							</Tooltip>
+						) : (
+							''
+						)}
 					</div>
 				<div className="wp-swiper__slide-content">
 					<InnerBlocks
@@ -1831,26 +1666,6 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 							<path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/>
 						</svg>
 						<p>{__('Drop images here to create slides', 'wp-swiper')}</p>
-						<div className="wp-swiper__drop-zone-divider">
-							<span>{__('or', 'wp-swiper')}</span>
-						</div>
-						<MediaUploadCheck>
-							<MediaUpload
-								multiple
-								value={[]}
-								onSelect={handleMediaLibrarySelect}
-								allowedTypes={['image']}
-								render={({ open }) => (
-									<Button
-										onClick={open}
-										variant="primary"
-										className="wp-swiper__media-library-button"
-									>
-										{__('Select Images from Media Library', 'wp-swiper')}
-									</Button>
-								)}
-							/>
-						</MediaUploadCheck>
 					</>
 				)}
 					</div>

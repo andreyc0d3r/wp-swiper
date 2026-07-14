@@ -45,10 +45,7 @@ class BlockSave extends Component {
             );
         }
 
-		// background size: cover
-		// needed becaue some people
-		// use Slide Image
-		// under Image Settings
+		// Display the configured slide image as a full background.
         const style = slideImg ? { backgroundImage: `url(${slideImg})`, backgroundSize: 'cover' } : {};
         const contaienr_width_style = containerWidth
             ? { maxWidth: `${containerWidth}%` }

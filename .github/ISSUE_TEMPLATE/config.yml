@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: WordPress.org support forum
+    url: https://wordpress.org/support/plugin/wp-swiper/
+    about: Ask installation, configuration, and usage questions.
+  - name: Security reporting
+    url: https://github.com/andreyc0d3r/wp-swiper/security/policy
+    about: Read the private vulnerability reporting instructions.

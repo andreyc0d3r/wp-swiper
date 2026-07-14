@@ -26,10 +26,7 @@ export default function save(props) {
 		className = classnames(className, getPositionClassName(contentVHalign));
 	}
 
-	// background size: cover
-	// needed becaue some people
-	// use Slide Image
-	// under Image Settings
+	// Display the configured slide image as a full background.
 	const style = slideImg
 		? {
 				backgroundImage: `url(${slideImg})`,

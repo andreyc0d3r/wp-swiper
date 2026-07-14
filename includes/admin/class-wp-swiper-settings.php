@@ -1,112 +1,160 @@
 <?php
-if (! class_exists('WP_Swiper_Settings')) {
 
-	class WP_Swiper_Settings
-	{
+/**
+ * Register and render WP Swiper settings.
+ *
+ * @package WP_Swiper
+ */
+class WP_Swiper_Settings {
 
-		// Constructor to hook into WordPress actions
-		public function __construct()
-		{
-			add_action('admin_menu', [$this, 'add_admin_menu']);
-			add_action('admin_init', [$this, 'settings_init']);
+	/**
+	 * Register WordPress hooks.
+	 */
+	public function __construct() {
+		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'settings_init' ) );
+	}
+
+	/**
+	 * Add the settings page.
+	 */
+	public function add_admin_menu() {
+		add_options_page(
+			esc_html__( 'WP Swiper Settings', 'wp-swiper' ),
+			esc_html__( 'WP Swiper', 'wp-swiper' ),
+			'manage_options',
+			'wp_swiper_settings',
+			array( $this, 'options_page' )
+		);
+	}
+
+	/**
+	 * Register settings and fields.
+	 */
+	public function settings_init() {
+		register_setting(
+			'wp_swiper_settings',
+			'wp_swiper_options',
+			array(
+				'type'              => 'array',
+				'sanitize_callback' => array( $this, 'sanitize_options' ),
+				'default'           => array(),
+			)
+		);
+
+		add_settings_section(
+			'wp_swiper_section',
+			esc_html__( 'WP Swiper Settings', 'wp-swiper' ),
+			array( $this, 'section_callback' ),
+			'wp_swiper_settings'
+		);
+
+		add_settings_field(
+			'wp_swiper_enqueue_toggle',
+			esc_html__( 'Asset loading', 'wp-swiper' ),
+			array( $this, 'enqueue_toggle_render' ),
+			'wp_swiper_settings',
+			'wp_swiper_section'
+		);
+
+		add_settings_field(
+			'wp_swiper_debug_toggle',
+			esc_html__( 'Debug information', 'wp-swiper' ),
+			array( $this, 'debug_toggle_render' ),
+			'wp_swiper_settings',
+			'wp_swiper_section'
+		);
+	}
+
+	/**
+	 * Sanitize checkbox settings.
+	 *
+	 * @param mixed $input Submitted settings.
+	 * @return array
+	 */
+	public function sanitize_options( $input ) {
+		$sanitized = array();
+
+		if ( ! is_array( $input ) ) {
+			return $sanitized;
 		}
 
-		// Function to add the settings page under the "Settings" menu
-		public function add_admin_menu()
-		{
-			add_options_page(
-				'WP Swiper Settings',		// Page title
-				'WP Swiper',			// Menu title
-				'manage_options',			// Capability required to access the page
-				'wp_swiper_settings',		// Menu slug
-				[$this, 'options_page']	// Function to display the page content
-			);
+		foreach ( array( 'enqueue_swiper', 'debug_swiper' ) as $option ) {
+			if ( isset( $input[ $option ] ) && 'on' === $input[ $option ] ) {
+				$sanitized[ $option ] = 'on';
+			}
 		}
 
-		// Function to initialize the settings
-		public function settings_init()
-		{
-			// Register the settings
-			register_setting(
-				'wp_swiper_settings',         // Option group (matches settings_fields() parameter)
-				'wp_swiper_options'           // Option name (matches get_option() calls)
-			);
+		return $sanitized;
+	}
 
-			// Add a section for the settings
-			add_settings_section(
-				'wp_swiper_section',          // Section ID
-				__('WP Swiper Settings', 'wp_swiper'), // Section title
-				[$this, 'section_callback'], // Callback to render the section description
-				'wp_swiper_settings'          // Page slug where the section will appear
-			);
-
-			// Add the enqueue Swiper JS toggle field
-			add_settings_field(
-				'wp_swiper_enqueue_toggle',   // Field ID
-				__('Load Swiper JS on every page', 'wp_swiper'), // Field title
-				[$this, 'enqueue_toggle_render'],   // Callback function to render the checkbox
-				'wp_swiper_settings',        // Page slug
-				'wp_swiper_section'          // Section ID
-			);
-
-			add_settings_field(
-				'wp_swiper_debug_toggle',   // Field ID
-				__('Output debug info to the frontend', 'wp_swiper'), // Field title
-				[$this, 'debug_toggle_render'],   // Callback function to render the checkbox
-				'wp_swiper_settings',        // Page slug
-				'wp_swiper_section'          // Section ID
-			);
-		}
-		public function debug_toggle_render()
-		{
-			$options = get_option('wp_swiper_options');
-			$checked = isset($options['debug_swiper']) && $options['debug_swiper'] === 'on' ? 'checked' : '';
-			?>
-			<input type='checkbox' name='wp_swiper_options[debug_swiper]' <?php echo $checked; ?> value='on'>
-			<label for='wp_swiper_options[debug_swiper]'><?php _e('Debug Mode', 'wp_swiper'); ?></label>
-			<p class="description">
-				<?php _e('If checked we output debug information that can be viewed in the source code on the frontend. Look for a div with a .wp-swiper-debug class', 'wp_swiper'); ?>
-			</p>
-
-		<?php
-
-		}
-
-		// Function to render the checkbox for "Load Swiper JS if Gutenberg Block is used"
-		public function enqueue_toggle_render()
-		{
-			$options = get_option('wp_swiper_options');
-			$checked = isset($options['enqueue_swiper']) && $options['enqueue_swiper'] === 'on' ? 'checked' : '';
+	/**
+	 * Render the debug setting.
+	 */
+	public function debug_toggle_render() {
+		$options = get_option( 'wp_swiper_options', array() );
 		?>
-			<input type='checkbox' name='wp_swiper_options[enqueue_swiper]' <?php echo $checked; ?> value='on'>
-			<label for='wp_swiper_options[enqueue_swiper]'><?php _e('Always load Swiper JS bundle on every page.', 'wp_swiper'); ?></label>
-			<p class="description">
-				<?php _e('Enable this to load the Swiper JavaScript file on all pages instead of only when the WP-Swiper Gutenberg block is used. Helps with custom setups.', 'wp_swiper'); ?>
-			</p>
+		<input
+			id="wp-swiper-debug"
+			type="checkbox"
+			name="wp_swiper_options[debug_swiper]"
+			value="on"
+			<?php checked( isset( $options['debug_swiper'] ) && 'on' === $options['debug_swiper'] ); ?>
+		>
+		<label for="wp-swiper-debug"><?php esc_html_e( 'Add diagnostic information for administrators', 'wp-swiper' ); ?></label>
+		<p class="description">
+			<?php esc_html_e( 'When enabled, diagnostic data is added to the page source for logged-in administrators only.', 'wp-swiper' ); ?>
+		</p>
 		<?php
-		}
+	}
 
-		// Callback to render the section description
-		public function section_callback()
-		{
-			echo __('Adjust settings for Swiper integration below.', 'wp_swiper');
-		}
-
-		// Function to display the options page content
-		public function options_page()
-		{
+	/**
+	 * Render the global asset-loading setting.
+	 */
+	public function enqueue_toggle_render() {
+		$options = get_option( 'wp_swiper_options', array() );
 		?>
-			<form action='options.php' method='post'>
+		<input
+			id="wp-swiper-enqueue"
+			type="checkbox"
+			name="wp_swiper_options[enqueue_swiper]"
+			value="on"
+			<?php checked( isset( $options['enqueue_swiper'] ) && 'on' === $options['enqueue_swiper'] ); ?>
+		>
+		<label for="wp-swiper-enqueue"><?php esc_html_e( 'Load Swiper assets on every page', 'wp-swiper' ); ?></label>
+		<p class="description">
+			<?php esc_html_e( 'Enable this only for custom setups where automatic block detection cannot find the slider.', 'wp-swiper' ); ?>
+		</p>
+		<?php
+	}
+
+	/**
+	 * Render the settings section description.
+	 */
+	public function section_callback() {
+		esc_html_e( 'Configure frontend asset loading and administrator diagnostics.', 'wp-swiper' );
+	}
+
+	/**
+	 * Render the settings page.
+	 */
+	public function options_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'WP Swiper Settings', 'wp-swiper' ); ?></h1>
+			<form action="options.php" method="post">
 				<?php
-				settings_fields('wp_swiper_settings');
-				do_settings_sections('wp_swiper_settings');
+				settings_fields( 'wp_swiper_settings' );
+				do_settings_sections( 'wp_swiper_settings' );
 				submit_button();
 				?>
 			</form>
-<?php
-		}
+		</div>
+		<?php
 	}
-
-	// Instantiate the class
-	new WP_Swiper_Settings();
 }
+
+new WP_Swiper_Settings();

@@ -3,8 +3,6 @@
  */
 const { __ } = wp.i18n;
 
-// Import Swiper React components
-
 /**
  * Internal dependencies
  */
@@ -19,8 +17,8 @@ export { metadata, name };
 
 const settings = {
 	...metadata,
-	title: __('WP Swiper', '@@text_domain'),
-	description: __('Create an awesome slider.', '@@text_domain'),
+	title: __('WP Swiper', 'wp-swiper'),
+	description: __('Create a responsive carousel with nested WordPress blocks.', 'wp-swiper'),
 	icon: (
 		<svg
 			width="24"
@@ -39,7 +37,7 @@ const settings = {
 			/>
 		</svg>
 	),
-	keywords: [__('swiper', '@@text_domain'), __('slider', '@@text_domain'), __('wp slider', '@@text_domain'), __('wp swiper', '@@text_domain')],
+	keywords: [__('swiper', 'wp-swiper'), __('slider', 'wp-swiper'), __('wp slider', 'wp-swiper'), __('wp swiper', 'wp-swiper')],
 	edit,
 	save,
 	deprecated,
