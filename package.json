@@ -40,7 +40,7 @@
 		"striptags": "^3.2.0"
 	},
 	"devDependencies": {
-		"@wordpress/icons": "^11.3.0",
+		"@wordpress/icons": "^15.1.0",
 		"@wordpress/scripts": "^32.6.0",
 		"adm-zip": "^0.6.0",
 		"classnames": "^2.3.2",
