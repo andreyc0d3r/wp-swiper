@@ -1,0 +1,60 @@
+{
+	"name": "wp-swiper",
+	"version": "1.4.5",
+	"description": "A Gutenberg block for building responsive Swiper carousels with nested WordPress blocks.",
+	"author": "Digital Apps",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"carousel",
+		"gutenberg",
+		"slider",
+		"swiper",
+		"wordpress"
+	],
+	"homepage": "https://wordpress.org/plugins/wp-swiper/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/andreyc0d3r/wp-swiper.git"
+	},
+	"bugs": {
+		"url": "https://github.com/andreyc0d3r/wp-swiper/issues"
+	},
+	"engines": {
+		"node": ">=20.19.0",
+		"npm": ">=10"
+	},
+	"files": [
+		"assets",
+		"build",
+		"includes",
+		"public",
+		"index.php",
+		"LICENSE",
+		"README.txt",
+		"THIRD_PARTY_NOTICES.md",
+		"uninstall.php",
+		"wp-swiper.php"
+	],
+	"dependencies": {
+		"slugify": "^1.6.6",
+		"striptags": "^3.2.0"
+	},
+	"devDependencies": {
+		"@wordpress/icons": "^11.3.0",
+		"@wordpress/scripts": "^31.1.0",
+		"adm-zip": "^0.5.16",
+		"classnames": "^2.3.2",
+		"swiper": "14.0.5"
+	},
+	"scripts": {
+		"build": "npm run sync:swiper && wp-scripts build",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
+		"package": "npm run build && wp-scripts plugin-zip && node scripts/prepare-release.mjs && npm run verify:release",
+		"publish:svn": "npm run package && node scripts/copy-svn.mjs",
+		"start": "npm run sync:swiper && wp-scripts start",
+		"sync:swiper": "node scripts/sync-swiper.mjs",
+		"test": "npm run lint:pkg-json && npm run build",
+		"verify:release": "node scripts/verify-release.mjs",
+		"verify:tag": "node scripts/verify-tag.mjs"
+	}
+}

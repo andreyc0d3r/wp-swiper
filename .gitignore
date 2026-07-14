@@ -1,0 +1,46 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Editor settings
+.idea/
+.vscode/
+*.komodoproject
+*.sublime-project
+*.sublime-workspace
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Dependencies and generated development output
+node_modules/
+coverage/
+dist-zip/
+wp-swiper-svn/
+svn/
+
+# Logs, databases, and archives
+*.log
+*.sql
+*.sqlite
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
+
+# Compiled native files
+*.class
+*.com
+*.dll
+*.exe
+*.lnk
+*.o
+*.so
