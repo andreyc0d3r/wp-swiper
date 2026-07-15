@@ -12,6 +12,7 @@ WP Swiper is an open-source WordPress plugin for building responsive [Swiper](ht
 - Drag-and-drop image uploads in the block editor
 - Conditional frontend asset loading
 - Bundled Swiper 14 runtime with no jQuery dependency
+- Non-visible slides removed from the accessibility tree and keyboard tab order
 - No analytics, advertising, tracking, or telemetry
 
 ## Requirements
@@ -21,6 +22,14 @@ WP Swiper is an open-source WordPress plugin for building responsive [Swiper](ht
 - A block-based editing environment
 
 The Swiper 14 runtime supports Chrome and Edge 110+, Firefox 110+, and Safari 16.4+. Node.js is required only for development. End users can install a packaged release without Node.js.
+
+## Accessibility
+
+Since version 1.4.6, WP Swiper removes non-visible slides from the accessibility tree and keyboard tab order. Focusable content is restored when its slide becomes visible, including in responsive layouts that display multiple slides.
+
+This behavior addresses one carousel accessibility barrier, but it is not a certification that WP Swiper or a website using it conforms to WCAG. Conformance must be evaluated for the complete published page and depends on the carousel configuration, slide content, theme, and other integrations.
+
+Site authors remain responsible for accessible content and configuration. Provide meaningful image alternatives, logical headings, readable contrast, and clear control labels. Leave autoplay disabled unless users can pause or stop rotation, rotation stops when keyboard focus enters the carousel, and it restarts only after an explicit user request. See the [W3C carousel accessibility guidance](https://www.w3.org/WAI/tutorials/carousels/).
 
 ## Installation
 
