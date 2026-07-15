@@ -26,6 +26,14 @@ Build responsive Swiper carousels with images, media, and nested WordPress block
 * Load frontend assets only when a slider is detected, with an optional global-loading setting for custom setups.
 * Use the bundled Swiper 14 runtime without a jQuery dependency.
 
+= Accessibility =
+
+Since version 1.4.6, WP Swiper removes non-visible slides from the accessibility tree and keyboard tab order. Focusable content is restored when its slide becomes visible, including in responsive layouts that display multiple slides.
+
+This behavior addresses one carousel accessibility barrier, but it is not a certification that WP Swiper or a website using it conforms to WCAG. Conformance must be evaluated for the complete published page and depends on the carousel configuration, slide content, theme, and other integrations.
+
+Site authors remain responsible for accessible content and configuration. Provide meaningful image alternatives, logical headings, readable contrast, and clear control labels. Leave autoplay disabled unless users can pause or stop rotation, rotation stops when keyboard focus enters the carousel, and it restarts only after an explicit user request. See the [W3C carousel accessibility guidance](https://www.w3.org/WAI/tutorials/carousels/).
+
 = Privacy =
 
 WP Swiper does not include analytics, advertising, tracking, or telemetry. Images selected through the editor are handled by the standard WordPress Media Library and REST API.
