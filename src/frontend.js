@@ -1,5 +1,7 @@
 import './styles/frontend.scss';
 
+import { enableSlideAccessibility } from './utils/slide-accessibility';
+
 var wp_swiper = new (function () {
 	var self = this;
 
@@ -59,6 +61,15 @@ var wp_swiper = new (function () {
 				}
 			}
 
+			options.watchSlidesProgress = true;
+			if (options.breakpoints && typeof options.breakpoints === 'object') {
+				Object.values(options.breakpoints).forEach((breakpointOptions) => {
+					if (breakpointOptions && typeof breakpointOptions === 'object') {
+						breakpointOptions.watchSlidesProgress = true;
+					}
+				});
+			}
+
 			// Swiper Thumbs
 			if (swiper_container.hasAttribute('data-thumbs')) {
 				let thumbsConfig = {
@@ -95,7 +106,9 @@ var wp_swiper = new (function () {
 				});
 
 				thumbsConfig = JSON.parse(swiper_container.getAttribute('data-thumbs'));
+				thumbsConfig.watchSlidesProgress = true;
 				window.wpSwiperThumbs[i] = new Swiper(thumbsSwiper, thumbsConfig);
+				enableSlideAccessibility(window.wpSwiperThumbs[i]);
 
 				options = {
 					...options,
@@ -169,6 +182,7 @@ var wp_swiper = new (function () {
 			}
 
 			window.wpSwiper[i] = new Swiper(swiper_container, options);
+			enableSlideAccessibility(window.wpSwiper[i]);
 		}
 	};
 
