@@ -1,6 +1,6 @@
 {
 	"name": "wp-swiper",
-	"version": "1.4.5",
+	"version": "1.4.6",
 	"description": "A Gutenberg block for building responsive Swiper carousels with nested WordPress blocks.",
 	"author": "Digital Apps",
 	"license": "GPL-2.0-or-later",

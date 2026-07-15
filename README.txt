@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 6.3
 Tested up to: 7.0
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -99,6 +99,10 @@ Please report security issues privately according to the [security policy](https
 3. A published WP Swiper slider with navigation and clickable pagination.
 
 == Changelog ==
+
+= 1.4.6 =
+
+* Improved carousel accessibility by removing non-visible slides from the accessibility tree and keyboard tab order.
 
 = 1.4.5 =
 
