@@ -53,7 +53,8 @@
 		"publish:svn": "npm run package && node scripts/copy-svn.mjs",
 		"start": "npm run sync:swiper && wp-scripts start",
 		"sync:swiper": "node scripts/sync-swiper.mjs",
-		"test": "npm run lint:pkg-json && npm run build",
+		"test": "npm run lint:pkg-json && npm run test:unit && npm run build",
+		"test:unit": "wp-scripts test-unit-js --runInBand",
 		"verify:release": "node scripts/verify-release.mjs",
 		"verify:tag": "node scripts/verify-tag.mjs"
 	}
