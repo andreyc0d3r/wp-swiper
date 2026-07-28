@@ -79,8 +79,9 @@ class WP_Swiper_Public {
 	 * Register and enqueue the Swiper runtime and plugin frontend assets.
 	 */
 	private function load_wp_swiper() {
-		$frontend_css_path = DAWPS_PLUGIN_PATH . 'build/frontend.css';
-		$frontend_js_path  = DAWPS_PLUGIN_PATH . 'build/frontend.build.js';
+		$frontend_css_path   = DAWPS_PLUGIN_PATH . 'build/frontend.css';
+		$frontend_js_path    = DAWPS_PLUGIN_PATH . 'build/frontend.build.js';
+		$frontend_asset_path = DAWPS_PLUGIN_PATH . 'build/frontend.build.asset.php';
 
 		if ( file_exists( $frontend_css_path ) ) {
 			wp_enqueue_style(
@@ -110,8 +111,25 @@ class WP_Swiper_Public {
 			return;
 		}
 
+		$frontend_asset = file_exists( $frontend_asset_path )
+			? include $frontend_asset_path
+			: array();
+		$asset_deps     = isset( $frontend_asset['dependencies'] ) && is_array( $frontend_asset['dependencies'] )
+			? $frontend_asset['dependencies']
+			: array();
+		$script_version = isset( $frontend_asset['version'] )
+			? $frontend_asset['version']
+			: $this->version;
+
 		$script_args = array(
-			'deps' => array( $this->plugin_name . '-bundle' ),
+			'deps' => array_values(
+				array_unique(
+					array_merge(
+						array( $this->plugin_name . '-bundle' ),
+						$asset_deps
+					)
+				)
+			),
 			'args' => array(
 				'in_footer' => false,
 			),
@@ -133,8 +151,13 @@ class WP_Swiper_Public {
 			$this->plugin_name . '-frontend-js',
 			DAWPS_PLUGIN_URL . 'build/frontend.build.js',
 			$script_args['deps'],
-			$this->version,
+			$script_version,
 			$script_args['args']
+		);
+
+		wp_set_script_translations(
+			$this->plugin_name . '-frontend-js',
+			'wp-swiper'
 		);
 	}
 }

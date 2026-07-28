@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 6.3
 Tested up to: 7.0
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -54,6 +54,12 @@ add_filter( 'wpswiper_frontend_js_register_args', function ( $args ) {
 
 See the [wp_enqueue_script() documentation](https://developer.wordpress.org/reference/functions/wp_enqueue_script/) for supported loading arguments.
 
+= Frontend lifecycle =
+
+WP Swiper automatically initializes blocks added after page load. Navigation and AJAX integrations can also call `window.wpSwiperInit(element)`, `window.wpSwiperDestroy(element)`, or `window.wpSwiperReinit(element)` with a `.wp-swiper` block wrapper.
+
+Runtime configuration corrections dispatch a `wp-swiper:warning` browser event with a structured diagnostic. Initialization failures dispatch `wp-swiper:error`, and explicit destruction dispatches `wp-swiper:destroy`.
+
 == Installation ==
 
 1. In WordPress, go to Plugins > Add New.
@@ -99,6 +105,19 @@ Please report security issues privately according to the [security policy](https
 3. A published WP Swiper slider with navigation and clickable pagination.
 
 == Changelog ==
+
+= 1.4.7 =
+
+* Restored block editor styling that was not enqueued in versions 1.4.5 and 1.4.6.
+* Restored support for fractional slides-per-view values such as 1.2.
+* Added migration support for slider blocks saved by version 1.3.10.
+* Restored multi-image selection from the Media Library.
+* Fixed mousewheel, pagination, autoplay, and breakpoint configuration handling.
+* Kept slide selection stable when slides are removed or reordered.
+* Isolated invalid slider configurations and initialized sliders added after page load.
+* Added configurable carousel names, autoplay controls, and reduced-motion support.
+* Preserved version 1.4.6 markup for backward-compatible block migration.
+* Added shared runtime configuration validation and frontend destroy/reinitialize APIs.
 
 = 1.4.6 =
 

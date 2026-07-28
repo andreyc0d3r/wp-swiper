@@ -64,16 +64,24 @@
             align-items: center;
             justify-content: center;
             min-width: 100px;
-            padding: 10px 16px;
+            padding: 0;
             background: var(--wpswiper-bg);
             border: 1px solid var(--wpswiper-border);
             border-radius: var(--wpswiper-radius);
-            cursor: pointer;
             opacity: 1;
             transition: all var(--wpswiper-transition);
             box-shadow: var(--wpswiper-shadow-sm);
 
-            h4 {
+			.wp-swiper__tab-select {
+				width: 100%;
+				height: auto;
+				justify-content: center;
+				padding: 10px 16px;
+				color: inherit;
+				border-radius: inherit;
+			}
+
+			.wp-swiper__tab-label {
                 margin: 0;
                 font-size: 13px;
                 font-weight: 500;
@@ -87,7 +95,7 @@
                 transform: translateY(-1px);
                 box-shadow: var(--wpswiper-shadow);
 
-                h4 {
+                .wp-swiper__tab-label {
                     color: var(--wpswiper-primary);
                 }
             }
@@ -97,7 +105,7 @@
                 border-color: var(--wpswiper-primary);
                 box-shadow: var(--wpswiper-shadow);
 
-                h4 {
+                .wp-swiper__tab-label {
                     color: #ffffff;
                     font-weight: 600;
                 }
@@ -453,7 +461,7 @@ div[data-type="da/wp-swiper-slides"] {
     justify-content: center;
     text-align: center;
     color: var(--wpswiper-text-muted);
-    pointer-events: none;
+    pointer-events: auto;
 
     .dashicons {
         font-size: 40px;
@@ -468,6 +476,32 @@ div[data-type="da/wp-swiper-slides"] {
         font-size: 14px;
         font-weight: 500;
     }
+
+	.wp-swiper__drop-zone-divider {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		margin: 16px 0;
+		color: var(--wpswiper-text-muted);
+		font-size: 12px;
+
+		&::before,
+		&::after {
+			content: "";
+			flex: 1;
+			height: 1px;
+			background: var(--wpswiper-border);
+		}
+
+		span {
+			padding: 0 12px;
+		}
+	}
+
+	.wp-swiper__media-library-button {
+		position: relative;
+		z-index: 2;
+	}
 }
 
 .wp-swiper__drop-zone-spinner {

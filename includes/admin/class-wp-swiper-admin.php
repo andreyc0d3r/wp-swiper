@@ -46,8 +46,13 @@ class WP_Swiper_Admin {
 
 		$asset_file_path = DAWPS_PLUGIN_PATH . 'build/index.build.asset.php';
 		$script_path     = DAWPS_PLUGIN_PATH . 'build/index.build.js';
+		$style_path      = DAWPS_PLUGIN_PATH . 'build/index.css';
 
-		if ( ! file_exists( $asset_file_path ) || ! file_exists( $script_path ) ) {
+		if (
+			! file_exists( $asset_file_path ) ||
+			! file_exists( $script_path ) ||
+			! file_exists( $style_path )
+		) {
 			return;
 		}
 
@@ -56,9 +61,19 @@ class WP_Swiper_Admin {
 			? $asset_file['dependencies']
 			: array( 'wp-blocks', 'wp-element' );
 		$version      = isset( $asset_file['version'] ) ? $asset_file['version'] : $this->version;
+		$handle       = $this->plugin_name . '-block-editor';
+
+		wp_enqueue_style(
+			$handle,
+			DAWPS_PLUGIN_URL . 'build/index.css',
+			array(),
+			$version
+		);
+		wp_style_add_data( $handle, 'rtl', 'replace' );
+		wp_enqueue_style( 'dashicons' );
 
 		wp_enqueue_script(
-			$this->plugin_name . '-block-editor',
+			$handle,
 			DAWPS_PLUGIN_URL . 'build/index.build.js',
 			$dependencies,
 			$version,

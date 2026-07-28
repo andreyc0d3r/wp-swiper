@@ -6,12 +6,7 @@ import classnames from 'classnames/dedupe';
 /**
  * WordPress dependencies
  */
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
-
-/**
- * Internal dependencies
- */
-import { buildSwiperConfig } from '../../utils/swiper-config';
+import { useBlockProps, InnerBlocks, useInnerBlocksProps } from '@wordpress/block-editor';
 
 /**
  * Block Save Class.
@@ -22,16 +17,51 @@ function save(props) {
 		align,
 		overlayImg,
 		overlayImgOpacity,
+		slidesPerView,
+		slidesPerGroup,
+		slidesPerGroupAuto,
+		slidesPerGroupSkip,
+		spaceBetween,
+		autoSlideWidth,
+		autoplay,
+		disableOnInteraction,
+		pauseOnMouseEnter,
+		reverseDirection,
+		stopOnLastSlide,
+		waitForTransition,
+		delay,
+		speed,
+		loop,
+		loopAddBlankSlides,
+		loopAdditionalSlides,
+		effect,
+		navigation,
+		pagination,
+		mousewheel,
+		releaseOnEdges,
+		pagination_type,
+		clickable_pagination,
+		breakpoints,
 		thumbs,
 		thumbsSpaceBetween,
 		thumbsSlidesPerView,
 		autoHeight,
 		sliderHeight,
+		freeMode,
+		freeModeMinimumVelocity,
+		freeModeMomentum,
+		freeModeMomentumBounce,
+		freeModeMomentumBounceRatio,
+		freeModeMomentumRatio,
+		freeModeMomentumVelocityRatio,
+		freeModeSticky,
 		debug,
-		carouselLabel,
+		direction,
 		tabsData,
 		previousIcon,
 		nextIcon,
+		slidesOffsetBefore,
+		slidesOffsetAfter,
 		overflowVisible,
 		navigationColor,
 		paginationColor,
@@ -56,17 +86,144 @@ function save(props) {
 	const blockProps = useBlockProps.save({
 		className: className,
 		style: blockStyle,
-		...(carouselLabel ? { 'data-carousel-label': carouselLabel } : {}),
 	});
+
+	const innerBlocksProps = useInnerBlocksProps;
 
 	const style_overlay_image = overlayImg ? { backgroundImage: `url(${overlayImg})` } : {};
 	if (overlayImgOpacity) {
 		style_overlay_image.opacity = overlayImgOpacity;
 	}
 
-	const thumbsConfig = {};
+	let thumbsConfig = {
+		'data-thumbs': {},
+	};
 
-	const data_atts = buildSwiperConfig(props.attributes);
+	let data_atts = {
+		slidesPerView: slidesPerView === 'auto' ? 'auto' : parseInt(slidesPerView, 10),
+		slidesPerGroup,
+		slidesPerGroupAuto,
+		slidesPerGroupSkip,
+		navigation,
+		pagination: {},
+		delay: delay,
+		speed: speed,
+		loop: loop,
+		direction,
+		slidesOffsetBefore,
+		slidesOffsetAfter,
+		autoHeight,
+		spaceBetween,
+		releaseOnEdges,
+	};
+
+	// Auto Slide Width logic - only include if true
+	if (autoSlideWidth) {
+		data_atts.autoSlideWidth = true;
+	}
+
+	// Mousewheel and release on edges logic
+	if (mousewheel && releaseOnEdges) {
+		data_atts.mousewheel = {
+			releaseOnEdges: releaseOnEdges === 'true',
+		};
+	}
+
+	// Loop logic
+	if (loop) {
+		data_atts.loopAddBlankSlides = loopAddBlankSlides;
+		data_atts.loopAdditionalSlides = loopAdditionalSlides;
+	}
+
+	// Effect logic
+	if (effect) {
+		data_atts.effect = effect;
+
+		// If the effect is 'fade', enable crossFade
+		if (effect === 'fade') {
+			data_atts.fadeEffect = {
+				crossFade: true,
+			};
+		}
+	}
+
+	// Autoplay
+	// -- START -- Autoplay logic
+	if (autoplay) {
+		data_atts.autoplay = true;
+
+		// Delay logic
+		if (delay !== null && delay !== undefined) {
+			data_atts.autoplay = {
+				delay: Number(delay),
+			};
+		}
+
+		// Disable on interaction
+		if (disableOnInteraction) {
+			if (!data_atts.autoplay) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.disableOnInteraction = true;
+		}
+
+		// Pause on mouse enter
+		if (pauseOnMouseEnter) {
+			if (!data_atts.autoplay) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.pauseOnMouseEnter = true;
+		}
+
+		// Reverse direction
+		if (reverseDirection) {
+			if (!data_atts.autoplay) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.reverseDirection = true;
+		}
+
+		// Stop on last slide
+		if (stopOnLastSlide) {
+			if (!data_atts.autoplay) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.stopOnLastSlide = true;
+		}
+
+		// Wait for transition
+		if (waitForTransition !== undefined && waitForTransition !== null) {
+			if (!data_atts.autoplay) {
+				data_atts.autoplay = {};
+			}
+			data_atts.autoplay.waitForTransition = waitForTransition;
+		}
+	}
+	// -- END -- Autoplay logic
+
+	// Freemode
+	if (freeMode) {
+		data_atts.freeMode = {
+			enabled: true,
+			minimumVelocity: freeModeMinimumVelocity,
+			momentum: freeModeMomentum,
+			momentumBounce: freeModeMomentumBounce,
+			momentumBounceRatio: freeModeMomentumBounceRatio,
+			momentumRatio: freeModeMomentumRatio,
+			momentumVelocityRatio: freeModeMomentumVelocityRatio,
+			sticky: freeModeSticky,
+		};
+	}
+
+	// Pagination
+	data_atts.pagination.type = pagination_type != 'bullets' ? pagination_type : 'bullets';
+	if (clickable_pagination) {
+		data_atts.pagination.clickable = clickable_pagination ? true : '';
+	}
+
+	if (typeof breakpoints !== 'undefined' && breakpoints != '') {
+		data_atts.breakpoints = breakpoints;
+	}
 
 	if (thumbs) {
 		thumbsConfig['data-thumbs'] = JSON.stringify({
@@ -173,7 +330,7 @@ function save(props) {
 								{previousIcon ? (
 									<img
 										src={previousIcon}
-										alt=""
+										alt="Previous"
 									/>
 								) : null}
 							</div>
@@ -182,7 +339,7 @@ function save(props) {
 								{nextIcon ? (
 									<img
 										src={nextIcon}
-										alt=""
+										alt="Previous"
 									/>
 								) : null}
 							</div>

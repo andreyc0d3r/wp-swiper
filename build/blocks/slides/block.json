@@ -91,7 +91,19 @@
       "type": "boolean",
       "default": true
     },
+    "pagination_type": {
+      "type": "string",
+      "default": "bullets"
+    },
     "clickable_pagination": {
+      "type": "boolean",
+      "default": false
+    },
+    "mousewheel": {
+      "type": "boolean",
+      "default": false
+    },
+    "releaseOnEdges": {
       "type": "boolean",
       "default": false
     },
@@ -220,6 +232,10 @@
     "debug": {
       "type": "boolean",
       "default": false
+    },
+    "carouselLabel": {
+      "type": "string",
+      "default": ""
     },
     "direction": {
       "type": "string",

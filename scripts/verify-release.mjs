@@ -13,10 +13,16 @@ const requiredFiles = [
 	'THIRD_PARTY_NOTICES.md',
 	'assets/swiper/swiper-bundle.min.css',
 	'assets/swiper/swiper-bundle.min.js',
+	'build/frontend.build.asset.php',
 	'build/frontend.build.js',
+	'build/frontend-rtl.css',
 	'build/frontend.css',
+	'build/index.build.asset.php',
 	'build/index.build.js',
+	'build/index-rtl.css',
 	'build/index.css',
+	'includes/admin/class-wp-swiper-admin.php',
+	'includes/core/class-wp-swiper.php',
 	'wp-swiper.php',
 ];
 
@@ -85,6 +91,69 @@ if ( ! existsSync( packageRoot ) ) {
 	for ( const file of requiredFiles ) {
 		if ( ! existsSync( join( packageRoot, file ) ) ) {
 			errors.push( `Required release file is missing: ${ file }` );
+		}
+	}
+
+	const editorStylePath = join( packageRoot, 'build', 'index.css' );
+	if (
+		existsSync( editorStylePath ) &&
+		! readFileSync( editorStylePath, 'utf8' ).includes(
+			'.wp-swiper__slides'
+		)
+	) {
+		errors.push(
+			'Editor stylesheet does not contain the WP Swiper editor styles.'
+		);
+	}
+
+	const editorAssetLoaderPath = join(
+		packageRoot,
+		'includes',
+		'admin',
+		'class-wp-swiper-admin.php'
+	);
+	if ( existsSync( editorAssetLoaderPath ) ) {
+		const editorAssetLoader = readFileSync( editorAssetLoaderPath, 'utf8' );
+
+		if (
+			! editorAssetLoader.includes(
+				"DAWPS_PLUGIN_URL . 'build/index.css'"
+			) ||
+			! editorAssetLoader.includes( 'wp_enqueue_style(' )
+		) {
+			errors.push(
+				'Block editor asset loader does not enqueue build/index.css.'
+			);
+		}
+
+		if (
+			! editorAssetLoader.includes(
+				"DAWPS_PLUGIN_URL . 'build/index.build.js'"
+			) ||
+			! editorAssetLoader.includes( 'wp_enqueue_script(' )
+		) {
+			errors.push(
+				'Block editor asset loader does not enqueue build/index.build.js.'
+			);
+		}
+	}
+
+	const pluginCorePath = join(
+		packageRoot,
+		'includes',
+		'core',
+		'class-wp-swiper.php'
+	);
+	if ( existsSync( pluginCorePath ) ) {
+		const pluginCore = readFileSync( pluginCorePath, 'utf8' );
+
+		if (
+			! pluginCore.includes( "'enqueue_block_editor_assets'" ) ||
+			! pluginCore.includes( "'register_gutenberg_block'" )
+		) {
+			errors.push(
+				'Plugin core does not hook the block editor asset loader.'
+			);
 		}
 	}
 

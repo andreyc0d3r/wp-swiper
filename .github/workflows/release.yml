@@ -36,6 +36,9 @@ jobs:
       - name: Check PHP syntax
         run: find . -path ./node_modules -prune -o -path ./dist-zip -prune -o -name '*.php' -print0 | xargs -0 -n1 php -l
 
+      - name: Test block editor asset loading
+        run: php tests/php/editor-assets.php
+
       - name: Build and verify package
         run: npm run package
 

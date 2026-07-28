@@ -43,7 +43,15 @@ import {
  */
 import RemoveButton from '../../components/remove-button';
 import getImage from '../../utils/get-image';
-import { deepClone } from '../../utils/shared';
+import {
+	addMediaToSlideCollection,
+	removeSlideFromCollection,
+	synchronizeSlideCollection,
+} from '../../utils/slide-collection';
+import {
+	buildSwiperConfig,
+	parseSwiperConfig,
+} from '../../utils/swiper-config';
 
 // Template for default inner blocks (one slide by default)
 const INNER_BLOCKS_TEMPLATE = [
@@ -79,163 +87,6 @@ function getErrorMessage(error) {
 }
 
 /**
- * Helper function to build the Swiper config object from attributes
- * This mirrors the logic in save.js to generate the same data-swiper JSON
- */
-function buildSwiperConfig(attributes) {
-	const {
-		slidesPerView,
-		slidesPerGroup,
-		slidesPerGroupAuto,
-		slidesPerGroupSkip,
-		spaceBetween,
-		autoSlideWidth,
-		autoplay,
-		disableOnInteraction,
-		pauseOnMouseEnter,
-		reverseDirection,
-		stopOnLastSlide,
-		waitForTransition,
-		delay,
-		speed,
-		loop,
-		loopAddBlankSlides,
-		loopAdditionalSlides,
-		effect,
-		navigation,
-		mousewheel,
-		releaseOnEdges,
-		pagination_type,
-		clickable_pagination,
-		breakpoints,
-		freeMode,
-		freeModeMinimumVelocity,
-		freeModeMomentum,
-		freeModeMomentumBounce,
-		freeModeMomentumBounceRatio,
-		freeModeMomentumRatio,
-		freeModeMomentumVelocityRatio,
-		freeModeSticky,
-		autoHeight,
-		direction,
-		slidesOffsetBefore,
-		slidesOffsetAfter,
-	} = attributes;
-
-	const dataAtts = {
-		slidesPerView: slidesPerView === 'auto' ? 'auto' : parseInt(slidesPerView, 10),
-		slidesPerGroup,
-		slidesPerGroupAuto,
-		slidesPerGroupSkip,
-		navigation,
-		pagination: {},
-		delay,
-		speed,
-		loop,
-		direction,
-		slidesOffsetBefore,
-		slidesOffsetAfter,
-		autoHeight,
-		spaceBetween,
-		releaseOnEdges,
-	};
-
-	// Auto Slide Width logic
-	if (autoSlideWidth) {
-		dataAtts.autoSlideWidth = true;
-	}
-
-	// Mousewheel and release on edges logic
-	if (mousewheel && releaseOnEdges) {
-		dataAtts.mousewheel = {
-			releaseOnEdges: releaseOnEdges === 'true',
-		};
-	}
-
-	// Loop logic
-	if (loop) {
-		dataAtts.loopAddBlankSlides = loopAddBlankSlides;
-		dataAtts.loopAdditionalSlides = loopAdditionalSlides;
-	}
-
-	// Effect logic
-	if (effect) {
-		dataAtts.effect = effect;
-		if (effect === 'fade') {
-			dataAtts.fadeEffect = {
-				crossFade: true,
-			};
-		}
-	}
-
-	// Autoplay logic
-	if (autoplay) {
-		dataAtts.autoplay = true;
-		if (delay !== null && delay !== undefined) {
-			dataAtts.autoplay = {
-				delay: Number(delay),
-			};
-		}
-		if (disableOnInteraction) {
-			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
-				dataAtts.autoplay = {};
-			}
-			dataAtts.autoplay.disableOnInteraction = true;
-		}
-		if (pauseOnMouseEnter) {
-			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
-				dataAtts.autoplay = {};
-			}
-			dataAtts.autoplay.pauseOnMouseEnter = true;
-		}
-		if (reverseDirection) {
-			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
-				dataAtts.autoplay = {};
-			}
-			dataAtts.autoplay.reverseDirection = true;
-		}
-		if (stopOnLastSlide) {
-			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
-				dataAtts.autoplay = {};
-			}
-			dataAtts.autoplay.stopOnLastSlide = true;
-		}
-		if (waitForTransition !== undefined && waitForTransition !== null) {
-			if (!dataAtts.autoplay || dataAtts.autoplay === true) {
-				dataAtts.autoplay = {};
-			}
-			dataAtts.autoplay.waitForTransition = waitForTransition;
-		}
-	}
-
-	// Freemode
-	if (freeMode) {
-		dataAtts.freeMode = {
-			enabled: true,
-			minimumVelocity: freeModeMinimumVelocity,
-			momentum: freeModeMomentum,
-			momentumBounce: freeModeMomentumBounce,
-			momentumBounceRatio: freeModeMomentumBounceRatio,
-			momentumRatio: freeModeMomentumRatio,
-			momentumVelocityRatio: freeModeMomentumVelocityRatio,
-			sticky: freeModeSticky,
-		};
-	}
-
-	// Pagination
-	dataAtts.pagination.type = pagination_type !== 'bullets' ? pagination_type : 'bullets';
-	if (clickable_pagination) {
-		dataAtts.pagination.clickable = clickable_pagination ? true : '';
-	}
-
-	if (typeof breakpoints !== 'undefined' && breakpoints !== '') {
-		dataAtts.breakpoints = breakpoints;
-	}
-
-	return dataAtts;
-}
-
-/**
  * Swiper Config Editor Component
  * Displays editable JSON config for the slider
  */
@@ -243,6 +94,7 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 	const [jsonValue, setJsonValue] = useState('');
 	const [isValid, setIsValid] = useState(true);
 	const [hasChanges, setHasChanges] = useState(false);
+	const [validationMessage, setValidationMessage] = useState('');
 
 	// Build the current config from attributes
 	const currentConfig = buildSwiperConfig(attributes);
@@ -266,10 +118,17 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 
 		// Validate JSON
 		try {
-			JSON.parse(value);
+			const parsedConfig = parseSwiperConfig(value);
 			setIsValid(true);
-		} catch {
+			setValidationMessage(
+				parsedConfig.diagnostics[0]?.message || ''
+			);
+		} catch (error) {
 			setIsValid(false);
+			setValidationMessage(
+				error?.message ||
+					__('Invalid Swiper configuration.', 'wp-swiper')
+			);
 		}
 	};
 
@@ -277,12 +136,14 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 		if (!isValid) return;
 
 		try {
-			const parsed = JSON.parse(jsonValue);
+			const parsedConfig = parseSwiperConfig(jsonValue);
+			const parsed = parsedConfig.options;
+			const sourceConfig = JSON.parse(jsonValue);
 
 			// Map JSON config back to block attributes
 			const newAttributes = {};
 
-			if (parsed.slidesPerView !== undefined) newAttributes.slidesPerView = parsed.slidesPerView;
+			if (parsed.slidesPerView !== undefined) newAttributes.slidesPerView = String(parsed.slidesPerView);
 			if (parsed.slidesPerGroup !== undefined) newAttributes.slidesPerGroup = parsed.slidesPerGroup;
 			if (parsed.slidesPerGroupAuto !== undefined) newAttributes.slidesPerGroupAuto = parsed.slidesPerGroupAuto;
 			if (parsed.slidesPerGroupSkip !== undefined) newAttributes.slidesPerGroupSkip = parsed.slidesPerGroupSkip;
@@ -334,27 +195,42 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 				}
 			}
 
-			// Handle pagination object
+			// Handle pagination
 			if (parsed.pagination !== undefined) {
-				if (parsed.pagination.type !== undefined) newAttributes.pagination_type = parsed.pagination.type;
-				if (parsed.pagination.clickable !== undefined) newAttributes.clickable_pagination = parsed.pagination.clickable;
+				newAttributes.pagination = parsed.pagination !== false;
+				if (typeof parsed.pagination === 'object' && parsed.pagination !== null) {
+					if (parsed.pagination.type !== undefined) newAttributes.pagination_type = parsed.pagination.type;
+					if (parsed.pagination.clickable !== undefined) newAttributes.clickable_pagination = parsed.pagination.clickable;
+				}
 			}
 
 			// Handle breakpoints
-			if (parsed.breakpoints !== undefined) newAttributes.breakpoints = parsed.breakpoints;
+			if (sourceConfig.breakpoints !== undefined) {
+				newAttributes.breakpoints =
+					typeof sourceConfig.breakpoints === 'string'
+						? sourceConfig.breakpoints
+						: JSON.stringify(sourceConfig.breakpoints);
+			}
 
 			// Handle mousewheel
 			if (parsed.mousewheel !== undefined) {
-				newAttributes.mousewheel = true;
+				newAttributes.mousewheel = parsed.mousewheel !== false;
 				if (typeof parsed.mousewheel === 'object' && parsed.mousewheel.releaseOnEdges !== undefined) {
-					newAttributes.releaseOnEdges = parsed.mousewheel.releaseOnEdges ? 'true' : 'false';
+					newAttributes.releaseOnEdges = Boolean(parsed.mousewheel.releaseOnEdges);
 				}
 			}
 
 			setAttributes(newAttributes);
 			setHasChanges(false);
-		} catch {
+			setValidationMessage(
+				parsedConfig.diagnostics[0]?.message || ''
+			);
+		} catch (error) {
 			setIsValid(false);
+			setValidationMessage(
+				error?.message ||
+					__('Invalid Swiper configuration.', 'wp-swiper')
+			);
 		}
 	};
 
@@ -362,6 +238,7 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 		setJsonValue(currentConfigJson);
 		setHasChanges(false);
 		setIsValid(true);
+		setValidationMessage('');
 	};
 
 	const helperTextStyle = {
@@ -376,7 +253,15 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 		<>
 			<BaseControl
 				label={__('Swiper Configuration (JSON)', 'wp-swiper')}
-				help={!isValid ? __('Invalid JSON format. Please fix the syntax errors.', 'wp-swiper') : ''}
+				help={
+					validationMessage ||
+					(!isValid
+						? __(
+								'Invalid JSON format. Please fix the syntax errors.',
+								'wp-swiper'
+						  )
+						: '')
+				}
 			>
 				<textarea
 					value={jsonValue}
@@ -511,6 +396,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		autoHeight,
 		sliderHeight,
 		debug,
+		carouselLabel,
 		direction,
 		previousIcon,
 		nextIcon,
@@ -523,48 +409,66 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 
 	const childBlocks = getBlocks(clientId);
 
-	const areArraysEqual = useCallback((arr1, arr2) => {
-		if (!arr1 || !arr2 || arr1.length !== arr2.length) {
-			return false;
-		}
-		return arr1.every((value, index) => value === arr2[index]);
-	}, []);
-
 	useEffect(() => {
 		if (!block?.innerBlocks) return;
 
-		// Extract the client IDs of the inner blocks
-		const prevClientIdOrder = block.innerBlocks.map((ib) => ib.attributes.slug);
-		const propClientIdOrder = tabsData.map((tabData) => tabData.slug);
+		const isSynchronized =
+			block.innerBlocks.length === tabsData.length &&
+			block.innerBlocks.every((innerBlock, index) => {
+				const expectedSlug = `slide-${index + 1}`;
+				const tab = tabsData[index];
 
-		const prevThumbImg = block.innerBlocks.map((ib) => ib.attributes.thumbImg);
-		const propThumbImg = tabsData.map((tabData) => tabData.thumbImg);
-
-		let counter = 0;
-
-		// Synchronize tab metadata when the slide order or thumbnails change.
-		if (!areArraysEqual(prevClientIdOrder, propClientIdOrder) || !areArraysEqual(prevThumbImg, propThumbImg)) {
-			const newTabsData = block.innerBlocks.map((tabData) => {
-				counter++;
-				return {
-					clientId: tabData.clientId,
-					slideImg: tabData.attributes.slideImg,
-					thumbImg: tabData.attributes.thumbImg,
-					slug: `slide-${counter}`,
-				};
+				return (
+					tab?.clientId === innerBlock.clientId &&
+					tab?.slug === expectedSlug &&
+					innerBlock.attributes.slug === expectedSlug &&
+					tab?.slideImg === innerBlock.attributes.slideImg &&
+					tab?.thumbImg === innerBlock.attributes.thumbImg
+				);
 			});
+		const hasValidActiveTab = tabsData.some(
+			(tab) => tab.slug === tabActive
+		);
 
+		if (!isSynchronized || !hasValidActiveTab) {
+			const synchronizedCollection = synchronizeSlideCollection(
+				block.innerBlocks,
+				tabsData,
+				tabActive
+			);
 			updateSlugsForInnerBlocks(block.innerBlocks);
 
 			setAttributes({
-				tabsData: newTabsData,
+				tabsData: synchronizedCollection.tabsData,
+				tabActive: synchronizedCollection.tabActive,
 			});
 		}
-	}, [childBlocks, block, tabsData, areArraysEqual, updateSlugsForInnerBlocks, setAttributes]);
+	}, [childBlocks, block, tabsData, tabActive, updateSlugsForInnerBlocks, setAttributes]);
 
 	const [alignment, setAlignment] = useState('bottom center');
 	const [isDraggingOver, setIsDraggingOver] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
+
+	const applyMediaSelection = useCallback((media) => {
+		const mediaItems = Array.isArray(media) ? media : [media];
+		const collection = addMediaToSlideCollection({
+			mediaItems,
+			tabsData,
+			innerBlocks: getBlocks(clientId),
+			createBlock,
+		});
+
+		if (collection.addedCount === 0) {
+			return false;
+		}
+
+		replaceInnerBlocks(clientId, collection.innerBlocks, false);
+		setAttributes({
+			tabsData: collection.tabsData,
+			tabActive: collection.tabActive,
+		});
+		return true;
+	}, [clientId, getBlocks, replaceInnerBlocks, setAttributes, tabsData]);
 
 	/**
 	 * Handle files dropped onto the swiper block
@@ -582,97 +486,29 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		setIsDraggingOver(false);
 
 		try {
-			// Check if the first slide is empty (no image set)
-			const firstSlideIsEmpty = tabsData.length === 1 &&
-				!tabsData[0].slideImg &&
-				block?.innerBlocks?.[0] &&
-				!block.innerBlocks[0].attributes.slideImg;
+			const uploadResults = await Promise.allSettled(
+				imageFiles.map(uploadMediaFile)
+			);
+			const uploadedMedia = uploadResults
+				.filter((result) => result.status === 'fulfilled')
+				.map((result) => result.value);
+			const failedUploads = uploadResults.filter(
+				(result) => result.status === 'rejected'
+			);
 
-			let startIndex = 0;
-			let currentTabsData = [...tabsData];
-			let currentInnerBlocks = [...getBlocks(clientId)];
+			applyMediaSelection(uploadedMedia);
 
-			// If first slide is empty, replace it with the first image
-			if (firstSlideIsEmpty && imageFiles.length > 0) {
-				const file = imageFiles[0];
-
-				// Upload the first file to media library
-				const media = await uploadMediaFile(file);
-
-				// Get the image URL
-				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
-				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
-
-				// Get the existing first slide's inner blocks (content)
-				const existingFirstSlide = currentInnerBlocks[0];
-
-				// Create a new block with the image, preserving inner blocks (content)
-				const updatedFirstSlide = createBlock(
-					'da/wp-swiper-slide',
+			if (failedUploads.length > 0) {
+				createErrorNotice(
+					__(
+						'Some images could not be uploaded. Successfully uploaded images were added as slides.',
+						'wp-swiper'
+					),
 					{
-						...existingFirstSlide.attributes,
-						slug: 'slide-1',
-						slideImg: imgUrl,
-						slideImgId: media.id,
-						thumbImg: thumbUrl,
-					},
-					existingFirstSlide.innerBlocks // Preserve any content blocks inside the slide
+						type: 'snackbar',
+						isDismissible: true,
+					}
 				);
-
-				// Replace the first block in the array
-				currentInnerBlocks[0] = updatedFirstSlide;
-
-				// Update tabsData for the first slide
-				currentTabsData[0] = {
-					clientId: updatedFirstSlide.clientId,
-					slug: 'slide-1',
-					slideImg: imgUrl,
-					thumbImg: thumbUrl,
-				};
-
-				// Start processing remaining images from index 1
-				startIndex = 1;
-			}
-
-			// Process remaining images (or all images if first slide wasn't empty)
-			for (let i = startIndex; i < imageFiles.length; i++) {
-				const file = imageFiles[i];
-
-				// Upload the file to media library
-				const media = await uploadMediaFile(file);
-
-				// Get the image URL
-				const imgUrl = media.source_url || (media.media_details?.sizes?.full?.source_url) || '';
-				const thumbUrl = media.media_details?.sizes?.thumbnail?.source_url || media.media_details?.sizes?.medium?.source_url || imgUrl;
-
-				// Create new slide with the image
-				const newDataLength = currentTabsData.length + 1;
-				const newBlock = createBlock('da/wp-swiper-slide', {
-					slug: `slide-${newDataLength}`,
-					slideImg: imgUrl,
-					slideImgId: media.id,
-					thumbImg: thumbUrl,
-				});
-
-				// Update tabsData
-				currentTabsData = [...currentTabsData, {
-					clientId: newBlock.clientId,
-					slug: `slide-${newDataLength}`,
-					slideImg: imgUrl,
-					thumbImg: thumbUrl,
-				}];
-
-				// Add the block to inner blocks
-				currentInnerBlocks = [...currentInnerBlocks, newBlock];
-			}
-
-			// Update all inner blocks and attributes at once
-			if (currentInnerBlocks.length > 0) {
-				replaceInnerBlocks(clientId, currentInnerBlocks, false);
-				setAttributes({
-					tabsData: currentTabsData,
-					tabActive: startIndex === 1 ? 'slide-1' : `slide-${currentTabsData.length}`,
-				});
 			}
 		} catch (error) {
 			createErrorNotice(getErrorMessage(error), {
@@ -684,6 +520,21 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		}
 	};
 
+	const handleMediaLibrarySelect = useCallback((media) => {
+		setIsUploading(true);
+
+		try {
+			applyMediaSelection(media);
+		} catch (error) {
+			createErrorNotice(getErrorMessage(error), {
+				type: 'snackbar',
+				isDismissible: true,
+			});
+		} finally {
+			setIsUploading(false);
+		}
+	}, [applyMediaSelection, createErrorNotice]);
+
 	/**
 	 * Remove a tab/slide
 	 */
@@ -694,25 +545,27 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 			removeBlock(block.clientId);
 		} else if (block.innerBlocks[i]) {
 			if (tabsData[i]) {
-				const newTabsData = deepClone(tabsData);
-				newTabsData.splice(i, 1);
+				const nextCollection = removeSlideFromCollection(
+					tabsData,
+					i,
+					tabActive
+				);
 
 				removeBlock(block.innerBlocks[i].clientId);
 
-				for (let j = i; j < newTabsData.length; j++) {
-					const newSlug = `slide-${j + 1}`;
-					newTabsData[j].slug = newSlug;
-					updateBlockAttributes(newTabsData[j].clientId, {
-						slug: newSlug,
+				nextCollection.tabsData.forEach((tab) => {
+					updateBlockAttributes(tab.clientId, {
+						slug: tab.slug,
 					});
-				}
+				});
 
 				setAttributes({
-					tabsData: newTabsData,
+					tabsData: nextCollection.tabsData,
+					tabActive: nextCollection.tabActive,
 				});
 			}
 		}
-	}, [block, tabsData, removeBlock, updateBlockAttributes, setAttributes]);
+	}, [block, tabsData, tabActive, removeBlock, updateBlockAttributes, setAttributes]);
 
 	className = classnames(className, 'wp-swiper__slides');
 
@@ -1022,7 +875,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 			<PanelRow>
 				<TextControl
 					label={__('Slides per view', 'wp-swiper')}
-					help={__('Number of slides per view (slides visible at the same time on slider\'s container). Can be a number or auto', 'wp-swiper')}
+					help={__('Number of visible slides. Enter a positive number, including decimals such as 1.2, or auto.', 'wp-swiper')}
 					value={slidesPerView}
 					onChange={(option) => {
 						setAttributes({ slidesPerView: option });
@@ -1523,6 +1376,29 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				)}
 			</PanelBody>
 			<PanelBody
+				title={__('Accessibility', 'wp-swiper')}
+				icon="universal-access-alt"
+				initialOpen={false}
+			>
+				<TextControl
+					label={__('Carousel name', 'wp-swiper')}
+					help={__(
+						'Describe this carousel for screen reader users, for example “Featured products”. A numbered name is generated when this is empty.',
+						'wp-swiper'
+					)}
+					value={carouselLabel}
+					onChange={(value) => {
+						setAttributes({ carouselLabel: value });
+					}}
+				/>
+				<p>
+					{__(
+						'Autoplay carousels include a pause or start control and pause automatically when reduced motion is requested.',
+						'wp-swiper'
+					)}
+				</p>
+			</PanelBody>
+			<PanelBody
 				title={__('Developer Tools', 'wp-swiper')}
 				icon="admin-tools"
 				initialOpen={false}
@@ -1538,13 +1414,14 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				<PanelRow>
 					<Button
 						onClick={() => {
-							let counter = 1;
-							tabsData.forEach((tab) => {
-								tab.slug = `slide-${counter}`;
-								counter++;
-							});
-							setAttributes({ tabsData });
+							const synchronizedCollection =
+								synchronizeSlideCollection(
+									block?.innerBlocks || [],
+									tabsData,
+									tabActive
+								);
 							updateSlugsForInnerBlocks(block?.innerBlocks || []);
+							setAttributes(synchronizedCollection);
 						}}
 						className="button"
 					>
@@ -1585,9 +1462,18 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 								<div
 									className={classnames('wb-tabs-buttons-item', selected ? 'wb-tabs-buttons-item-active' : '')}
 									key={`tab_button_${tabData.slug}`}
-									onClick={() => setAttributes({ tabActive: slug })}
 								>
-									<h4>{__('Slide', 'wp-swiper')} {counter++}</h4>
+									<Button
+										className="wp-swiper__tab-select"
+										onClick={() =>
+											setAttributes({ tabActive: slug })
+										}
+										aria-pressed={selected}
+									>
+										<span className="wp-swiper__tab-label">
+											{__('Slide', 'wp-swiper')} {counter++}
+										</span>
+									</Button>
 
 									<RemoveButton
 										show={isSelectedBlockInRoot}
@@ -1621,6 +1507,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 										replaceInnerBlocks(clientId, innerBlocks, false);
 										setAttributes({
 											tabsData: newTabsData,
+											tabActive: `slide-${newDataLength}`,
 										});
 									}}
 								/>
@@ -1666,6 +1553,29 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 							<path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/>
 						</svg>
 						<p>{__('Drop images here to create slides', 'wp-swiper')}</p>
+						<div className="wp-swiper__drop-zone-divider">
+							<span>{__('or', 'wp-swiper')}</span>
+						</div>
+						<MediaUploadCheck>
+							<MediaUpload
+								multiple
+								value={[]}
+								onSelect={handleMediaLibrarySelect}
+								allowedTypes={['image']}
+								render={({ open }) => (
+									<Button
+										onClick={open}
+										variant="primary"
+										className="wp-swiper__media-library-button"
+									>
+										{__(
+											'Select images from Media Library',
+											'wp-swiper'
+										)}
+									</Button>
+								)}
+							/>
+						</MediaUploadCheck>
 					</>
 				)}
 					</div>

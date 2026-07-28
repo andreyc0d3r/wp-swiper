@@ -58,6 +58,24 @@ The archive is written to `dist-zip/wp-swiper.zip`. See the [build and release g
 
 Compiled files in `build/` are committed so the repository remains installable without a local Node.js build.
 
+## Frontend lifecycle API
+
+WP Swiper initializes blocks present at page load and watches for blocks added
+later. Navigation systems and AJAX integrations can also manage a block
+explicitly:
+
+```js
+const carousel = document.querySelector( '.wp-swiper' );
+
+window.wpSwiperInit( carousel );
+window.wpSwiperDestroy( carousel );
+window.wpSwiperReinit( carousel );
+```
+
+Configuration corrections dispatch `wp-swiper:warning` with a structured
+diagnostic. Initialization failures dispatch `wp-swiper:error`, and explicit
+destruction dispatches `wp-swiper:destroy`.
+
 ## Support and contributing
 
 - Ask usage questions in the [WordPress.org support forum](https://wordpress.org/support/plugin/wp-swiper/).

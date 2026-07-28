@@ -1,6 +1,30 @@
 .wp-swiper {
 	position: relative;
 
+	&__autoplay-toggle {
+		position: absolute;
+		right: 1rem;
+		bottom: 1rem;
+		z-index: 10;
+		padding: 0.5rem 0.75rem;
+		color: #fff;
+		background: rgba(0, 0, 0, 0.75);
+		border: 1px solid currentcolor;
+		border-radius: 0.25rem;
+		cursor: pointer;
+		font: inherit;
+		line-height: 1.2;
+
+		&:hover {
+			background: #000;
+		}
+
+		&:focus-visible {
+			outline: 2px solid currentcolor;
+			outline-offset: 2px;
+		}
+	}
+
 	&__thumbs {
 		overflow: hidden;
 

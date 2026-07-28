@@ -81,7 +81,8 @@ function save(props) {
 	};
 
 	let data_atts = {
-		slidesPerView: slidesPerView === 'auto' ? 'auto' : parseInt(slidesPerView, 10),
+		// Historical versions serialized this string without coercing it.
+		slidesPerView,
 		slidesPerGroup,
 		slidesPerGroupAuto,
 		slidesPerGroupSkip,
