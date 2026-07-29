@@ -3,6 +3,7 @@
  */
 import metadata from './block.json';
 import deprecated, { saveIntegerSlidesPerView } from './deprecated';
+import oldsave from './oldsave';
 import saveCurrent from './save';
 import saveV1310 from './save-v1-3-10';
 import { buildSwiperConfig } from '../../utils/swiper-config';
@@ -168,6 +169,19 @@ test( 'version 1.3.10 output and attributes remain available for migration', () 
 	expect( config.slidesPerView ).toBe( '1.2' );
 	expect( migratedAttributes.slidesPerView ).toBe( '1.2' );
 	expect( migratedAttributes ).not.toHaveProperty( 'txtColor' );
+} );
+
+test( 'legacy breakpoint output remains available without throwing', () => {
+	const config = renderSwiperConfig(
+		oldsave,
+		getDefaultAttributes( {
+			breakpoints: '{"720":{"slidesPerView":2}}',
+		} )
+	);
+
+	expect( config[ 'data-breakpoints' ] ).toBe(
+		'{\\"720\\":{\\"slidesPerView\\":2}}'
+	);
 } );
 
 test( 'older sticky-mode blocks discard removed text color during migration', () => {

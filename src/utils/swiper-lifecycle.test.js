@@ -40,6 +40,15 @@ function createSwiperClass() {
 			wrapperEl: element.querySelector( '.swiper-wrapper' ),
 			on: jest.fn(),
 		};
+		if ( options.autoplay ) {
+			instance.autoplay = {
+				paused: false,
+				running: true,
+				pause: jest.fn(),
+				resume: jest.fn(),
+				start: jest.fn(),
+			};
+		}
 		instance.destroy = jest.fn( () => {
 			instance.destroyed = true;
 		} );
@@ -105,6 +114,39 @@ test( 'keeps controls isolated across multiple sliders', () => {
 	);
 	expect( instances[ 1 ].options.pagination.el ).toBe(
 		secondSlider.querySelector( '.swiper-pagination' )
+	);
+} );
+
+test( 'only renders the autoplay control when explicitly enabled', () => {
+	const SwiperClass = createSwiperClass();
+	const defaultSlider = createSlider( {
+		autoplay: {
+			delay: 3000,
+		},
+	} );
+	const enabledSlider = createSlider( {
+		autoplay: {
+			delay: 3000,
+		},
+		showAutoplayControl: true,
+	} );
+
+	initializeSwiperElement( defaultSlider, {
+		SwiperClass,
+	} );
+	const enabledInstance = initializeSwiperElement( enabledSlider, {
+		SwiperClass,
+		index: 1,
+	} );
+
+	expect(
+		defaultSlider.querySelector( '.wp-swiper__autoplay-toggle' )
+	).toBeNull();
+	expect(
+		enabledSlider.querySelector( '.wp-swiper__autoplay-toggle' )
+	).not.toBeNull();
+	expect( enabledInstance.options ).not.toHaveProperty(
+		'showAutoplayControl'
 	);
 } );
 

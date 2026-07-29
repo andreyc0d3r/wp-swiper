@@ -58,6 +58,7 @@ function resumeAutoplay( swiper ) {
  * @param {boolean}        settings.autoplayEnabled    Whether autoplay is configured.
  * @param {number}         settings.index              Page-level slider index.
  * @param {MediaQueryList} settings.reducedMotionQuery Reduced-motion query.
+ * @param {boolean}        settings.showControl        Whether to render the control.
  * @return {Function} Cleanup callback.
  */
 export function enableCarouselAccessibility(
@@ -67,6 +68,7 @@ export function enableCarouselAccessibility(
 		autoplayEnabled = Boolean( swiper.autoplay?.running ),
 		index = 0,
 		reducedMotionQuery = window.matchMedia?.( REDUCED_MOTION_QUERY ),
+		showControl = true,
 	} = {}
 ) {
 	const label = getCarouselLabel( sliderElement, index );
@@ -86,18 +88,20 @@ export function enableCarouselAccessibility(
 		return () => {};
 	}
 
-	const controlsContainer =
-		sliderElement.querySelector( '.wp-swiper__wrapper' ) || sliderElement;
-	const autoplayButton = document.createElement( 'button' );
-	autoplayButton.type = 'button';
-	autoplayButton.className = 'wp-swiper__autoplay-toggle';
+	let autoplayButton;
+	let autoplayLabel;
 
 	const updateButton = () => {
+		if ( ! autoplayButton || ! autoplayLabel ) {
+			return;
+		}
+
 		const running = isAutoplayRunning( swiper );
 		const text = running
 			? __( 'Pause autoplay', 'wp-swiper' )
 			: __( 'Start autoplay', 'wp-swiper' );
-		autoplayButton.textContent = text;
+		autoplayLabel.textContent = text;
+		autoplayButton.title = text;
 		autoplayButton.setAttribute( 'aria-label', text );
 		autoplayButton.setAttribute(
 			'data-autoplay-running',
@@ -121,12 +125,23 @@ export function enableCarouselAccessibility(
 		}
 	};
 
-	autoplayButton.addEventListener( 'click', toggleAutoplay );
-	controlsContainer.appendChild( autoplayButton );
-	swiper.on?.(
-		'autoplayPause autoplayResume autoplayStart autoplayStop',
-		updateButton
-	);
+	if ( showControl ) {
+		const controlsContainer =
+			sliderElement.querySelector( '.wp-swiper__wrapper' ) ||
+			sliderElement;
+		autoplayButton = document.createElement( 'button' );
+		autoplayLabel = document.createElement( 'span' );
+		autoplayButton.type = 'button';
+		autoplayButton.className = 'wp-swiper__autoplay-toggle';
+		autoplayLabel.className = 'wp-swiper__autoplay-label';
+		autoplayButton.appendChild( autoplayLabel );
+		autoplayButton.addEventListener( 'click', toggleAutoplay );
+		controlsContainer.appendChild( autoplayButton );
+		swiper.on?.(
+			'autoplayPause autoplayResume autoplayStart autoplayStop',
+			updateButton
+		);
+	}
 
 	if ( reducedMotionQuery?.matches ) {
 		pauseAutoplay( swiper );
@@ -139,8 +154,8 @@ export function enableCarouselAccessibility(
 	updateButton();
 
 	const cleanup = () => {
-		autoplayButton.removeEventListener( 'click', toggleAutoplay );
-		autoplayButton.remove();
+		autoplayButton?.removeEventListener( 'click', toggleAutoplay );
+		autoplayButton?.remove();
 		if ( typeof reducedMotionQuery?.removeEventListener === 'function' ) {
 			reducedMotionQuery.removeEventListener(
 				'change',
@@ -149,10 +164,12 @@ export function enableCarouselAccessibility(
 		} else {
 			reducedMotionQuery?.removeListener?.( handleReducedMotion );
 		}
-		swiper.off?.(
-			'autoplayPause autoplayResume autoplayStart autoplayStop',
-			updateButton
-		);
+		if ( showControl ) {
+			swiper.off?.(
+				'autoplayPause autoplayResume autoplayStart autoplayStop',
+				updateButton
+			);
+		}
 	};
 
 	swiper.on?.( 'destroy', cleanup );

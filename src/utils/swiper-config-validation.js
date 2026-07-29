@@ -18,6 +18,7 @@ const BOOLEAN_ATTRIBUTE_NAMES = [
 	'pauseOnMouseEnter',
 	'releaseOnEdges',
 	'reverseDirection',
+	'showAutoplayControl',
 	'slidesPerGroupAuto',
 	'stopOnLastSlide',
 	'waitForTransition',
@@ -68,7 +69,12 @@ const FREE_MODE_NUMERIC_RULES = {
 };
 
 const SINGLE_SLIDE_EFFECTS = new Set( [ 'cube', 'fade', 'flip' ] );
-const UNSUPPORTED_BREAKPOINT_OPTIONS = [ 'direction', 'effect', 'loop' ];
+const UNSUPPORTED_BREAKPOINT_OPTIONS = [
+	'direction',
+	'effect',
+	'loop',
+	'showAutoplayControl',
+];
 
 function isPlainObject( value ) {
 	return (
@@ -692,6 +698,12 @@ function prepareSwiperConfig( config, { kind = 'main' } = {} ) {
 	}
 
 	normalizeNumericOptions( options, RUNTIME_NUMERIC_RULES, diagnostics );
+	normalizeBooleanOptions(
+		options,
+		[ 'showAutoplayControl' ],
+		diagnostics,
+		'config'
+	);
 	normalizeModuleOptions( options, diagnostics, 'config' );
 	normalizeLegacyMousewheelOptions( options, diagnostics );
 

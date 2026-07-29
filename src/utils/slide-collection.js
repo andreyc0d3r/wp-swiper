@@ -150,6 +150,47 @@ export function synchronizeSlideCollection( innerBlocks, tabsData, tabActive ) {
 }
 
 /**
+ * Determine whether the parent slide metadata needs to be rebuilt.
+ *
+ * An empty inner block collection is left alone so InnerBlocks can apply its
+ * default slide template without competing attribute updates.
+ *
+ * @param {Object[]} innerBlocks Current ordered slide blocks.
+ * @param {Object[]} tabsData    Existing parent slide metadata.
+ * @param {string}   tabActive   Existing active slide slug.
+ * @return {boolean} Whether the collection needs synchronization.
+ */
+export function shouldSynchronizeSlideCollection(
+	innerBlocks,
+	tabsData,
+	tabActive
+) {
+	if ( innerBlocks.length === 0 ) {
+		return false;
+	}
+
+	const isSynchronized =
+		innerBlocks.length === tabsData.length &&
+		innerBlocks.every( ( innerBlock, index ) => {
+			const expectedSlug = `slide-${ index + 1 }`;
+			const tab = tabsData[ index ];
+
+			return (
+				tab?.clientId === innerBlock.clientId &&
+				tab?.slug === expectedSlug &&
+				innerBlock.attributes.slug === expectedSlug &&
+				tab?.slideImg === innerBlock.attributes.slideImg &&
+				tab?.thumbImg === innerBlock.attributes.thumbImg
+			);
+		} );
+	const hasValidActiveTab = tabsData.some(
+		( tab ) => tab.slug === tabActive
+	);
+
+	return ! isSynchronized || ! hasValidActiveTab;
+}
+
+/**
  * Remove one slide and preserve a valid active slide.
  *
  * @param {Object[]} tabsData  Existing parent slide metadata.

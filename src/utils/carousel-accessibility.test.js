@@ -83,10 +83,17 @@ test( 'adds carousel semantics and toggles autoplay', () => {
 
 	const button = slider.querySelector( '.wp-swiper__autoplay-toggle' );
 	expect( button.textContent ).toBe( 'Pause autoplay' );
+	expect( button.getAttribute( 'aria-label' ) ).toBe( 'Pause autoplay' );
+	expect( button.getAttribute( 'title' ) ).toBe( 'Pause autoplay' );
+	expect( button.getAttribute( 'data-autoplay-running' ) ).toBe( 'true' );
+	expect(
+		button.querySelector( '.wp-swiper__autoplay-label' ).textContent
+	).toBe( 'Pause autoplay' );
 
 	button.click();
 	expect( swiper.autoplay.pause ).toHaveBeenCalledTimes( 1 );
 	expect( button.textContent ).toBe( 'Start autoplay' );
+	expect( button.getAttribute( 'data-autoplay-running' ) ).toBe( 'false' );
 
 	button.click();
 	expect( swiper.autoplay.resume ).toHaveBeenCalledTimes( 1 );
@@ -132,6 +139,28 @@ test( 'does not add an autoplay control when autoplay is disabled', () => {
 	} );
 
 	expect( slider.querySelector( '.wp-swiper__autoplay-toggle' ) ).toBeNull();
+} );
+
+test( 'honors reduced motion when the autoplay control is hidden', () => {
+	const slider = createSlider();
+	const swiper = createSwiper();
+	const reducedMotionQuery = {
+		matches: true,
+		addEventListener: jest.fn(),
+		removeEventListener: jest.fn(),
+	};
+
+	enableCarouselAccessibility( slider, swiper, {
+		reducedMotionQuery,
+		showControl: false,
+	} );
+
+	expect( slider.querySelector( '.wp-swiper__autoplay-toggle' ) ).toBeNull();
+	expect( swiper.autoplay.pause ).toHaveBeenCalledTimes( 1 );
+	expect( reducedMotionQuery.addEventListener ).toHaveBeenCalledWith(
+		'change',
+		expect.any( Function )
+	);
 } );
 
 test( 'starts autoplay again after it has stopped', () => {

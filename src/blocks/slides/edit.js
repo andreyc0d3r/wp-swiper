@@ -46,6 +46,7 @@ import getImage from '../../utils/get-image';
 import {
 	addMediaToSlideCollection,
 	removeSlideFromCollection,
+	shouldSynchronizeSlideCollection,
 	synchronizeSlideCollection,
 } from '../../utils/slide-collection';
 import {
@@ -161,6 +162,7 @@ function SwiperConfigEditor({ attributes, setAttributes }) {
 			if (parsed.effect !== undefined) newAttributes.effect = parsed.effect;
 			if (parsed.loopAddBlankSlides !== undefined) newAttributes.loopAddBlankSlides = parsed.loopAddBlankSlides;
 			if (parsed.loopAdditionalSlides !== undefined) newAttributes.loopAdditionalSlides = parsed.loopAdditionalSlides;
+			if (parsed.showAutoplayControl !== undefined) newAttributes.showAutoplayControl = parsed.showAutoplayControl;
 
 			// Handle autoplay object
 			if (parsed.autoplay !== undefined) {
@@ -342,10 +344,12 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 
 	// Helper function to update slug attribute for inner blocks
 	const updateSlugsForInnerBlocks = useCallback((innerBlocks) => {
-		let counter = 1;
-		innerBlocks.forEach((innerBlock) => {
-			updateBlockAttributes(innerBlock.clientId, { slug: `slide-${counter}` });
-			counter++;
+		innerBlocks.forEach((innerBlock, index) => {
+			const slug = `slide-${index + 1}`;
+
+			if (innerBlock.attributes.slug !== slug) {
+				updateBlockAttributes(innerBlock.clientId, { slug });
+			}
 		});
 	}, [updateBlockAttributes]);
 
@@ -357,6 +361,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		overlayImg,
 		overlayImgOpacity,
 		autoplay,
+		showAutoplayControl,
 		disableOnInteraction,
 		pauseOnMouseEnter,
 		reverseDirection,
@@ -410,27 +415,14 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 	const childBlocks = getBlocks(clientId);
 
 	useEffect(() => {
-		if (!block?.innerBlocks) return;
-
-		const isSynchronized =
-			block.innerBlocks.length === tabsData.length &&
-			block.innerBlocks.every((innerBlock, index) => {
-				const expectedSlug = `slide-${index + 1}`;
-				const tab = tabsData[index];
-
-				return (
-					tab?.clientId === innerBlock.clientId &&
-					tab?.slug === expectedSlug &&
-					innerBlock.attributes.slug === expectedSlug &&
-					tab?.slideImg === innerBlock.attributes.slideImg &&
-					tab?.thumbImg === innerBlock.attributes.thumbImg
-				);
-			});
-		const hasValidActiveTab = tabsData.some(
-			(tab) => tab.slug === tabActive
-		);
-
-		if (!isSynchronized || !hasValidActiveTab) {
+		if (
+			block?.innerBlocks &&
+			shouldSynchronizeSlideCollection(
+				block.innerBlocks,
+				tabsData,
+				tabActive
+			)
+		) {
 			const synchronizedCollection = synchronizeSlideCollection(
 				block.innerBlocks,
 				tabsData,
@@ -777,6 +769,18 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 						}}
 					/>
 				</PanelRow>
+				{autoplay && (
+					<PanelRow>
+						<ToggleControl
+							label={__('Show Pause/Play Control', 'wp-swiper')}
+							help={__('Display a minimal pause/play control on the frontend.', 'wp-swiper')}
+							checked={showAutoplayControl}
+							onChange={() => {
+								setAttributes({ showAutoplayControl: !showAutoplayControl });
+							}}
+						/>
+					</PanelRow>
+				)}
 				<PanelRow>
 					<ToggleControl
 						label={__('Loop', 'wp-swiper')}
@@ -1393,7 +1397,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				/>
 				<p>
 					{__(
-						'Autoplay carousels include a pause or start control and pause automatically when reduced motion is requested.',
+						'Autoplay carousels can optionally include a pause or start control and pause automatically when reduced motion is requested.',
 						'wp-swiper'
 					)}
 				</p>

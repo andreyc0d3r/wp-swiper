@@ -14,6 +14,7 @@ test( 'normalizes runtime attributes without mutating block attributes', () => {
 		delay: '4500',
 		loopAdditionalSlides: '2',
 		mousewheel: 'true',
+		showAutoplayControl: 'false',
 		slidesPerGroup: '2',
 		slidesPerView: '1.5',
 	};
@@ -23,6 +24,7 @@ test( 'normalizes runtime attributes without mutating block attributes', () => {
 		delay: 4500,
 		loopAdditionalSlides: 2,
 		mousewheel: true,
+		showAutoplayControl: false,
 		slidesPerGroup: 2,
 		slidesPerView: 1.5,
 	} );
@@ -31,6 +33,7 @@ test( 'normalizes runtime attributes without mutating block attributes', () => {
 		delay: '4500',
 		loopAdditionalSlides: '2',
 		mousewheel: 'true',
+		showAutoplayControl: 'false',
 		slidesPerGroup: '2',
 		slidesPerView: '1.5',
 	} );
@@ -95,6 +98,30 @@ test( 'preserves explicit autoplay boolean settings', () => {
 		stopOnLastSlide: false,
 		waitForTransition: true,
 	} );
+} );
+
+test( 'only enables the autoplay control when explicitly requested', () => {
+	const enabledConfig = buildSwiperConfig( {
+		slidesPerView: '1',
+		autoplay: true,
+		showAutoplayControl: true,
+	} );
+	const defaultConfig = buildSwiperConfig( {
+		slidesPerView: '1',
+		autoplay: true,
+		showAutoplayControl: false,
+	} );
+	const autoplayDisabledConfig = buildSwiperConfig( {
+		slidesPerView: '1',
+		autoplay: false,
+		showAutoplayControl: true,
+	} );
+
+	expect( enabledConfig.showAutoplayControl ).toBe( true );
+	expect( defaultConfig ).not.toHaveProperty( 'showAutoplayControl' );
+	expect( autoplayDisabledConfig ).not.toHaveProperty(
+		'showAutoplayControl'
+	);
 } );
 
 test.each( [

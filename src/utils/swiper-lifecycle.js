@@ -220,6 +220,8 @@ export function initializeSwiperElement(
 	sliderElement.classList.add( `wp-swiper--${ index }` );
 
 	const options = getSwiperConfig( swiperContainer );
+	const showAutoplayControl = options.showAutoplayControl === true;
+	delete options.showAutoplayControl;
 	addNavigationOptions( sliderElement, options );
 	addPaginationOptions( sliderElement, options );
 
@@ -253,6 +255,7 @@ export function initializeSwiperElement(
 	enableCarouselAccessibility( sliderElement, main, {
 		autoplayEnabled: Boolean( options.autoplay ),
 		index,
+		showControl: showAutoplayControl,
 	} );
 	sliderElement[ INITIALIZED_PROPERTY ] = {
 		main,

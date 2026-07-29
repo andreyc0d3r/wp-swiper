@@ -63,6 +63,10 @@
       "type": "boolean",
       "default": false
     },
+    "showAutoplayControl": {
+      "type": "boolean",
+      "default": false
+    },
     "disableOnInteraction": {
       "type": "boolean",
       "default": true

@@ -27,6 +27,7 @@ export function buildSwiperConfig( attributes ) {
 		spaceBetween,
 		autoSlideWidth,
 		autoplay,
+		showAutoplayControl,
 		disableOnInteraction,
 		pauseOnMouseEnter,
 		reverseDirection,
@@ -117,6 +118,10 @@ export function buildSwiperConfig( attributes ) {
 			stopOnLastSlide: Boolean( stopOnLastSlide ),
 			waitForTransition: Boolean( waitForTransition ),
 		};
+
+		if ( showAutoplayControl ) {
+			config.showAutoplayControl = true;
+		}
 	}
 
 	if ( freeMode ) {

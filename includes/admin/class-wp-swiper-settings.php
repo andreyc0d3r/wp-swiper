@@ -5,6 +5,11 @@
  *
  * @package WP_Swiper
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class WP_Swiper_Settings {
 
 	/**

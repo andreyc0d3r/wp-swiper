@@ -2,6 +2,7 @@ import {
 	addMediaToSlideCollection,
 	getSlideMediaAttributes,
 	removeSlideFromCollection,
+	shouldSynchronizeSlideCollection,
 	synchronizeSlideCollection,
 } from './slide-collection';
 
@@ -167,6 +168,39 @@ test( 'preserves the active slide identity after reordering', () => {
 		'first',
 	] );
 	expect( result.tabActive ).toBe( 'slide-1' );
+} );
+
+test( 'waits for the default slide template when inner blocks are empty', () => {
+	expect( shouldSynchronizeSlideCollection( [], [], 'slide-1' ) ).toBe(
+		false
+	);
+} );
+
+test( 'synchronizes metadata after the default slide template is applied', () => {
+	const innerBlocks = [
+		{
+			clientId: 'first',
+			attributes: {
+				slug: 'slide-1',
+			},
+		},
+	];
+
+	expect(
+		shouldSynchronizeSlideCollection( innerBlocks, [], 'slide-1' )
+	).toBe( true );
+	expect(
+		shouldSynchronizeSlideCollection(
+			innerBlocks,
+			[
+				{
+					clientId: 'first',
+					slug: 'slide-1',
+				},
+			],
+			'slide-1'
+		)
+	).toBe( false );
 } );
 
 test( 'selects the next available slide after removing the active slide', () => {

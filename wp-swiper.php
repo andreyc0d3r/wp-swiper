@@ -16,7 +16,7 @@
  * Plugin Name:       WP Swiper
  * Plugin URI:        https://digitalapps.com/wp-swiper/
  * Description:       Build responsive Swiper carousels with images, media, and nested WordPress blocks.
- * Version:           1.4.7
+ * Version:           1.4.8
  * Requires at least: 6.3
  * Requires PHP:      7.4
  * Author:            Digital Apps
@@ -24,7 +24,6 @@
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wp-swiper
- * Domain Path:       /languages
  * Tested up to:      7.0
  */
 
@@ -33,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DAWPS_PLUGIN_VERSION', '1.4.7' );
+define( 'DAWPS_PLUGIN_VERSION', '1.4.8' );
 define( 'DAWPS_BUNDLE_VERSION', '14.0.5' );
 define( 'DAWPS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'DAWPS_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );

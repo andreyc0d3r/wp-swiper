@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 6.3
 Tested up to: 7.0
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -105,6 +105,14 @@ Please report security issues privately according to the [security policy](https
 3. A published WP Swiper slider with navigation and clickable pagination.
 
 == Changelog ==
+
+= 1.4.8 =
+
+* Fixed a Gutenberg crash when loading legacy sliders with responsive breakpoints.
+* Made the frontend autoplay pause/play control optional and disabled it by default.
+* Replaced the autoplay text button with a minimal pause/play icon when enabled.
+* Prevented unnecessary slide metadata updates when adding or editing sliders.
+* Kept image-only slides visible on the frontend when auto height is enabled.
 
 = 1.4.7 =
 
