@@ -135,7 +135,8 @@ class WP_Swiper_Public {
 			),
 		);
 
-		$filtered_args = apply_filters( $this->plugin_name . '_frontend_js_register_args', $script_args );
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Preserve the documented public hook name.
+		$filtered_args = apply_filters( 'wpswiper_frontend_js_register_args', $script_args );
 
 		if ( is_array( $filtered_args ) ) {
 			if ( isset( $filtered_args['deps'] ) && is_array( $filtered_args['deps'] ) ) {

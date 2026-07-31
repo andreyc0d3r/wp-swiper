@@ -20,6 +20,9 @@ ehthumbs.db
 # Dependencies and generated development output
 node_modules/
 coverage/
+artifacts/
+playwright-report/
+test-results/
 dist-zip/
 wp-swiper-svn/
 svn/

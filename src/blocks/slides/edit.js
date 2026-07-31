@@ -1492,6 +1492,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 						{isSelectedBlockInRoot ? (
 							<Tooltip text={__('Add Slide', 'wp-swiper')}>
 								<Button
+									aria-label={__('Add Slide', 'wp-swiper')}
 									icon="insert"
 									onClick={() => {
 										const newDataLength = tabsData.length + 1;

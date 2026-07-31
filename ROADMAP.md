@@ -1,6 +1,6 @@
 # WP Swiper Roadmap
 
-Last reviewed: 25 July 2026
+Last reviewed: 31 July 2026
 
 ## Product direction
 
@@ -19,7 +19,7 @@ and delivery tracking.
 
 | Order | Initiative | Status | Intended outcome |
 | --- | --- | --- | --- |
-| 1 | Stabilization release | Release candidate | Resolve regressions and accessibility defects before expanding the feature set |
+| 1 | Stabilization release | Ready for release | Resolve regressions and accessibility defects before expanding the feature set |
 | 2 | Engineering foundation | In progress | Create reliable configuration, editor, frontend lifecycle, and test boundaries |
 | 3 | Responsive setup and presets | Planned after WordPress 7.1 API review | Replace raw breakpoint configuration with a native-feeling responsive workflow |
 | 4 | Dynamic content | Later | Support post, product, and Query Loop carousel use cases |
@@ -44,9 +44,11 @@ and delivery tracking.
 - [x] Provide a visible pause/resume control when autoplay is enabled.
 - [x] Respect reduced-motion preferences for autoplay and transitions.
 
-Implementation and automated release checks are complete. Live editor validation
-against the minimum and latest supported WordPress versions remains the release
-candidate gate.
+Version 1.4.9 is ready for release. Editor and frontend browser flows run the
+packaged plugin contents against the minimum and latest supported WordPress
+versions in CI. The generated archive passes activation, deactivation and
+uninstall checks. Official Plugin Check reports no code or package findings; its
+only remaining warnings concern the existing approved plugin name and slug.
 
 ### Acceptance criteria
 
@@ -142,11 +144,11 @@ Suggested boundaries:
 
 ### 2.6 Test and quality gates
 
-- [ ] Add serializer tests for the current and every supported deprecated save.
+- [x] Add serializer tests for the current and every supported deprecated save.
 - [x] Add configuration matrix tests.
 - [x] Add frontend lifecycle and multiple-slider tests.
-- [ ] Add editor tests for adding, deleting, reordering, and selecting slides.
-- [ ] Add browser-level smoke tests in a WordPress environment.
+- [x] Add editor tests for adding, deleting, reordering, and selecting slides.
+- [x] Add browser-level smoke tests in a WordPress environment.
 - [ ] Add JavaScript and style linting to CI after separating baseline formatting
       cleanup from behavioral changes.
 - [ ] Keep PHP 7.4 compatibility until the documented minimum changes.

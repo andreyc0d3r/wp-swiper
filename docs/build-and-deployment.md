@@ -8,6 +8,7 @@ This guide covers development builds, distributable plugin archives, and release
 - npm 10 or newer
 - PHP 7.4 or newer for local syntax checks
 - A WordPress 6.3 or newer test site
+- Docker for the automated WordPress browser environments
 
 ## Development
 
@@ -30,6 +31,29 @@ npm run build
 ```
 
 Compiled assets are written to `build/`. These files are tracked because WordPress installs the plugin without running Node.js.
+
+## Browser smoke tests
+
+Run the editor and frontend release flows against both supported endpoints:
+
+```bash
+npm run test:e2e:all
+```
+
+Each command first builds and verifies the release package. The test matrix
+mounts those packaged contents on WordPress 6.3.8 with PHP 7.4 and WordPress
+7.0.2 with PHP 8.2. To run a single environment:
+
+```bash
+npm run test:e2e:minimum
+npm run test:e2e:stable
+```
+
+The first run downloads the Playwright browsers and WordPress Docker images.
+The tests cover Media Library multi-selection, adding, selecting, reordering,
+removing and reopening slides, plus frontend initialization, navigation,
+pagination, autoplay, thumbnails and responsive breakpoint parsing. Failure
+traces and screenshots are written below `artifacts/`.
 
 ## Distribution archive
 
@@ -58,7 +82,7 @@ Releases are created from tags matching `v*` by the GitHub release workflow.
 1. Update the version in `package.json`, `wp-swiper.php`, and `README.txt`.
 2. Update the changelog in `README.txt`.
 3. Run `npm install --package-lock-only` if package metadata changed.
-4. Run `npm test` and `npm run package`.
+4. Run `npm test`, `npm run test:e2e:all`, and `npm run package`.
 5. Test the generated archive on a clean WordPress site.
 6. Commit the release changes.
 7. Create and push a signed tag such as `v1.4.5`.

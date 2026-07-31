@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`current version serializer output remains stable 1`] = `"<div class="wp-swiper__slide swiper-slide is-position-bottom-right" data-tab="slide-1" style="background-image:url(https://example.com/slide.jpg);background-size:cover;background-position:25% 75%"><div class="wp-swiper__overlay-color" style="background-color:rgba(12, 34, 56, 0.4)"></div><div class="wp-swiper__slide-content" style="max-width:80%">Serialized inner block</div></div>"`;
+
+exports[`original version serializer output remains stable 1`] = `"<div class="wp-swiper__slide swiper-slide is-position-bottom-right" data-tab="slide-1" style="background-image:url(https://example.com/slide.jpg);background-size:cover"><div class="wp-swiper__overlay-color" style="background-color:rgba(12, 34, 56, 0.4)"></div><div class="wp-swiper__slide-content" style="max-width:80%">Serialized inner block</div></div>"`;
+
+exports[`version without focal point serializer output remains stable 1`] = `"<div class="wp-swiper__slide swiper-slide is-position-bottom-right" data-tab="slide-1" style="background-image:url(https://example.com/slide.jpg);background-size:cover"><div class="wp-swiper__overlay-color" style="background-color:rgba(12, 34, 56, 0.4)"></div><div class="wp-swiper__slide-content" style="max-width:80%">Serialized inner block</div></div>"`;

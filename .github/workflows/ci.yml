@@ -49,3 +49,44 @@ jobs:
           name: wp-swiper
           path: dist-zip/wp-swiper.zip
           if-no-files-found: error
+
+  browser-smoke:
+    name: Browser smoke (WordPress ${{ matrix.wordpress }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        wordpress:
+          - "6.3.8"
+          - "7.0.2"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and verify plugin package
+        run: npm run package
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser smoke tests
+        run: node scripts/run-e2e.mjs "${{ matrix.wordpress }}"
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+
+      - name: Upload browser test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-smoke-wordpress-${{ matrix.wordpress }}
+          path: artifacts/wordpress-${{ matrix.wordpress }}
+          if-no-files-found: ignore

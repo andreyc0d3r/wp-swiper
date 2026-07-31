@@ -10,7 +10,7 @@ const errors = [];
 const requiredFiles = [
 	'LICENSE',
 	'README.txt',
-	'THIRD_PARTY_NOTICES.md',
+	'THIRD_PARTY_NOTICES.txt',
 	'assets/swiper/swiper-bundle.min.css',
 	'assets/swiper/swiper-bundle.min.js',
 	'build/frontend.build.asset.php',
@@ -41,6 +41,7 @@ const forbiddenPaths = [
 	'package.json',
 	'scripts',
 	'src',
+	'babel.config.js',
 	'webpack.config.js',
 ];
 
@@ -103,6 +104,20 @@ if ( ! existsSync( packageRoot ) ) {
 	) {
 		errors.push(
 			'Editor stylesheet does not contain the WP Swiper editor styles.'
+		);
+	}
+
+	const editorAssetPath = join(
+		packageRoot,
+		'build',
+		'index.build.asset.php'
+	);
+	if (
+		existsSync( editorAssetPath ) &&
+		readFileSync( editorAssetPath, 'utf8' ).includes( 'react-jsx-runtime' )
+	) {
+		errors.push(
+			'Editor script depends on react-jsx-runtime, which is unavailable in WordPress 6.3.'
 		);
 	}
 
@@ -205,7 +220,7 @@ const packageJson = JSON.parse(
 const pluginFile = readFileSync( join( root, 'wp-swiper.php' ), 'utf8' );
 const readme = readFileSync( join( root, 'README.txt' ), 'utf8' );
 const thirdPartyNotices = readFileSync(
-	join( root, 'THIRD_PARTY_NOTICES.md' ),
+	join( root, 'THIRD_PARTY_NOTICES.txt' ),
 	'utf8'
 );
 const assetMetadata = readFileSync(
@@ -252,9 +267,9 @@ if ( ! /^\d+\.\d+\.\d+$/.test( swiperVersion || '' ) ) {
 		}
 	}
 
-	if ( ! thirdPartyNotices.includes( `## Swiper ${ swiperVersion }` ) ) {
+	if ( ! thirdPartyNotices.includes( `Swiper ${ swiperVersion }` ) ) {
 		errors.push(
-			'THIRD_PARTY_NOTICES.md has an incorrect Swiper version.'
+			'THIRD_PARTY_NOTICES.txt has an incorrect Swiper version.'
 		);
 	}
 }

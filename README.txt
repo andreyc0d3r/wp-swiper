@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 6.3
 Tested up to: 7.0
-Stable tag: 1.4.8
+Stable tag: 1.4.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -113,6 +113,13 @@ Please report security issues privately according to the [security policy](https
 3. A published WP Swiper slider with navigation and clickable pagination.
 
 == Changelog ==
+
+= 1.4.9 =
+
+* Restored block editor compatibility with WordPress 6.3 by using compatible JSX output.
+* Added accessible names to the editor controls for adding and removing slides.
+* Removed editor warnings caused by deprecated Popover and SVG properties.
+* Expanded automated coverage for packaged editor, frontend, and legacy block behavior.
 
 = 1.4.8 =
 

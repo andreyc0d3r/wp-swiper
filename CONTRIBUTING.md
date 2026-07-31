@@ -21,6 +21,7 @@ Requirements:
 - npm 10 or newer
 - PHP 7.4 or newer
 - WordPress 6.3 or newer
+- Docker for the browser smoke-test environments
 
 Install dependencies and start the asset watcher:
 
@@ -48,8 +49,15 @@ Run the automated checks:
 
 ```bash
 npm test
+npm run test:e2e:all
 npm run package
 ```
+
+The browser suite first builds and verifies the release package, then mounts its
+contents in isolated `wp-env` sites for WordPress 6.3.8 with PHP 7.4 and
+WordPress 7.0.2 with PHP 8.2. Run only one endpoint with
+`npm run test:e2e:minimum` or `npm run test:e2e:stable`. Failure traces and
+screenshots are written below `artifacts/`.
 
 Install the generated `dist-zip/wp-swiper.zip` on a clean WordPress site and test the affected editor and frontend behavior. Include the WordPress, PHP, and browser versions used in the pull request.
 

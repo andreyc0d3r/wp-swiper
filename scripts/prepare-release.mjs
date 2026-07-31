@@ -1,5 +1,5 @@
 import AdmZip from 'adm-zip';
-import { existsSync, mkdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +7,7 @@ const root = resolve( dirname( fileURLToPath( import.meta.url ) ), '..' );
 const sourceArchive = join( root, 'wp-swiper.zip' );
 const distributionDirectory = join( root, 'dist-zip' );
 const distributionArchive = join( distributionDirectory, 'wp-swiper.zip' );
+const packageDirectory = join( distributionDirectory, 'wp-swiper' );
 
 if ( ! existsSync( sourceArchive ) ) {
 	throw new Error(
@@ -14,8 +15,24 @@ if ( ! existsSync( sourceArchive ) ) {
 	);
 }
 
-rmSync( distributionDirectory, { force: true, recursive: true } );
 mkdirSync( distributionDirectory, { recursive: true } );
+mkdirSync( packageDirectory, { recursive: true } );
+
+// Preserve the package directory itself because wp-env may have it mounted.
+for ( const entry of readdirSync( distributionDirectory ) ) {
+	const entryPath = join( distributionDirectory, entry );
+
+	if ( entryPath === packageDirectory ) {
+		for ( const packageEntry of readdirSync( packageDirectory ) ) {
+			rmSync( join( packageDirectory, packageEntry ), {
+				force: true,
+				recursive: true,
+			} );
+		}
+	} else {
+		rmSync( entryPath, { force: true, recursive: true } );
+	}
+}
 
 const archive = new AdmZip( sourceArchive );
 

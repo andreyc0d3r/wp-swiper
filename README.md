@@ -96,4 +96,4 @@ destruction dispatches `wp-swiper:destroy`.
 
 WP Swiper is licensed under the [GNU General Public License v2.0 or later](LICENSE).
 
-The bundled Swiper runtime is licensed separately under the MIT License. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The bundled Swiper runtime is licensed separately under the MIT License. See [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt).

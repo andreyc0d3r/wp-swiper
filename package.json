@@ -1,6 +1,6 @@
 {
 	"name": "wp-swiper",
-	"version": "1.4.8",
+	"version": "1.4.9",
 	"description": "A Gutenberg block for building responsive Swiper carousels with nested WordPress blocks.",
 	"author": "Digital Apps",
 	"license": "GPL-2.0-or-later",
@@ -31,7 +31,7 @@
 		"index.php",
 		"LICENSE",
 		"README.txt",
-		"THIRD_PARTY_NOTICES.md",
+		"THIRD_PARTY_NOTICES.txt",
 		"uninstall.php",
 		"wp-swiper.php"
 	],
@@ -40,6 +40,10 @@
 		"striptags": "^3.2.0"
 	},
 	"devDependencies": {
+		"@babel/plugin-transform-react-jsx": "^7.29.7",
+		"@playwright/test": "^1.62.0",
+		"@wordpress/e2e-test-utils-playwright": "^1.52.0",
+		"@wordpress/env": "^11.12.0",
 		"@wordpress/icons": "^11.3.0",
 		"@wordpress/scripts": "^31.1.0",
 		"adm-zip": "^0.5.16",
@@ -54,8 +58,13 @@
 		"start": "npm run sync:swiper && wp-scripts start",
 		"sync:swiper": "node scripts/sync-swiper.mjs",
 		"test": "npm run lint:pkg-json && npm run test:unit && npm run build",
+		"test:e2e": "npm run package && node scripts/run-e2e.mjs 7.0.2",
+		"test:e2e:all": "npm run package && node scripts/run-e2e.mjs all",
+		"test:e2e:minimum": "npm run package && node scripts/run-e2e.mjs 6.3.8",
+		"test:e2e:stable": "npm run package && node scripts/run-e2e.mjs 7.0.2",
 		"test:unit": "wp-scripts test-unit-js --runInBand",
 		"verify:release": "node scripts/verify-release.mjs",
-		"verify:tag": "node scripts/verify-tag.mjs"
+		"verify:tag": "node scripts/verify-tag.mjs",
+		"wp-env": "wp-env"
 	}
 }

@@ -35,7 +35,7 @@ export const settings = {
 				rx="2"
 				stroke="currentColor"
 				fill="transparent"
-				stroke-width="1.5"
+				strokeWidth="1.5"
 			/>
 			<circle cx="8" cy="10" r="1.5" fill="currentColor" />
 			<path

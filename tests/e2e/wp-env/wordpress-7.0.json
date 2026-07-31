@@ -1,0 +1,13 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
+	"core": "https://wordpress.org/wordpress-7.0.2.zip",
+	"phpVersion": "8.2",
+	"plugins": [ "./dist-zip/wp-swiper" ],
+	"port": 8892,
+	"testsEnvironment": false,
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_DISPLAY": true,
+		"SCRIPT_DEBUG": true
+	}
+}

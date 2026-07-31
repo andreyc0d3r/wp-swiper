@@ -21,7 +21,7 @@ jest.mock(
 			} ),
 		},
 		InnerBlocks: {
-			Content: () => null,
+			Content: () => 'Serialized slide content',
 		},
 		useInnerBlocksProps: () => ( {} ),
 	} ),
@@ -69,6 +69,72 @@ function renderSwiperConfig( save, attributes ) {
 			.getAttribute( 'data-swiper' )
 	);
 }
+
+function getSerializationAttributes() {
+	return getDefaultAttributes( {
+		align: 'wide',
+		autoHeight: false,
+		breakpoints: '{"720":{"slidesPerView":2,"spaceBetween":24}}',
+		carouselLabel: 'Featured slides',
+		className: 'is-style-testimonials',
+		navigation: true,
+		navigationColor: '#112233',
+		nextIcon: 'https://example.com/next.svg',
+		overlayImg: 'https://example.com/overlay.jpg',
+		overlayImgOpacity: 0.25,
+		pagination: true,
+		paginationColor: '#445566',
+		previousIcon: 'https://example.com/previous.svg',
+		sliderHeight: '480px',
+		slidesPerView: '1.25',
+		tabsData: [
+			{
+				clientId: 'slide-client-id',
+				slideImg: 'https://example.com/slide.jpg',
+				slug: 'slide-1',
+				thumbImg: 'https://example.com/thumb.jpg',
+			},
+		],
+		thumbs: true,
+		txtColor: '#778899',
+	} );
+}
+
+const deprecatedSerializerNames = [
+	'versions 1.4.0-1.4.6',
+	'version 1.3.10',
+	'pre-height-and-color version',
+	'sticky-attribute version',
+	'original version',
+];
+
+const serializerCases = [
+	[ 'current version', saveCurrent ],
+	...deprecated.map( ( definition, index ) => [
+		deprecatedSerializerNames[ index ],
+		definition.save,
+	] ),
+];
+
+test( 'serializer matrix includes every registered deprecated save', () => {
+	expect( deprecatedSerializerNames ).toHaveLength( deprecated.length );
+	expect( serializerCases.slice( 1 ).map( ( [ , save ] ) => save ) ).toEqual(
+		deprecated.map( ( definition ) => definition.save )
+	);
+} );
+
+test.each( serializerCases )(
+	'%s serializer output remains stable',
+	( name, save ) => {
+		expect(
+			renderToStaticMarkup(
+				save( {
+					attributes: getSerializationAttributes(),
+				} )
+			)
+		).toMatchSnapshot();
+	}
+);
 
 test( 'current save output preserves fractional slides per view', () => {
 	const config = renderSwiperConfig(
