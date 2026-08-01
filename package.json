@@ -44,7 +44,7 @@
 		"@playwright/test": "^1.62.0",
 		"@wordpress/e2e-test-utils-playwright": "^1.52.0",
 		"@wordpress/env": "^11.12.0",
-		"@wordpress/icons": "^11.3.0",
+		"@wordpress/icons": "^15.2.0",
 		"@wordpress/scripts": "^31.1.0",
 		"adm-zip": "^0.5.16",
 		"classnames": "^2.3.2",
