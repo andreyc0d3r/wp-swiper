@@ -1,6 +1,6 @@
 # WP Swiper Roadmap
 
-Last reviewed: 31 July 2026
+Last reviewed: 3 August 2026
 
 ## Product direction
 
@@ -19,9 +19,9 @@ and delivery tracking.
 
 | Order | Initiative | Status | Intended outcome |
 | --- | --- | --- | --- |
-| 1 | Stabilization release | Ready for release | Resolve regressions and accessibility defects before expanding the feature set |
+| 1 | Stabilization release | Released | Resolve regressions and accessibility defects before expanding the feature set |
 | 2 | Engineering foundation | In progress | Create reliable configuration, editor, frontend lifecycle, and test boundaries |
-| 3 | Responsive setup and presets | Planned after WordPress 7.1 API review | Replace raw breakpoint configuration with a native-feeling responsive workflow |
+| 3 | Responsive setup and presets | Presets ready; responsive setup planned after WordPress 7.1 API review | Replace raw breakpoint configuration with a native-feeling responsive workflow |
 | 4 | Dynamic content | Later | Support post, product, and Query Loop carousel use cases |
 | 5 | Abilities API | Explore later | Expose safe, deterministic carousel operations to AI and automation |
 
@@ -44,7 +44,7 @@ and delivery tracking.
 - [x] Provide a visible pause/resume control when autoplay is enabled.
 - [x] Respect reduced-motion preferences for autoplay and transitions.
 
-Version 1.4.9 is ready for release. Editor and frontend browser flows run the
+Version 1.4.9 was released. Editor and frontend browser flows run the
 packaged plugin contents against the minimum and latest supported WordPress
 versions in CI. The generated archive passes activation, deactivation and
 uninstall checks. Official Plugin Check reports no code or package findings; its
@@ -102,8 +102,11 @@ saved markup, and frontend.
 ### 2.3 Editor decomposition
 
 - [ ] Separate the large slider editor into focused control panels and hooks.
-- [ ] Extract slide collection, active-slide, media-selection, preview, and
-      configuration responsibilities.
+- [x] Extract slide collection and active-slide responsibilities into focused
+      hooks.
+- [x] Extract the advanced configuration editor state, validation, and attribute
+      mapping.
+- [ ] Extract media-selection and preview responsibilities.
 - [ ] Make child block attributes the canonical source where practical, rather
       than duplicating slide data in the parent.
 - [x] Replace clickable `div` tab controls with accessible WordPress components
@@ -238,16 +241,18 @@ layer, not the stored Swiper data model.
 
 ### Presets
 
-- [ ] Add block variations or patterns for:
+The in-block starter templates are included in version 1.5.0.
+
+- [x] Add an in-block starting-template selector for:
   - Hero;
   - Cards;
   - Image gallery;
   - Logo strip;
   - Testimonials;
   - Main gallery with thumbnails.
-- [ ] Build presets entirely from the existing WP Swiper and core block model.
-- [ ] Allow users to change or remove every preset choice after insertion.
-- [ ] Do not add frontend dependencies for presets.
+- [x] Build presets entirely from the existing WP Swiper and core block model.
+- [x] Allow users to change or remove every preset choice after insertion.
+- [x] Do not add frontend dependencies for presets.
 
 ## 4. Dynamic content
 

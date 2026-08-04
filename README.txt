@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/wpplugins
 Tags: swiper, carousel, slider block, carousel block, swiper block
 Requires at least: 6.3
 Tested up to: 7.0
-Stable tag: 1.4.9
+Stable tag: 1.5.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -18,6 +18,7 @@ Build responsive Swiper carousels with images, media, and nested WordPress block
 = Highlights =
 
 * Build slides with nested WordPress blocks.
+* Choose from seven editable in-block starter templates without adding extra block types.
 * Create horizontal or vertical responsive carousels.
 * Configure navigation, pagination, autoplay, loop mode, free mode, and transition effects.
 * Set responsive breakpoints, spacing, offsets, and slides per view.
@@ -113,6 +114,13 @@ Please report security issues privately according to the [security policy](https
 3. A published WP Swiper slider with navigation and clickable pagination.
 
 == Changelog ==
+
+= 1.5.0 =
+
+* Added seven editable in-block starter templates for blank, gallery, hero, card, logo, testimonial, and thumbnail-gallery carousels.
+* Kept every starter template within the existing WP Swiper block and standard WordPress content blocks.
+* Improved the reliability and testability of slide collection and advanced configuration editing.
+* Reduced the default navigation arrow icon size while preserving its larger click target.
 
 = 1.4.9 =
 

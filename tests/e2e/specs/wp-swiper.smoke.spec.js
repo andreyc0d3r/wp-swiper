@@ -92,6 +92,7 @@ test.describe( 'WP Swiper release smoke tests', () => {
 			'[data-type="da/wp-swiper-slides"]'
 		);
 		await expect( carousel ).toBeVisible();
+		await carousel.getByRole( 'button', { name: /Start blank/ } ).click();
 
 		await carousel
 			.getByRole( 'button', {
@@ -196,6 +197,16 @@ test.describe( 'WP Swiper release smoke tests', () => {
 		).toHaveClass( /swiper-initialized/ );
 		await expect( carousel.locator( '.swiper-button-prev' ) ).toBeVisible();
 		await expect( carousel.locator( '.swiper-button-next' ) ).toBeVisible();
+		await expect(
+			carousel.locator(
+				'.swiper-button-next .swiper-navigation-icon'
+			)
+		).toHaveCSS( 'width', '24px' );
+		await expect(
+			carousel.locator(
+				'.swiper-button-next .swiper-navigation-icon'
+			)
+		).toHaveCSS( 'height', '24px' );
 		await expect( carousel.locator( '.swiper-pagination' ) ).toBeVisible();
 		await expect(
 			carousel.locator( '.wp-swiper__thumbs .swiper-container' )
@@ -248,5 +259,90 @@ test.describe( 'WP Swiper release smoke tests', () => {
 		await expect( autoplayControl ).toHaveAccessibleName(
 			'Start autoplay'
 		);
+	} );
+
+	test( 'selects, saves, and reopens a template inside one WP Swiper block', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
+		await admin.createNewPost( { title: 'WP Swiper template smoke test' } );
+
+		const registeredVariationNames = await page.evaluate( () =>
+			window.wp.blocks
+				.getBlockVariations( 'da/wp-swiper-slides', 'inserter' )
+				.map( ( variation ) => variation.name )
+		);
+		expect( registeredVariationNames ).toEqual( [] );
+
+		await editor.insertBlock( { name: 'da/wp-swiper-slides' } );
+
+		const carousel = editor.canvas.locator(
+			'[data-type="da/wp-swiper-slides"]'
+		);
+		await expect( carousel ).toBeVisible();
+
+		const templateSelector = carousel.getByRole( 'region', {
+			name: 'Choose a starting template',
+		} );
+		await expect( templateSelector ).toBeVisible();
+		await expect( templateSelector.getByRole( 'button' ) ).toHaveCount( 7 );
+		await templateSelector
+			.getByRole( 'button', { name: /Card Carousel/ } )
+			.click();
+
+		await expect( templateSelector ).toHaveCount( 0 );
+		await expect(
+			carousel.locator( '.wp-swiper__tab-select' )
+		).toHaveCount( 3 );
+		await expect( carousel.getByText( 'Card one' ) ).toBeVisible();
+
+		const insertedTemplate = await page.evaluate( () => {
+			const selector = window.wp.data.select( 'core/block-editor' );
+			const carouselBlock = selector
+				.getBlocks()
+				.find( ( block ) => block.name === 'da/wp-swiper-slides' );
+
+			return {
+				attributes: carouselBlock.attributes,
+				slideCount: selector.getBlocks( carouselBlock.clientId ).length,
+			};
+		} );
+		expect( insertedTemplate.slideCount ).toBe( 3 );
+		expect( insertedTemplate.attributes ).toMatchObject( {
+			navigation: true,
+			pagination: false,
+			selectedTemplate: 'cards',
+			slidesPerView: '1',
+			spaceBetween: 24,
+		} );
+		expect( JSON.parse( insertedTemplate.attributes.breakpoints ) ).toEqual(
+			{
+				600: {
+					slidesPerView: 2,
+				},
+				960: {
+					slidesPerView: 3,
+				},
+			}
+		);
+
+		const postId = await editor.publishPost();
+		expect( postId ).not.toBeNull();
+
+		await admin.editPost( postId );
+		await expect(
+			editor.canvas.locator( '[data-type="da/wp-swiper-slides"]' )
+		).toBeVisible();
+		await expect(
+			editor.canvas.getByRole( 'region', {
+				name: 'Choose a starting template',
+			} )
+		).toHaveCount( 0 );
+		await expect(
+			editor.canvas.locator(
+				'.block-editor-block-list__block.is-invalid'
+			)
+		).toHaveCount( 0 );
 	} );
 } );

@@ -56,6 +56,10 @@
 			"type": "string",
 			"default": "start"
 		},
+		"selectedTemplate": {
+			"type": "string",
+			"default": ""
+		},
 		"autoplay": {
 			"type": "boolean",
 			"default": false

@@ -315,6 +315,11 @@
 		svg {
 			fill: var(--wp-swiper-navigation-color, #000);
 		}
+
+		.swiper-navigation-icon {
+			width: 24px;
+			height: 24px;
+		}
 	}
 
 	.swiper-pagination-bullet-active {

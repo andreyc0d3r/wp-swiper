@@ -6,7 +6,7 @@ import classnames from 'classnames/dedupe';
 /**
  * WordPress dependencies
  */
-import { useEffect, useState, useCallback } from '@wordpress/element';
+import { useState, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { createBlock } from '@wordpress/blocks';
 import { useSelect, useDispatch } from '@wordpress/data';
@@ -43,21 +43,20 @@ import {
  */
 import RemoveButton from '../../components/remove-button';
 import getImage from '../../utils/get-image';
-import {
-	addMediaToSlideCollection,
-	removeSlideFromCollection,
-	shouldSynchronizeSlideCollection,
-	synchronizeSlideCollection,
-} from '../../utils/slide-collection';
-import {
-	buildSwiperConfig,
-	parseSwiperConfig,
-} from '../../utils/swiper-config';
+import SwiperConfigEditor from './components/swiper-config-editor';
+import TemplateSelector from './components/template-selector';
+import useActiveSlide from './hooks/use-active-slide';
+import useSlideCollection from './hooks/use-slide-collection';
+import templates, {
+	instantiateSlideTemplate,
+	isPristineSlideCollection,
+} from './templates';
 
 // Template for default inner blocks (one slide by default)
 const INNER_BLOCKS_TEMPLATE = [
 	['da/wp-swiper-slide', { slug: 'slide-1' }]
 ];
+const EMPTY_INNER_BLOCKS = [];
 
 /**
  * Helper function to upload a file to the media library
@@ -88,229 +87,6 @@ function getErrorMessage(error) {
 }
 
 /**
- * Swiper Config Editor Component
- * Displays editable JSON config for the slider
- */
-function SwiperConfigEditor({ attributes, setAttributes }) {
-	const [jsonValue, setJsonValue] = useState('');
-	const [isValid, setIsValid] = useState(true);
-	const [hasChanges, setHasChanges] = useState(false);
-	const [validationMessage, setValidationMessage] = useState('');
-
-	// Build the current config from attributes
-	const currentConfig = buildSwiperConfig(attributes);
-	const currentConfigJson = JSON.stringify(currentConfig, null, 2);
-
-	// Update local state when attributes change (but only if user hasn't made changes)
-	useEffect(() => {
-		if (!hasChanges) {
-			setJsonValue(currentConfigJson);
-		}
-	}, [currentConfigJson, hasChanges]);
-
-	// Initialize on mount
-	useEffect(() => {
-		setJsonValue(currentConfigJson);
-	}, []);
-
-	const handleJsonChange = (value) => {
-		setJsonValue(value);
-		setHasChanges(true);
-
-		// Validate JSON
-		try {
-			const parsedConfig = parseSwiperConfig(value);
-			setIsValid(true);
-			setValidationMessage(
-				parsedConfig.diagnostics[0]?.message || ''
-			);
-		} catch (error) {
-			setIsValid(false);
-			setValidationMessage(
-				error?.message ||
-					__('Invalid Swiper configuration.', 'wp-swiper')
-			);
-		}
-	};
-
-	const handleSave = () => {
-		if (!isValid) return;
-
-		try {
-			const parsedConfig = parseSwiperConfig(jsonValue);
-			const parsed = parsedConfig.options;
-			const sourceConfig = JSON.parse(jsonValue);
-
-			// Map JSON config back to block attributes
-			const newAttributes = {};
-
-			if (parsed.slidesPerView !== undefined) newAttributes.slidesPerView = String(parsed.slidesPerView);
-			if (parsed.slidesPerGroup !== undefined) newAttributes.slidesPerGroup = parsed.slidesPerGroup;
-			if (parsed.slidesPerGroupAuto !== undefined) newAttributes.slidesPerGroupAuto = parsed.slidesPerGroupAuto;
-			if (parsed.slidesPerGroupSkip !== undefined) newAttributes.slidesPerGroupSkip = parsed.slidesPerGroupSkip;
-			if (parsed.spaceBetween !== undefined) newAttributes.spaceBetween = parsed.spaceBetween;
-			if (parsed.autoSlideWidth !== undefined) newAttributes.autoSlideWidth = parsed.autoSlideWidth;
-			if (parsed.navigation !== undefined) newAttributes.navigation = parsed.navigation;
-			if (parsed.delay !== undefined) newAttributes.delay = parsed.delay;
-			if (parsed.speed !== undefined) newAttributes.speed = parsed.speed;
-			if (parsed.loop !== undefined) newAttributes.loop = parsed.loop;
-			if (parsed.direction !== undefined) newAttributes.direction = parsed.direction;
-			if (parsed.slidesOffsetBefore !== undefined) newAttributes.slidesOffsetBefore = parsed.slidesOffsetBefore;
-			if (parsed.slidesOffsetAfter !== undefined) newAttributes.slidesOffsetAfter = parsed.slidesOffsetAfter;
-			if (parsed.autoHeight !== undefined) newAttributes.autoHeight = parsed.autoHeight;
-			if (parsed.releaseOnEdges !== undefined) newAttributes.releaseOnEdges = parsed.releaseOnEdges;
-			if (parsed.effect !== undefined) newAttributes.effect = parsed.effect;
-			if (parsed.loopAddBlankSlides !== undefined) newAttributes.loopAddBlankSlides = parsed.loopAddBlankSlides;
-			if (parsed.loopAdditionalSlides !== undefined) newAttributes.loopAdditionalSlides = parsed.loopAdditionalSlides;
-			if (parsed.showAutoplayControl !== undefined) newAttributes.showAutoplayControl = parsed.showAutoplayControl;
-
-			// Handle autoplay object
-			if (parsed.autoplay !== undefined) {
-				if (parsed.autoplay === true || typeof parsed.autoplay === 'object') {
-					newAttributes.autoplay = true;
-					if (typeof parsed.autoplay === 'object') {
-						if (parsed.autoplay.delay !== undefined) newAttributes.delay = parsed.autoplay.delay;
-						if (parsed.autoplay.disableOnInteraction !== undefined) newAttributes.disableOnInteraction = parsed.autoplay.disableOnInteraction;
-						if (parsed.autoplay.pauseOnMouseEnter !== undefined) newAttributes.pauseOnMouseEnter = parsed.autoplay.pauseOnMouseEnter;
-						if (parsed.autoplay.reverseDirection !== undefined) newAttributes.reverseDirection = parsed.autoplay.reverseDirection;
-						if (parsed.autoplay.stopOnLastSlide !== undefined) newAttributes.stopOnLastSlide = parsed.autoplay.stopOnLastSlide;
-						if (parsed.autoplay.waitForTransition !== undefined) newAttributes.waitForTransition = parsed.autoplay.waitForTransition;
-					}
-				} else {
-					newAttributes.autoplay = false;
-				}
-			}
-
-			// Handle freeMode object
-			if (parsed.freeMode !== undefined) {
-				if (typeof parsed.freeMode === 'object' && parsed.freeMode.enabled) {
-					newAttributes.freeMode = true;
-					if (parsed.freeMode.minimumVelocity !== undefined) newAttributes.freeModeMinimumVelocity = parsed.freeMode.minimumVelocity;
-					if (parsed.freeMode.momentum !== undefined) newAttributes.freeModeMomentum = parsed.freeMode.momentum;
-					if (parsed.freeMode.momentumBounce !== undefined) newAttributes.freeModeMomentumBounce = parsed.freeMode.momentumBounce;
-					if (parsed.freeMode.momentumBounceRatio !== undefined) newAttributes.freeModeMomentumBounceRatio = parsed.freeMode.momentumBounceRatio;
-					if (parsed.freeMode.momentumRatio !== undefined) newAttributes.freeModeMomentumRatio = parsed.freeMode.momentumRatio;
-					if (parsed.freeMode.momentumVelocityRatio !== undefined) newAttributes.freeModeMomentumVelocityRatio = parsed.freeMode.momentumVelocityRatio;
-					if (parsed.freeMode.sticky !== undefined) newAttributes.freeModeSticky = parsed.freeMode.sticky;
-				} else {
-					newAttributes.freeMode = false;
-				}
-			}
-
-			// Handle pagination
-			if (parsed.pagination !== undefined) {
-				newAttributes.pagination = parsed.pagination !== false;
-				if (typeof parsed.pagination === 'object' && parsed.pagination !== null) {
-					if (parsed.pagination.type !== undefined) newAttributes.pagination_type = parsed.pagination.type;
-					if (parsed.pagination.clickable !== undefined) newAttributes.clickable_pagination = parsed.pagination.clickable;
-				}
-			}
-
-			// Handle breakpoints
-			if (sourceConfig.breakpoints !== undefined) {
-				newAttributes.breakpoints =
-					typeof sourceConfig.breakpoints === 'string'
-						? sourceConfig.breakpoints
-						: JSON.stringify(sourceConfig.breakpoints);
-			}
-
-			// Handle mousewheel
-			if (parsed.mousewheel !== undefined) {
-				newAttributes.mousewheel = parsed.mousewheel !== false;
-				if (typeof parsed.mousewheel === 'object' && parsed.mousewheel.releaseOnEdges !== undefined) {
-					newAttributes.releaseOnEdges = Boolean(parsed.mousewheel.releaseOnEdges);
-				}
-			}
-
-			setAttributes(newAttributes);
-			setHasChanges(false);
-			setValidationMessage(
-				parsedConfig.diagnostics[0]?.message || ''
-			);
-		} catch (error) {
-			setIsValid(false);
-			setValidationMessage(
-				error?.message ||
-					__('Invalid Swiper configuration.', 'wp-swiper')
-			);
-		}
-	};
-
-	const handleReset = () => {
-		setJsonValue(currentConfigJson);
-		setHasChanges(false);
-		setIsValid(true);
-		setValidationMessage('');
-	};
-
-	const helperTextStyle = {
-		marginTop: '8px',
-		fontSize: '12px',
-		fontStyle: 'normal',
-		color: 'rgb(117, 117, 117)',
-		marginBottom: '12px',
-	};
-
-	return (
-		<>
-			<BaseControl
-				label={__('Swiper Configuration (JSON)', 'wp-swiper')}
-				help={
-					validationMessage ||
-					(!isValid
-						? __(
-								'Invalid JSON format. Please fix the syntax errors.',
-								'wp-swiper'
-						  )
-						: '')
-				}
-			>
-				<textarea
-					value={jsonValue}
-					onChange={(e) => handleJsonChange(e.target.value)}
-					rows={15}
-					style={{
-						width: '100%',
-						fontFamily: 'monospace',
-						fontSize: '11px',
-						padding: '8px',
-						border: `1px solid ${isValid ? '#8c8f94' : '#cc1818'}`,
-						borderRadius: '4px',
-						backgroundColor: isValid ? '#fff' : '#fff5f5',
-						resize: 'vertical',
-					}}
-				/>
-			</BaseControl>
-
-			<PanelRow>
-				<Button
-					variant="primary"
-					onClick={handleSave}
-					disabled={!isValid || !hasChanges}
-					style={{ marginRight: '8px' }}
-				>
-					{__('Apply Changes', 'wp-swiper')}
-				</Button>
-				<Button
-					variant="secondary"
-					onClick={handleReset}
-					disabled={!hasChanges}
-				>
-					{__('Reset', 'wp-swiper')}
-				</Button>
-			</PanelRow>
-
-			<p style={helperTextStyle}>
-				{__('This JSON object represents the Swiper initialization configuration. You can edit properties directly here and click "Apply Changes" to update the slider settings. This is useful for advanced customizations or copying configurations between sliders.', 'wp-swiper')}
-			</p>
-			<p style={helperTextStyle}>
-				<strong>{__('Tip:', 'wp-swiper')}</strong> {__('Changes made here will update the corresponding settings in the sidebar panels. Some nested properties (like autoplay options) will be extracted to their respective settings.', 'wp-swiper')}
-			</p>
-		</>
-	);
-}
-
-/**
  * Block Edit Component.
  *
  * @param {Object} props Block props.
@@ -337,25 +113,18 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		replaceInnerBlocks,
 	} = useDispatch(blockEditorStore);
 	const { createErrorNotice } = useDispatch(noticesStore);
-
 	const { getBlocks } = useSelect((select) => ({
 		getBlocks: select(blockEditorStore).getBlocks,
 	}), []);
-
-	// Helper function to update slug attribute for inner blocks
-	const updateSlugsForInnerBlocks = useCallback((innerBlocks) => {
-		innerBlocks.forEach((innerBlock, index) => {
-			const slug = `slide-${index + 1}`;
-
-			if (innerBlock.attributes.slug !== slug) {
-				updateBlockAttributes(innerBlock.clientId, { slug });
-			}
-		});
-	}, [updateBlockAttributes]);
+	const getInnerBlocks = useCallback(
+		() => getBlocks(clientId),
+		[clientId, getBlocks]
+	);
 
 	const {
 		tabActive,
 		buttonsAlign,
+		selectedTemplate,
 		tabsData,
 		overlayColor,
 		overlayImg,
@@ -412,55 +181,51 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		paginationColor,
 	} = attributes;
 
-	const childBlocks = getBlocks(clientId);
-
-	useEffect(() => {
-		if (
-			block?.innerBlocks &&
-			shouldSynchronizeSlideCollection(
-				block.innerBlocks,
-				tabsData,
-				tabActive
-			)
-		) {
-			const synchronizedCollection = synchronizeSlideCollection(
-				block.innerBlocks,
-				tabsData,
-				tabActive
+	const innerBlocks = block?.innerBlocks || EMPTY_INNER_BLOCKS;
+	const isTemplateSelectorVisible =
+		! selectedTemplate &&
+		isPristineSlideCollection( innerBlocks, tabsData );
+	const { isActiveSlide, selectSlide } = useActiveSlide( {
+		tabActive,
+		setAttributes,
+	} );
+	const {
+		addMedia,
+		addSlide,
+		removeSlide,
+		repairSlideSlugs,
+	} = useSlideCollection( {
+		clientId,
+		createSlideBlock: createBlock,
+		getInnerBlocks,
+		innerBlocks,
+		removeBlock,
+		replaceInnerBlocks,
+		setAttributes,
+		tabActive,
+		tabsData,
+		updateBlockAttributes,
+	} );
+	const applyTemplate = useCallback(
+		( template ) => {
+			const instantiatedTemplate = instantiateSlideTemplate(
+				template,
+				createBlock
 			);
-			updateSlugsForInnerBlocks(block.innerBlocks);
 
-			setAttributes({
-				tabsData: synchronizedCollection.tabsData,
-				tabActive: synchronizedCollection.tabActive,
-			});
-		}
-	}, [childBlocks, block, tabsData, tabActive, updateSlugsForInnerBlocks, setAttributes]);
+			replaceInnerBlocks(
+				clientId,
+				instantiatedTemplate.innerBlocks,
+				false
+			);
+			setAttributes( instantiatedTemplate.attributes );
+		},
+		[ clientId, replaceInnerBlocks, setAttributes ]
+	);
 
 	const [alignment, setAlignment] = useState('bottom center');
 	const [isDraggingOver, setIsDraggingOver] = useState(false);
 	const [isUploading, setIsUploading] = useState(false);
-
-	const applyMediaSelection = useCallback((media) => {
-		const mediaItems = Array.isArray(media) ? media : [media];
-		const collection = addMediaToSlideCollection({
-			mediaItems,
-			tabsData,
-			innerBlocks: getBlocks(clientId),
-			createBlock,
-		});
-
-		if (collection.addedCount === 0) {
-			return false;
-		}
-
-		replaceInnerBlocks(clientId, collection.innerBlocks, false);
-		setAttributes({
-			tabsData: collection.tabsData,
-			tabActive: collection.tabActive,
-		});
-		return true;
-	}, [clientId, getBlocks, replaceInnerBlocks, setAttributes, tabsData]);
 
 	/**
 	 * Handle files dropped onto the swiper block
@@ -488,7 +253,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				(result) => result.status === 'rejected'
 			);
 
-			applyMediaSelection(uploadedMedia);
+			addMedia(uploadedMedia);
 
 			if (failedUploads.length > 0) {
 				createErrorNotice(
@@ -516,7 +281,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		setIsUploading(true);
 
 		try {
-			applyMediaSelection(media);
+			addMedia(media);
 		} catch (error) {
 			createErrorNotice(getErrorMessage(error), {
 				type: 'snackbar',
@@ -525,41 +290,24 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 		} finally {
 			setIsUploading(false);
 		}
-	}, [applyMediaSelection, createErrorNotice]);
-
-	/**
-	 * Remove a tab/slide
-	 */
-	const removeTab = useCallback((i) => {
-		if (!block?.innerBlocks) return;
-
-		if (block.innerBlocks.length <= 1) {
-			removeBlock(block.clientId);
-		} else if (block.innerBlocks[i]) {
-			if (tabsData[i]) {
-				const nextCollection = removeSlideFromCollection(
-					tabsData,
-					i,
-					tabActive
-				);
-
-				removeBlock(block.innerBlocks[i].clientId);
-
-				nextCollection.tabsData.forEach((tab) => {
-					updateBlockAttributes(tab.clientId, {
-						slug: tab.slug,
-					});
-				});
-
-				setAttributes({
-					tabsData: nextCollection.tabsData,
-					tabActive: nextCollection.tabActive,
-				});
-			}
-		}
-	}, [block, tabsData, tabActive, removeBlock, updateBlockAttributes, setAttributes]);
+	}, [addMedia, createErrorNotice]);
 
 	className = classnames(className, 'wp-swiper__slides');
+
+	if ( isTemplateSelectorVisible ) {
+		return (
+			<div
+				{ ...blockProps }
+				className={ classnames( blockProps.className, className ) }
+			>
+				<TemplateSelector
+					clientId={ clientId }
+					onSelect={ applyTemplate }
+					templates={ templates }
+				/>
+			</div>
+		);
+	}
 
 	let buttonsAlignValForControl = buttonsAlign;
 	if (buttonsAlignValForControl === 'start') {
@@ -1417,16 +1165,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 				/>
 				<PanelRow>
 					<Button
-						onClick={() => {
-							const synchronizedCollection =
-								synchronizeSlideCollection(
-									block?.innerBlocks || [],
-									tabsData,
-									tabActive
-								);
-							updateSlugsForInnerBlocks(block?.innerBlocks || []);
-							setAttributes(synchronizedCollection);
-						}}
+						onClick={repairSlideSlugs}
 						className="button"
 					>
 						{__('Fix Slide Slugs', 'wp-swiper')}
@@ -1446,7 +1185,11 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 					</p>
 				</PanelRow>
 
-				<SwiperConfigEditor attributes={attributes} setAttributes={setAttributes} />
+				<SwiperConfigEditor
+					attributes={attributes}
+					clientId={clientId}
+					setAttributes={setAttributes}
+				/>
 			</PanelBody>
 			</InspectorControls>
 			<div
@@ -1460,7 +1203,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 					<div className={classnames('wb-tabs-buttons', `wb-tabs-buttons-align-${buttonsAlign}`)}>
 						{tabsData.map((tabData, i) => {
 							const { slug } = tabData;
-							const selected = tabActive === slug;
+							const selected = isActiveSlide( slug );
 
 							return (
 								<div
@@ -1469,9 +1212,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 								>
 									<Button
 										className="wp-swiper__tab-select"
-										onClick={() =>
-											setAttributes({ tabActive: slug })
-										}
+										onClick={() => selectSlide( slug )}
 										aria-pressed={selected}
 									>
 										<span className="wp-swiper__tab-label">
@@ -1482,9 +1223,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 									<RemoveButton
 										show={isSelectedBlockInRoot}
 										tooltipText={__('Remove slide?', 'wp-swiper')}
-										onRemove={() => {
-											removeTab(i);
-										}}
+										onRemove={() => removeSlide( i )}
 									/>
 								</div>
 							);
@@ -1494,27 +1233,7 @@ export default function Edit({ clientId, attributes, setAttributes, className })
 								<Button
 									aria-label={__('Add Slide', 'wp-swiper')}
 									icon="insert"
-									onClick={() => {
-										const newDataLength = tabsData.length + 1;
-										const newBlock = createBlock('da/wp-swiper-slide', {
-											slug: `slide-${newDataLength}`,
-										});
-
-										const newTabsData = [...tabsData, {
-											clientId: newBlock.clientId,
-											slug: `slide-${newDataLength}`,
-											slideImg: '',
-											thumbImg: '',
-										}];
-
-										const innerBlocks = [...getBlocks(clientId), newBlock];
-
-										replaceInnerBlocks(clientId, innerBlocks, false);
-										setAttributes({
-											tabsData: newTabsData,
-											tabActive: `slide-${newDataLength}`,
-										});
-									}}
+									onClick={addSlide}
 								/>
 							</Tooltip>
 						) : (
