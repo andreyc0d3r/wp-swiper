@@ -48,7 +48,7 @@
 		"@wordpress/scripts": "^31.1.0",
 		"adm-zip": "^0.5.16",
 		"classnames": "^2.3.2",
-		"swiper": "14.0.5"
+		"swiper": "14.0.7"
 	},
 	"scripts": {
 		"build": "npm run sync:swiper && wp-scripts build",
